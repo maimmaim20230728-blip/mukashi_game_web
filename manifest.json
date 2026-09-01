@@ -1,0 +1,27 @@
+{
+  "name": "名作の主人公になろう！",
+  "short_name": "名作の主人公",
+  "description": "桃太郎、赤ずきん、浦島太郎。おなじみの昔話が、あなたの選択で別の結末へ。原典に伝わる幻の結末も収録した、読む昔話アドベンチャー。",
+  "lang": "ja",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf3e0",
+  "theme_color": "#faf3e0",
+  "categories": ["games", "education"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

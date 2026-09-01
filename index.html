@@ -1,0 +1,1489 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#faf3e0">
+<meta name="description" content="桃太郎、赤ずきん、浦島太郎。おなじみの昔話が、あなたの選択で別の結末へ。原典に伝わる幻の結末も収録した、読む昔話アドベンチャー。">
+<title>名作の主人公になろう！</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="名作の主人公になろう！">
+<meta property="og:description" content="桃太郎、赤ずきん、浦島太郎。おなじみの昔話が、あなたの選択で別の結末へ。原典に伝わる幻の結末も収録した、読む昔話アドベンチャー。">
+<meta property="og:image" content="https://maimmaim20230728-blip.github.io/mukashi_game_web/ogp.png">
+<meta property="og:url" content="https://maimmaim20230728-blip.github.io/mukashi_game_web/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{
+  --bg:#faf3e0; --panel:#fffdf5; --ink:#4a3728;
+  --accent:#e8804f; --accent-dark:#c9642f; --green:#5aa66b;
+  --frame:#c9a86b; --dim:#b8a88e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{
+  font-family:'Hiragino Maru Gothic ProN','BIZ UDGothic','Yu Gothic UI','Meiryo',sans-serif;
+  min-height:100vh;display:flex;justify-content:center;
+  /* エッジtoエッジ(AAB)の きりかけを よける。Webでは 0 なので みためは かわらない */
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+#app{width:100%;max-width:560px;padding:14px 12px 28px}
+.screen{display:none}
+.screen.on{display:block}
+
+/* ---- タイトル ---- */
+.titlebox{text-align:center;padding:26px 10px 10px}
+.titlebox .momo{font-size:60px;line-height:1}
+h1{font-size:32px;letter-spacing:.04em;margin:18px 0 6px;line-height:1.5}
+h1 rt{font-size:11px;letter-spacing:.2em;color:#8a7a62}
+.subtitle{font-size:13px;color:#8a7a62;margin-bottom:26px}
+.menu{display:flex;flex-direction:column;gap:12px;max-width:320px;margin:0 auto}
+.menu button{
+  font-size:19px;padding:15px 10px;border-radius:14px;border:3px solid var(--accent-dark);
+  background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.menu button.sub{background:var(--panel);color:var(--ink);border-color:var(--frame)}
+.foot{margin-top:34px;font-size:11px;color:#a08f76;text-align:center;line-height:1.9}
+.foot a{color:#8a7a62}
+.foot button{font-size:11px;padding:5px 12px;border-radius:8px;border:1px solid var(--dim);background:none;color:#a08f76;cursor:pointer;font-family:inherit}
+
+/* ---- おはなしえらび ---- */
+h2{font-size:20px;margin:8px 0 14px;text-align:center;letter-spacing:.1em}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{
+  background:var(--panel);border:3px solid var(--frame);border-radius:14px;
+  padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:14px;
+}
+.card .ico{font-size:34px;width:44px;text-align:center;flex:none}
+.card .nm{font-size:18px;font-weight:700}
+.card .tg{font-size:12px;color:#8a7a62;margin-top:3px}
+.card.locked{cursor:default;background:#f1e9d8;color:#9c8d76}
+.card.locked .nm{color:#9c8d76}
+.card.dim{opacity:.55;cursor:default}
+.backrow{margin-top:18px;text-align:center}
+.backrow button,.gamefoot button{
+  font-size:14px;padding:12px 20px;border-radius:10px;border:2px solid var(--frame);
+  background:var(--panel);color:var(--ink);cursor:pointer;font-family:inherit;
+  min-height:44px;                    /* 実機で 押しやすい 44px を たしかに 確保する */
+}
+.gamefoot{margin-top:14px;text-align:center;display:flex;gap:10px;justify-content:center;align-items:center}
+/* 設定歯車: 文字サイズ設定に連動させず固定サイズ(実機で押しやすい44px以上) */
+.gearbtn{width:48px;height:44px;font-size:20px !important;padding:0 !important;flex:none}
+
+/* ---- ゲーム画面 ---- */
+.stage{background:#fff;border:4px solid var(--frame);border-radius:16px;overflow:hidden;position:relative}
+.stage svg{width:100%;height:auto;display:block}
+.textbox{
+  background:var(--panel);border:3px solid var(--frame);border-radius:14px;
+  padding:14px 16px;margin-top:10px;font-size:17px;line-height:1.95;min-height:104px;
+  white-space:pre-line;
+}
+.choices{margin-top:10px;display:flex;flex-direction:column;gap:9px}
+.choices button{
+  font-size:17px;padding:13px 14px;border-radius:12px;cursor:pointer;font-family:inherit;
+  border:3px solid var(--accent-dark);background:var(--accent);color:#fff;font-weight:700;
+  text-align:left;
+}
+.choices button.next{
+  background:var(--panel);color:var(--ink);border-color:var(--frame);text-align:center;
+}
+.choices button.zk{background:var(--green);border-color:#3f7e50;text-align:center}
+.choices button:disabled{opacity:.4;cursor:default}
+.choices button.next.ready{animation:nudge 1.4s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+
+/* もじの おおきさ */
+body[data-fs="s"] .textbox{font-size:15px;line-height:1.85}
+body[data-fs="s"] .choices button{font-size:15px}
+body[data-fs="l"] .textbox{font-size:20px;line-height:2.05}
+body[data-fs="l"] .choices button{font-size:19px}
+/* 「おおきい」は 本文だけでなく ずかん・カードのタグ・注記も おおきくする */
+body[data-fs="l"] .zcell .zn{font-size:17px}
+body[data-fs="l"] .zcell .zh{font-size:14px}
+body[data-fs="l"] .card .tg{font-size:14px}
+body[data-fs="l"] .znote{font-size:13px}
+
+/* ---- せってい ---- */
+.setrow{background:var(--panel);border:3px solid var(--frame);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.setrow .sl{font-size:15px;font-weight:700;margin-bottom:10px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{
+  flex:1;min-width:64px;min-height:44px;font-size:14px;padding:12px 6px;border-radius:10px;cursor:pointer;font-family:inherit;
+  border:2px solid var(--frame);background:#f1e9d8;color:#8a7a62;
+}
+.seg button.on{background:var(--accent);border-color:var(--accent-dark);color:#fff;font-weight:700}
+
+/* ---- ずかん ---- */
+.zgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.zcell{background:var(--panel);border:3px solid var(--frame);border-radius:12px;padding:12px}
+.zcell .zn{font-size:15px;font-weight:700}
+.zcell .zh{font-size:12px;color:#8a7a62;margin-top:5px;line-height:1.6}
+.zcell.lock{background:#f1e9d8}
+.zcell.lock .zn{color:#b0a189}
+.zcount{text-align:center;font-size:14px;margin:2px 0 8px;color:#8a7a62}
+.znote{text-align:center;font-size:11px;margin:0 6px 12px;color:#a08f76;line-height:1.7}
+/* おはなしごとの みだし行(ZKの {section:'…'} 要素) */
+.zsec{
+  grid-column:1 / -1;font-size:15px;font-weight:700;color:#8a7a62;letter-spacing:.08em;
+  border-bottom:2px solid var(--frame);padding:8px 3px 6px;margin-top:8px;
+}
+.zsec:first-child{margin-top:0}
+
+/* ---- カットイン ---- */
+#cutin{position:fixed;inset:0;display:none;z-index:50;cursor:pointer;overflow:hidden}
+#cutin.on{display:block}
+.ci-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+
+#cutin.waza .ci-inner{animation:shake .35s;overflow:hidden}
+.stripe-bg{position:absolute;inset:-140px;z-index:0;animation:stripeFlow 1s linear infinite}
+@keyframes stripeFlow{to{transform:translate(-56px,-56px)}}
+#cutin.waza .ci-text{
+  position:relative;z-index:2;
+  font-size:46px;font-weight:900;color:#fff;letter-spacing:.06em;text-align:center;line-height:1.4;
+  text-shadow:3px 3px 0 #c9642f,-2px -2px 0 #c9642f,2px -2px 0 #c9642f,-2px 2px 0 #c9642f,0 6px 14px rgba(0,0,0,.25);
+  animation:pop .45s cubic-bezier(.2,1.6,.4,1);
+}
+.ci-icon{position:relative;z-index:2;animation:pop .4s cubic-bezier(.2,1.6,.4,1), iconBounce .8s .4s ease-in-out infinite}
+@keyframes iconBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+
+#cutin.kao .ci-inner{overflow:hidden}
+#cutin .flines{position:absolute;left:-25%;top:-25%;width:150%;height:150%;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#cutin.kao .ci-face{
+  width:min(46vh,300px,80vw);height:min(46vh,300px,80vw);border-radius:50%;
+  background:#fffdf5;border:6px solid #4a3a2c;overflow:hidden;position:relative;z-index:2;
+  animation:pop .4s cubic-bezier(.2,1.6,.4,1), kaoPunch .5s .42s;
+}
+@keyframes kaoPunch{0%,100%{transform:none}25%{transform:translate(-6px,4px) rotate(-2deg)}55%{transform:translate(5px,-4px) rotate(1.5deg)}80%{transform:translate(-3px,2px)}}
+#cutin.kao .ci-face svg{width:100%;height:100%;display:block}
+#cutin.kao .ci-text{
+  position:relative;z-index:2;
+  font-size:34px;font-weight:900;color:#4a3a2c;background:#fffdf5;
+  padding:10px 30px;border-radius:16px;border:4px solid #4a3a2c;text-align:center;line-height:1.4;
+  animation:slideup .35s ease-out;
+}
+
+#cutin.vs .ci-inner{flex-direction:row;gap:0;animation:vsClash .35s .45s}
+@keyframes vsClash{0%,100%{transform:none}30%{transform:translate(-7px,5px)}60%{transform:translate(6px,-4px)}}
+#cutin.vs .vs-half{position:absolute;top:-10%;bottom:-10%;width:80%}
+#cutin.vs .vs-left{left:-22%;background:#4a8fd4;transform:skewX(-12deg);border-right:8px solid #fffdf5}
+#cutin.vs .vs-right{right:-22%;background:#c94a4a;transform:skewX(-12deg);border-left:8px solid #fffdf5}
+#cutin.vs .ci-face{
+  width:min(38vh,240px,30vw);height:min(38vh,240px,30vw);border-radius:50%;
+  background:#fffdf5;border:6px solid #4a3a2c;overflow:hidden;position:relative;z-index:2;margin:0 3vw;
+}
+#cutin.vs .ci-face svg{width:100%;height:100%;display:block}
+#cutin.vs .f1{animation:fromleft .4s ease-out}
+#cutin.vs .f2{animation:fromright .4s ease-out}
+#cutin.vs .ci-text{
+  position:relative;z-index:3;font-size:56px;font-weight:900;color:#fff;
+  text-shadow:3px 3px 0 #4a3a2c,-2px -2px 0 #4a3a2c,2px -2px 0 #4a3a2c,-2px 2px 0 #4a3a2c;
+  animation:pop .5s cubic-bezier(.2,1.6,.4,1), vsPulse 1s .6s ease-in-out infinite;
+}
+@keyframes vsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+#cutin.dark .ci-inner{background:#15120e}
+#cutin.dark .ci-text{
+  font-size:26px;font-weight:700;color:#f5efe2;letter-spacing:.1em;line-height:2.2;text-align:center;
+  animation:darkIn 1.4s ease-out;white-space:pre-line;
+}
+@keyframes darkIn{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:none}}
+
+/* なかま加入スタンプ型 */
+#cutin.join .ci-inner{background:#ffd76e}
+#cutin.join .ci-face{
+  width:min(44vh,280px,76vw);height:min(44vh,280px,76vw);border-radius:50%;
+  background:#fffdf5;border:6px solid #4a3a2c;overflow:hidden;position:relative;z-index:2;
+  animation:pop .45s cubic-bezier(.2,1.7,.4,1), joinHop .7s .5s ease-in-out infinite;
+}
+@keyframes joinHop{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.join-ring{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;
+  width:min(44vh,280px,76vw);height:min(44vh,280px,76vw);border-radius:50%;
+  border:6px solid rgba(255,255,255,.9);animation:ringPulse 1.1s .35s ease-out infinite;
+}
+@keyframes ringPulse{0%{opacity:.9;scale:1}100%{opacity:0;scale:1.55}}
+#cutin.join .ci-face svg{width:100%;height:100%;display:block}
+#cutin.join .ci-text{
+  position:relative;z-index:2;
+  font-size:30px;font-weight:900;color:#4a3a2c;background:#fffdf5;
+  padding:10px 26px;border-radius:16px;border:4px solid #4a3a2c;text-align:center;line-height:1.4;
+  animation:slideup .35s ease-out;
+}
+.ci-star{position:absolute;font-size:34px;color:#fff;z-index:1;animation:twinkle 1s ease-in-out infinite}
+@keyframes twinkle{0%,100%{transform:scale(.6);opacity:.5}50%{transform:scale(1.2);opacity:1}}
+
+/* もも割れ専用型 */
+#cutin.paka .ci-inner{background:repeating-linear-gradient(45deg,#ffdce6 0 30px,#ffd0de 30px 60px)}
+.paka-svg{width:min(52vh,330px,84vw);height:auto;display:block;position:relative;z-index:2}
+.paka-svg .phL{transform-origin:130px 110px;animation:pakaL .55s .1s ease-out forwards}
+.paka-svg .phR{transform-origin:130px 110px;animation:pakaR .55s .1s ease-out forwards}
+.paka-svg .pburst{transform-origin:130px 110px;transform:scale(0);animation:burst .45s .3s ease-out forwards}
+.paka-svg .pbaby{transform-origin:130px 110px;transform:scale(0);animation:burst .4s .45s cubic-bezier(.2,1.7,.4,1) forwards, babyWobble 1s 1s ease-in-out infinite}
+@keyframes babyWobble{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1) rotate(-5deg)}75%{transform:scale(1) rotate(5deg)}}
+@keyframes pakaL{100%{transform:translate(-52px,8px) rotate(-16deg)}}
+@keyframes pakaR{100%{transform:translate(52px,8px) rotate(16deg)}}
+@keyframes burst{100%{transform:scale(1)}}
+#cutin.paka .ci-text{
+  font-size:44px;font-weight:900;color:#fff;letter-spacing:.06em;position:relative;z-index:2;
+  text-shadow:3px 3px 0 #e87f96,-2px -2px 0 #e87f96,2px -2px 0 #e87f96,-2px 2px 0 #e87f96;
+  animation:pop .45s .25s cubic-bezier(.2,1.6,.4,1) backwards;
+}
+
+/* 刀閃フラッシュ型 */
+#cutin.flash .ci-inner{background:#fdfcf8;animation:flashBlink .5s}
+@keyframes flashBlink{0%{background:#fdfcf8}15%{background:#fff}30%{background:#e9f2ff}45%{background:#fdfcf8}}
+.fl-slash{position:absolute;left:-20%;right:-20%;height:14px;z-index:1;
+  background:linear-gradient(90deg,transparent,#41526b 25%,#41526b 75%,transparent);
+  transform:rotate(-16deg) scaleX(0);animation:slash .2s ease-out forwards}
+.fl-slash.fl2{height:9px;transform:rotate(11deg) scaleX(0);animation-delay:.1s}
+@keyframes slash{100%{transform:rotate(var(--rot,-16deg)) scaleX(1)}}
+#cutin.flash .ci-text{
+  position:relative;z-index:2;font-size:44px;font-weight:900;color:#b03a3a;letter-spacing:.06em;text-align:center;
+  text-shadow:2px 2px 0 #fff,-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,4px 6px 10px rgba(0,0,0,.18);
+  animation:pop .4s .18s cubic-bezier(.2,1.6,.4,1) backwards;
+}
+
+/* ぱくり専用型(オオカミの あぎとが 上下から とじる) */
+#cutin.pakuri .ci-inner{background:#c96a52;overflow:hidden;animation:shake .4s .34s}
+.pk-jaw{position:absolute;left:-1%;width:102%;height:54%;z-index:1}
+.pk-jaw svg{width:100%;height:100%;display:block}
+.pk-top{top:0;animation:pkTop .35s ease-in backwards}
+.pk-bot{bottom:0;animation:pkBot .35s ease-in backwards}
+@keyframes pkTop{0%{transform:translateY(-102%)}100%{transform:none}}
+@keyframes pkBot{0%{transform:translateY(102%)}100%{transform:none}}
+.pk-dark{position:absolute;inset:0;background:#15120e;opacity:0;z-index:2;animation:pkDark .4s .34s ease-out forwards}
+@keyframes pkDark{100%{opacity:1}}
+#cutin.pakuri .ci-text{
+  position:relative;z-index:3;
+  font-size:40px;font-weight:900;color:#fff;letter-spacing:.08em;text-align:center;line-height:1.5;
+  white-space:pre-line;text-shadow:0 5px 16px rgba(0,0,0,.7);
+  animation:pkText .5s .42s ease-out backwards;
+}
+@keyframes pkText{0%{opacity:0;transform:scale(1.35)}100%{opacity:1;transform:none}}
+
+/* ちょっきん専用型(ハサミの 2まいの はが Xに とじる) */
+#cutin.chokkin .ci-inner{background:#fdfcf8;overflow:hidden;animation:shake .3s .4s}
+.ck-blade{
+  position:absolute;left:50%;top:50%;width:min(88vw,470px);aspect-ratio:440/96;
+  transform-origin:50% 50%;translate:-50% -50%;z-index:1;
+}
+.ck-blade svg{width:100%;height:100%;display:block}
+.ck-b1{animation:ckClose1 .4s cubic-bezier(.4,0,.15,1) forwards}
+.ck-b2{animation:ckClose2 .4s cubic-bezier(.4,0,.15,1) forwards}
+@keyframes ckClose1{0%{rotate:-62deg;opacity:0}25%{opacity:1}100%{rotate:-21deg;opacity:1}}
+@keyframes ckClose2{0%{rotate:62deg;opacity:0}25%{opacity:1}100%{rotate:21deg;opacity:1}}
+.ck-flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:2;animation:ckFlash .5s .38s ease-out forwards}
+@keyframes ckFlash{0%{opacity:0}20%{opacity:.95}100%{opacity:0}}
+#cutin.chokkin .ci-text{
+  position:relative;z-index:3;
+  font-size:44px;font-weight:900;color:#41526b;letter-spacing:.06em;text-align:center;line-height:1.4;
+  text-shadow:2px 2px 0 #fff,-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,4px 6px 12px rgba(65,82,107,.25);
+  animation:pop .42s .4s cubic-bezier(.2,1.6,.4,1) backwards;
+}
+
+/* すっぽーん専用型(かぶが 画面したから とびあがり、つちの つぶが ちる) */
+#cutin.suppon .ci-inner{background:#aee3f5;overflow:hidden;justify-content:flex-start;padding-top:11%}
+.sp-kabu{
+  position:absolute;left:50%;top:55%;width:min(38vh,240px,58vw);z-index:2;
+  animation:spFly .5s cubic-bezier(.15,.85,.35,1) forwards;
+}
+.sp-kabu svg{width:100%;height:auto;display:block}
+@keyframes spFly{
+  0%{transform:translate(-50%,58vh) rotate(-15deg)}
+  100%{transform:translate(-50%,-50%) rotate(9deg)}
+}
+.sp-dirt{
+  position:absolute;left:50%;top:62%;border-radius:50%;background:#7a5a34;z-index:1;
+  opacity:0;transform:translate(-50%,-50%);animation:spDirt .85s ease-out forwards;
+}
+@keyframes spDirt{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.4)}
+  62%{opacity:.95}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.1)}
+}
+#cutin.suppon .ci-text{
+  position:relative;z-index:3;
+  font-size:46px;font-weight:900;color:#fff;letter-spacing:.06em;text-align:center;line-height:1.4;
+  text-shadow:3px 3px 0 #4d8ba3,-2px -2px 0 #4d8ba3,2px -2px 0 #4d8ba3,-2px 2px 0 #4d8ba3,0 6px 14px rgba(0,0,0,.2);
+  animation:pop .45s .4s cubic-bezier(.2,1.6,.4,1) backwards;
+}
+
+/* しろい けむり専用型(たまてばこから けむりが ゆっくり たちのぼる・しずかな場面なので ゆれは 入れない) */
+#cutin.kemuri .ci-inner{background:#3a3f4a;overflow:hidden}
+.km-box{
+  position:absolute;left:50%;bottom:8%;width:min(20vh,130px,30vw);z-index:1;
+  transform:translateX(-50%);
+}
+.km-box svg{width:100%;height:auto;display:block}
+.km-smoke{
+  position:absolute;left:50%;bottom:12%;width:min(120vh,900px,165vw);z-index:2;
+  transform:translate(-50%,0) scale(.12);transform-origin:50% 100%;opacity:0;
+  animation:kmRise 1.6s ease-out forwards;
+}
+.km-smoke svg{width:100%;height:auto;display:block}
+@keyframes kmRise{
+  0%{opacity:0;transform:translate(-50%,0) scale(.12)}
+  35%{opacity:.5}
+  100%{opacity:.92;transform:translate(-50%,-5%) scale(1)}
+}
+#cutin.kemuri .ci-text{
+  position:relative;z-index:3;
+  font-size:34px;font-weight:700;color:#4a3a2c;letter-spacing:.1em;text-align:center;line-height:1.6;
+  white-space:pre-line;animation:kmText 1s 1.2s ease-out backwards;
+}
+@keyframes kmText{0%{opacity:0}100%{opacity:1}}
+
+/* ふうふう専用型(よこに ながれる 大風。still=ゆれも かけらも 出さず かぜだけが とおりすぎる) */
+/* そらの いろは ゆれない #cutin がわに 敷く(ゆれた ときに ふちが すけない ように) */
+#cutin.fuu{background:#bfe0f0}
+#cutin.fuu .ci-inner{overflow:hidden;animation:shake .5s 2}
+#cutin.fuu .ci-inner.still{animation:none}
+.fu-line{position:absolute;left:0;z-index:1;animation:fuFlow 1.15s linear infinite}
+.fu-line svg{width:100%;height:auto;display:block}
+@keyframes fuFlow{
+  0%{transform:translateX(-50vw);opacity:0}
+  14%{opacity:.95}
+  82%{opacity:.95}
+  100%{transform:translateX(115vw);opacity:0}
+}
+.fu-bit{position:absolute;left:0;z-index:2;border-radius:3px;animation:fuBit 1.1s linear infinite}
+@keyframes fuBit{
+  0%{transform:translate(-25vw,0) rotate(0);opacity:0}
+  12%{opacity:1}
+  84%{opacity:1}
+  100%{transform:translate(112vw,var(--dy)) rotate(var(--rot));opacity:0}
+}
+#cutin.fuu .ci-text{
+  position:relative;z-index:3;max-width:92%;
+  /* ふうふうの せりふは ながい(「……びくとも しない！！」等)。はばに あわせて 字を ちぢめる */
+  font-size:min(46px,7.5vw);font-weight:900;color:#fff;letter-spacing:.06em;text-align:center;line-height:1.4;
+  white-space:pre-line;
+  text-shadow:3px 3px 0 #4d8ba3,-2px -2px 0 #4d8ba3,2px -2px 0 #4d8ba3,-2px 2px 0 #4d8ba3,0 6px 14px rgba(0,0,0,.2);
+  animation:pop .45s cubic-bezier(.2,1.6,.4,1);
+}
+
+/* おしまいの印影(結末の絵の上に押す・背景透過) */
+.seal{
+  position:absolute;right:5%;top:7%;width:44%;max-width:220px;
+  pointer-events:none;opacity:0;mix-blend-mode:multiply;
+  animation:sealPress .5s .5s cubic-bezier(.3,1.3,.5,1) forwards;
+}
+.seal svg{width:100%;height:auto;display:block}
+@keyframes sealPress{
+  0%{opacity:0;transform:translateY(-70px) scale(1.8) rotate(3deg)}
+  55%{opacity:.9;transform:translateY(0) scale(.93) rotate(-9deg)}
+  75%{transform:scale(1.05) rotate(-9deg)}
+  100%{opacity:.9;transform:scale(1) rotate(-9deg)}
+}
+
+@keyframes pop{0%{transform:scale(.2) rotate(-6deg);opacity:0}100%{transform:scale(1) rotate(0)}}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-8px,4px)}40%{transform:translate(7px,-5px)}60%{transform:translate(-5px,3px)}80%{transform:translate(4px,-2px)}}
+@keyframes fadein{0%{opacity:0}100%{opacity:1}}
+@keyframes slideup{0%{transform:translateY(30px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes fromleft{0%{transform:translateX(-60vw)}100%{transform:translateX(0)}}
+@keyframes fromright{0%{transform:translateX(60vw)}100%{transform:translateX(0)}}
+@media (max-width:420px){
+  #cutin.waza .ci-text{font-size:34px}
+  #cutin.vs .ci-text{font-size:40px}
+  #cutin.dark .ci-text{font-size:20px}
+  #cutin.kao .ci-text{font-size:24px}
+  #cutin.paka .ci-text{font-size:34px}
+  #cutin.flash .ci-text{font-size:32px}
+  #cutin.pakuri .ci-text{font-size:28px}
+  #cutin.chokkin .ci-text{font-size:32px}
+  #cutin.suppon .ci-text{font-size:34px}
+  #cutin.kemuri .ci-text{font-size:26px}
+  /* fuu は min(46px,7.5vw)で じどうに ちぢむので ここでは いじらない */
+  h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="scTitle" class="screen on">
+    <div class="titlebox">
+      <div class="momo">🍑</div>
+      <h1 id="ttl"></h1>
+      <div class="subtitle" id="ttlSub"></div>
+      <div class="menu">
+        <button id="btnStart"></button>
+        <button id="btnCont" class="sub" style="display:none"></button>
+        <button id="btnZukan" class="sub"></button>
+        <button id="btnSettings" class="sub"></button>
+      </div>
+      <div class="foot" id="footBox"></div>
+    </div>
+  </div>
+
+  <div id="scSelect" class="screen">
+    <h2 id="selTitle"></h2>
+    <div class="cards" id="cards"></div>
+    <div class="backrow"><button id="btnSelBack"></button></div>
+  </div>
+
+  <div id="scGame" class="screen">
+    <div class="stage" id="stage"></div>
+    <div class="textbox" id="tbox"></div>
+    <div class="choices" id="chs"></div>
+    <div class="gamefoot">
+      <button id="btnGameBack"></button>
+      <button id="btnGear" class="gearbtn">⚙️</button>
+    </div>
+  </div>
+
+  <div id="scZukan" class="screen">
+    <h2 id="zTitle"></h2>
+    <div class="zcount" id="zcount"></div>
+    <div class="znote" id="znote"></div>
+    <div class="zgrid" id="zgrid"></div>
+    <div class="backrow"><button id="btnZBack"></button></div>
+  </div>
+
+  <div id="scSettings" class="screen">
+    <h2 id="setTitle"></h2>
+    <div class="setrow"><div class="sl" id="lblFs"></div><div class="seg" id="segFs"></div></div>
+    <div class="setrow"><div class="sl" id="lblBgm"></div><div class="seg" id="segBgm"></div></div>
+    <div class="setrow"><div class="sl" id="lblSe"></div><div class="seg" id="segSe"></div></div>
+    <div class="setrow"><div class="sl" id="lblLang"></div><div class="seg" id="segLang"></div></div>
+    <div class="backrow"><button id="btnSetBack"></button></div>
+  </div>
+
+</div>
+<div id="cutin"></div>
+
+<script src="art.js"></script>
+<script src="story.js"></script>
+<script src="story_akazukin.js"></script>
+<script src="story_kabu.js"></script>
+<script src="story_urashima.js"></script>
+<script src="story_kobuta.js"></script>
+<script src="story_en.js"></script>
+<script src="story_akazukin_en.js"></script>
+<script src="story_kabu_en.js"></script>
+<script src="story_urashima_en.js"></script>
+<script src="story_kobuta_en.js"></script>
+<script src="audio.js"></script>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+
+/* ================= セーブ ================= */
+const SAVE_KEY = 'mukashi_zukan_v003';
+const UNLOCK_KEY = 'mukashi_unlock_v003';
+const PREF_KEY = 'mukashi_pref_v1';
+/* よみかけの ばしょ(つづきから よむ 用)。シーンIDは 日英 きょうつうなので ことばを かえても つづきが よめる */
+const CUR_KEY = 'mukashi_cur_v1';
+function loadJson(key, fallback){
+  try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+  catch(e){ return fallback; }
+}
+function saveJson(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
+}
+let zukan = loadJson(SAVE_KEY, []);
+let unlocks = loadJson(UNLOCK_KEY, {});
+let PREF = Object.assign({fs:'m', bgm:2, se:2, lang:'ja'}, loadJson(PREF_KEY, {}));
+const VOLS = [0, 0.4, 0.7, 1.0];
+
+/* ================= おはなし(tale)の単位 =================
+   1つの tale = 本編 + その視点ちがい。クリア判定・一本道再生・解放は tale 単位で みる */
+const TALE_OF = {momo:'momo', oni:'momo', kiji:'momo', akz:'akz', wolf:'akz', gma:'akz',
+                 kabu:'kabu', turnip:'kabu', mouse:'kabu',
+                 ura:'ura', hime:'ura', kame:'ura',
+                 buta:'buta', pwolf:'buta', prenga:'buta'};
+/* ura の /^u_/ は 本編の けつまつだけに あたる(視点ちがいは uh_ / uv_ で はじまる)
+   buta の /^pb_/ も おなじ(視点ちがいは pw_ / ps_ で はじまる) */
+const TALE_END = {momo:/^(a_|b_|c_|d_)/, akz:/^za_/, kabu:/^kb_/, ura:/^u_/, buta:/^pb_/};
+/* 本編を クリアした ときに 出す「視点ちがいが あそべます」の 文言 */
+const TALE_UNLOCK_MSG = {momo:'unlockOni', akz:'unlockWolf', kabu:'unlockTurnip', ura:'unlockKame',
+                         buta:'unlockPwolf'};
+const taleOf = story => TALE_OF[story] || story;
+function taleCleared(tale){
+  const re = TALE_END[tale];
+  return !!re && zukan.some(id => re.test(id));
+}
+
+/* ================= ことば(UI文言) ================= */
+const UIT = {
+ja:{
+  title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
+  subtitle:'えらぶたびに、おはなしが かわる',
+  start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
+  footVer:'v1.0.0',
+  footOrig:'ぶんしょうと えは すべて オリジナルです',
+  footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
+  footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
+  credit:'アプリ開発：介護と支援の相談どころ「そよぎ」',
+  privacy:'プライバシーポリシー',
+  reset:'きろくを ぜんぶ けして さいしょから',
+  resetConfirm:'ほんとうに けす？（もういちど おすと けします）',
+  selTitle:'どの おはなしに する？',
+  momoName:'ももたろう',
+  momoTagFirst:'はじめての 1かいめは、もとの おはなしを とおしで',
+  momoTag:'にほんの おはなし・ハラハラ　けつまつ 8しゅるい',
+  oniName:'おにの はなし', oniTag:'ももたろうを おにの めから みると…　けつまつ 5しゅるい',
+  oniLock:'ももたろうを 1かい さいごまで よむと あそべます',
+  kijiName:'キジの はなし', kijiTag:'いちばん ちいさな なかまの ものがたり　けつまつ 2しゅるい',
+  kijiLock:'ももたろうを キジと いっしょに クリアすると あそべます',
+  akzName:'あかずきん',
+  akzTagFirst:'はじめての 1かいめは、もとの おはなしを とおしで',
+  akzTag:'グリムの おはなし・ドキドキ　けつまつ 6しゅるい',
+  wolfName:'オオカミの はなし', wolfTag:'オオカミの めから みると…　けつまつ 3しゅるい',
+  wolfLock:'あかずきんを 1かい さいごまで よむと あそべます',
+  gmaName:'おばあさんの はなし', gmaTag:'まもられるだけじゃ ないんだから　けつまつ 2しゅるい',
+  gmaLock:'けつまつ『おばあさんの ちえ』を みつけると あそべます',
+  kabuName:'おおきな かぶ',
+  kabuTagFirst:'はじめての 1かいめは、もとの おはなしを とおしで',
+  kabuTag:'ロシアの おはなし・ちからを あわせて　けつまつ 4しゅるい',
+  turnipName:'かぶの はなし', turnipTag:'ぬかれる がわにも きもちが ある　けつまつ 2しゅるい',
+  turnipLock:'おおきな かぶを 1かい さいごまで よむと あそべます',
+  mouseName:'ねずみの はなし', mouseTag:'いちばん ちいさな さいごの ひとおし　けつまつ 2しゅるい',
+  mouseLock:'かぶの はなしを 1つ クリアすると あそべます',
+  uraName:'うらしまたろう',
+  uraTagFirst:'はじめての 1かいめは、もとの おはなしを とおしで',
+  uraTag:'にほんの おはなし・せつない　けつまつ 5しゅるい',
+  kameName:'かめの はなし', kameTag:'せなかは とくとうせき　けつまつ 2しゅるい',
+  kameLock:'うらしまたろうを 1かい さいごまで よむと あそべます',
+  himeName:'おとひめの はなし', himeTag:'たまてばこに こめた おもい　けつまつ 2しゅるい',
+  himeLock:'けつまつ『つるに なった たろう』か『あけなかった たまてばこ』を みつけると あそべます',
+  butaName:'さんびきの こぶた',
+  butaTagFirst:'はじめての 1かいめは、もとの おはなしを とおしで',
+  butaTag:'イギリスの おはなし・ふうふうに まけない　けつまつ 4しゅるい',
+  pwolfName:'はらぺこ オオカミの はなし', pwolfTag:'はらぺこで、だまされる がわ　けつまつ 2しゅるい',
+  pwolfLock:'さんびきの こぶたを 1かい さいごまで よむと あそべます',
+  prengaName:'レンガの いえの はなし', prengaTag:'まもる がわにも ほこりが ある　けつまつ 2しゅるい',
+  prengaLock:'けつまつ『イギリスの ほんとうの おはなし』か『さいしょから 3びきで』を みつけると あそべます',
+  prep:'じゅんびちゅう',
+  titleBack:'タイトルへ もどる', selBack:'おはなし えらびへ もどる', next:'つぎへ ▼', back:'もどる',
+  zTitle:'けつまつ ずかん',
+  zCount:(n,t)=>'みつけた けつまつ：'+n+' ／ '+t,
+  zNote:'※もとの おはなしの けつまつ いがいは、むかしばなしには ない、この アプリだけの そうさくです',
+  zFound:'▶ タップで よみかえす', zHint:'ヒント：', unknown:'？？？',
+  newEnd:n=>'★あたらしい けつまつ「'+n+'」を ずかんに とうろくしました！',
+  dupEnd:n=>'（けつまつ「'+n+'」は とうろくずみです）',
+  unlockChoice:'★つぎからは、おはなしの とちゅうで じぶんで えらべます！',
+  unlockNote:'（えらんで かわる おはなしは、この アプリだけの そうさくです）',
+  unlockOni:'★「おにの はなし」も あそべるように なりました！',
+  unlockKiji:'★「キジの はなし」が あそべるように なりました！',
+  unlockWolf:'★「オオカミの はなし」も あそべるように なりました！',
+  unlockGma:'★「おばあさんの はなし」が あそべるように なりました！',
+  unlockTurnip:'★「かぶの はなし」が あそべるように なりました！',
+  unlockMouse:'★「ねずみの はなし」が あそべるように なりました！',
+  unlockKame:'★「かめの はなし」も あそべるように なりました！',
+  unlockHime:'★「おとひめの はなし」が あそべるように なりました！',
+  unlockPwolf:'★「はらぺこ オオカミの はなし」も あそべるように なりました！',
+  unlockPrenga:'★「レンガの いえの はなし」が あそべるように なりました！',
+  btnZukan:'けつまつ ずかんを みる', btnAgain:'おなじ おはなしを もういちど',
+  btnSelect:'おはなし えらびへ', btnZBack:'ずかんへ もどる',
+  setTitle:'せってい', lblFs:'もじの おおきさ', lblBgm:'おんがく', lblSe:'こうかおん', lblLang:'ことば / Language',
+  fsOpts:['ちいさい','ふつう','おおきい'], volOpts:['なし','ちいさい','ふつう','おおきい'],
+  seal:['お','し','ま','い']
+},
+en:{
+  title:'Be the Hero of Tales!',
+  subtitle:'The story changes with every choice',
+  start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
+  footVer:'v1.0.0',
+  footOrig:'All text and art are original.',
+  footFirst:'Your first read follows the original tale.',
+  footCreate:'Branching stories and endings are original creations for this app.',
+  credit:'App by SOYOGI — Care & Support Counseling (service in Japanese)',
+  privacy:'Privacy Policy',
+  reset:'Erase all records and start over',
+  resetConfirm:'Really erase? (Press again to erase)',
+  selTitle:'Which tale will you read?',
+  momoName:'Momotaro the Peach Boy',
+  momoTagFirst:'Your first read follows the original tale',
+  momoTag:'A Japanese tale of adventure — 8 endings',
+  oniName:"The Ogre's Tale", oniTag:"Momotaro through an ogre's eyes — 5 endings",
+  oniLock:'Finish Momotaro once to unlock',
+  kijiName:"The Pheasant's Tale", kijiTag:'The story of the smallest friend — 2 endings',
+  kijiLock:'Finish Momotaro with the Pheasant to unlock',
+  akzName:'Little Red Riding Hood',
+  akzTagFirst:'Your first read follows the original tale',
+  akzTag:'A Grimm tale of suspense — 6 endings',
+  wolfName:"The Wolf's Tale", wolfTag:"The tale through the wolf's eyes — 3 endings",
+  wolfLock:'Finish Little Red Riding Hood once to unlock',
+  gmaName:"Grandmother's Tale", gmaTag:'She is not only there to be saved — 2 endings',
+  gmaLock:'Find the ending "Grandma\'s Clever Plan" to unlock',
+  kabuName:'The Enormous Turnip',
+  kabuTagFirst:'Your first read follows the original tale',
+  kabuTag:'A Russian tale of pulling together — 4 endings',
+  turnipName:"The Turnip's Tale", turnipTag:'The one being pulled has feelings too — 2 endings',
+  turnipLock:'Finish The Enormous Turnip once to unlock',
+  mouseName:"The Mouse's Tale", mouseTag:'The smallest one gives the final push — 2 endings',
+  mouseLock:"Find one ending in The Turnip's Tale to unlock",
+  uraName:'Urashima Taro',
+  uraTagFirst:'Your first read follows the original tale',
+  uraTag:'A Japanese tale of longing — 5 endings',
+  kameName:"The Turtle's Tale", kameTag:'The best seat is on my shell — 2 endings',
+  kameLock:'Finish Urashima Taro once to unlock',
+  himeName:"Princess Otohime's Tale", himeTag:'The wish sealed in the tamatebako — 2 endings',
+  himeLock:'Find the ending "Taro the Crane" or "The Box He Never Opened" to unlock',
+  butaName:'The Three Little Pigs',
+  butaTagFirst:'Your first read follows the original tale',
+  butaTag:'An English tale of huff and puff — 4 endings',
+  pwolfName:"The Hungry Wolf's Tale", pwolfTag:'Hungry, and always the one fooled — 2 endings',
+  pwolfLock:'Finish The Three Little Pigs once to unlock',
+  prengaName:"The Brick House's Tale", prengaTag:'The one who protects has pride too — 2 endings',
+  prengaLock:'Find the ending "The True English Tale" or "Three Together from the Start" to unlock',
+  prep:'Coming soon',
+  titleBack:'Back to Title', selBack:'Back to Tale Select', next:'Next ▼', back:'Back',
+  zTitle:'Ending Collection',
+  zCount:(n,t)=>'Endings found: '+n+' / '+t,
+  zNote:'* Except for the original ending, all endings are original creations for this app.',
+  zFound:'▶ Tap to read again', zHint:'Hint: ', unknown:'? ? ?',
+  newEnd:n=>'★ New ending "'+n+'" added to your collection!',
+  dupEnd:n=>'(Ending "'+n+'" is already in your collection)',
+  unlockChoice:'★ From now on, you can choose your own path!',
+  unlockNote:'(The branching stories are original creations for this app)',
+  unlockOni:'★ "The Ogre\'s Tale" is now unlocked!',
+  unlockKiji:'★ "The Pheasant\'s Tale" is now unlocked!',
+  unlockWolf:'★ "The Wolf\'s Tale" is now unlocked!',
+  unlockGma:'★ "Grandmother\'s Tale" is now unlocked!',
+  unlockTurnip:'★ "The Turnip\'s Tale" is now unlocked!',
+  unlockMouse:'★ "The Mouse\'s Tale" is now unlocked!',
+  unlockKame:'★ "The Turtle\'s Tale" is now unlocked!',
+  unlockHime:'★ "Princess Otohime\'s Tale" is now unlocked!',
+  unlockPwolf:'★ "The Hungry Wolf\'s Tale" is now unlocked!',
+  unlockPrenga:'★ "The Brick House\'s Tale" is now unlocked!',
+  btnZukan:'See the Ending Collection', btnAgain:'Read this tale again',
+  btnSelect:'Back to Tale Select', btnZBack:'Back to the Collection',
+  setTitle:'Settings', lblFs:'Text size', lblBgm:'Music', lblSe:'Sound effects', lblLang:'ことば / Language',
+  fsOpts:['Small','Normal','Large'], volOpts:['Off','Soft','Normal','Loud'],
+  seal:['The','End']
+}
+};
+const t = key => UIT[PREF.lang][key];
+const CUR_SC = () => PREF.lang === 'en' ? SCENES_EN : SCENES;
+const CUR_ZK = () => PREF.lang === 'en' ? ZK_EN : ZK;
+const zkName = id => { const z = CUR_ZK().find(x=>x.id===id); return z ? z.n : id; };
+
+/* ================= 場面BGM・効果音 ================= */
+const TRACK_BY_ART = {
+  yama:'home', momo_river:'home', baby:'home', kids:'home', momotaro:'home',
+  kibidango:'home', hachimaki:'home', momo_home:'home', michi:'home', yamamichi:'home', umizoi:'home',
+  dog:'travel', saru:'travel', kiji:'travel', fune:'travel', fune_asa:'travel',
+  fune_night:'night', oni_raid:'night', oni_takara:'night', oni_hama:'night', oni_night:'night',
+  onigashima:'tense', oyabun:'tense',
+  maitta:'warm', talk:'warm', festival:'warm', nakanaori:'warm', oni_asa:'warm',
+  oni_hatake:'warm', kiji_hero:'warm', miokuri:'warm', oni_ship:'warm',
+  village_sad:'oni', oni_village:'oni', oni_dinner:'oni', oni_kaigi:'oni',
+  kiji_yama:'kiji', kiji_sora:'kiji', kiji_gyoretsu:'kiji', kiji_join:'kiji', kiji_scout:'kiji',
+  /* ---- あかずきん(ヨーロッパのセット) ---- */
+  akz_home:'eu_home', akz_door:'eu_home', akz_haha_road:'eu_home', g_heya:'eu_home',
+  akz_forest:'eu_mori', akz_meet:'eu_mori', akz_flowers:'eu_mori',
+  akz_gma_out:'eu_wolf', akz_bed:'eu_wolf', akz_machibuse:'eu_wolf', akz_yane:'eu_wolf', akz_onaka:'eu_wolf',
+  akz_hunter:'eu_sukui', akz_rescue:'eu_sukui', akz_stone:'eu_sukui',
+  akz_end:'eu_owari', akz_talk:'eu_owari', w_haru:'eu_owari',
+  w_fuyu:'eu_fuyu', w_mura:'eu_fuyu', w_panya:'eu_fuyu',
+  /* ---- おおきな かぶ(ロシアのセット) ---- */
+  kabu_hata:'ru_hatake', kabu_sodatsu:'ru_hatake', kabu_talk:'ru_hatake', kabu_yuyake:'ru_hatake',
+  kabu_hiku:'ru_pull',
+  kabu_nuketa:'ru_win', kabu_matsuri:'ru_win',
+  kt_tsuchi:'ru_kabu', kt_up:'ru_kabu', kt_sora:'ru_kabu',
+  kn_naya:'ru_nezumi', kn_neko:'ru_nezumi', kn_retsu:'ru_pull',
+  /* ---- うらしまたろう(和風セットの ひろがり) ---- */
+  ura_hama:'ura_umi', ura_ijime:'ura_umi', ura_tasuke:'ura_umi', ura_kame_mukae:'ura_umi',
+  ura_kame_kaeri:'ura_umi', kame_hama:'ura_umi',
+  ura_umi_naka:'ura_ryugu', ura_ryugu:'ura_ryugu', ura_otohime:'ura_ryugu', ura_utage:'ura_ryugu',
+  ura_shiki:'ura_ryugu', ura_tama:'ura_ryugu', hime_ryugu:'ura_ryugu',
+  ura_hama700:'oni', ura_oldman:'oni',
+  ura_tsuru:'warm', ura_fune:'warm',
+  /* ---- さんびきの こぶた(ヨーロッパのセットの ひろがり) ---- */
+  buta_hajimari:'buta_march', buta_michi:'buta_march', buta_owari:'buta_march',
+  buta_wara:'buta_ton', buta_eda:'buta_ton', buta_renga:'buta_ton', prenga_kamado:'buta_ton',
+  buta_kabubatake:'buta_oikake', buta_ringo:'buta_oikake', buta_ichi:'buta_oikake', buta_taru:'buta_oikake',
+  buta_fuki_wara:'eu_wolf', buta_fuki_eda:'eu_wolf', buta_entotsu:'eu_wolf',
+  buta_naka:'eu_wolf', buta_nabe:'eu_wolf',
+  buta_soup:'eu_owari', buta_nigeru:'eu_owari',
+  pwolf_yama:'eu_fuyu'
+};
+const SE_BY_CUTIN = {
+  waza:'don', kao:'dodon', vs:'zugan', flash:'shakin', join:'fanfare', paka:'pon', dark:'gong',
+  pakuri:'gabu', chokkin:'shakin', suppon:'suppon', kemuri:'kemuri', fuu:'fuu'
+};
+
+/* ================= カットイン ================= */
+let cutinTimer = null;
+let cutinNext = null;
+let cutinShownAt = 0;
+const CUTIN_SKIP_MS = 700;
+
+function focusLines(color){
+  let s = `<svg class="flines" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">`;
+  for(let i=0;i<28;i++){
+    const a = (i/28)*Math.PI*2 + (i%2)*0.04;
+    const r1 = 150, r2 = 62, w = 0.035;
+    const x1=100+Math.cos(a-w)*r1, y1=100+Math.sin(a-w)*r1;
+    const x2=100+Math.cos(a+w)*r1, y2=100+Math.sin(a+w)*r1;
+    const x3=100+Math.cos(a)*r2,  y3=100+Math.sin(a)*r2;
+    s += `<polygon points="${x1.toFixed(1)},${y1.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)} ${x3.toFixed(1)},${y3.toFixed(1)}" fill="${color}"/>`;
+  }
+  return s + '</svg>';
+}
+const faceSvg = (key, f) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">${FACES[key](f)}</svg>`;
+
+const CUTIN_BG = { momo:'#f2b04f', oyabun:'#8a4a5a', aka:'#c96a52', kiji:'#5a9a6f',
+                   jii:'#c9a05b', kabu:'#9a7fb5', nezumi:'#8fa6b8' };
+const WAZA_TH = {
+  orange:['#f7b733','#f79a33'], blue:['#6ec6e8','#3f9fd4'], green:['#9fd48a','#5aa66b'],
+  gold:['#ffd76e','#f2b04f'], red:['#e06868','#c04848'], brown:['#d9a05b','#b9803f']
+};
+const CHAR_SCALE = { dog:2.6, saru:2.6, kiji:2.2, momo:1.4 };
+
+function charIconSvg(key){
+  if(CHARS[key]){
+    const s = CHAR_SCALE[key] || 2;
+    return `<svg viewBox="0 0 160 150" xmlns="http://www.w3.org/2000/svg"><g transform="translate(80 140) scale(${s})">${CHARS[key]()}</g></svg>`;
+  }
+  const shapes = {
+    banner: `<rect x="76" y="18" width="8" height="114" rx="3" fill="#8a6d3b"/><rect x="84" y="24" width="58" height="42" rx="3" fill="#fff" stroke="#4a3a2c" stroke-width="3"/><circle cx="113" cy="45" r="13" fill="#ffa8ba"/>`,
+    boat: `<path d="M28 96 L132 96 L112 122 L48 122 z" fill="#9a7845" stroke="#4a3a2c" stroke-width="3"/><rect x="78" y="40" width="6" height="56" fill="#7a5c34"/><rect x="48" y="46" width="30" height="42" rx="3" fill="#fff" stroke="#4a3a2c" stroke-width="3"/>`,
+    club: `<g transform="rotate(22 80 75)"><rect x="68" y="16" width="24" height="108" rx="11" fill="#8a6d3b" stroke="#4a3a2c" stroke-width="3"/><circle cx="75" cy="40" r="3" fill="#554"/><circle cx="86" cy="62" r="3" fill="#554"/><circle cx="76" cy="86" r="3" fill="#554"/></g>`
+  };
+  return shapes[key] ? `<svg viewBox="0 0 160 150" xmlns="http://www.w3.org/2000/svg">${shapes[key]}</svg>` : '';
+}
+function charFaceSvg(key){
+  const s = (CHAR_SCALE[key] || 2) * 1.25;
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g transform="translate(100 182) scale(${s})">${CHARS[key]()}</g></svg>`;
+}
+
+/* ぱくり型の あぎと。bottom=true で 上下を さかさに して したあごに する */
+function pakuriJaw(bottom){
+  const yAt = t => 110 + 280 * t * (1 - t);      /* ふちの まがり(2じ曲線と おなじ形) */
+  let teeth = '';
+  for(let i = 0; i < 11; i++){
+    const t = (i + 0.5) / 11;
+    const x = 400 * t, y = yAt(t);
+    const w = 15, h = 22 + 20 * Math.sin(Math.PI * t);
+    teeth += `<polygon points="${(x-w).toFixed(1)},${(y-10).toFixed(1)} ${(x+w).toFixed(1)},${(y-10).toFixed(1)} ${x.toFixed(1)},${(y+h).toFixed(1)}"`
+      + ` fill="#fffdf5" stroke="#4a3a2c" stroke-width="2.5" stroke-linejoin="round"/>`;
+  }
+  const g = `<path d="M0 0 H400 V110 Q200 250 0 110 Z" fill="#8a8f9a" stroke="#4a3a2c" stroke-width="4"/>`
+    + `<path d="M0 104 Q200 244 400 104" fill="none" stroke="#a8616e" stroke-width="14" stroke-linecap="round" opacity=".9"/>`
+    + teeth;
+  return `<svg viewBox="0 0 400 260" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`
+    + (bottom ? `<g transform="translate(0 260) scale(1 -1)">${g}</g>` : g) + `</svg>`;
+}
+
+/* ちょっきん型の は。ねじ(支点)は まんなか(220,48)。edgeUp=false で 上下を さかさに する */
+function scissorBlade(edgeUp){
+  const g = `<polygon points="10,50 90,38 218,24 218,56 90,56" fill="#e6ebf1" stroke="#41526b" stroke-width="3" stroke-linejoin="round"/>`
+    + `<polyline points="14,49 92,38 214,26" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9"/>`
+    + `<rect x="212" y="40" width="118" height="16" rx="8" fill="#41526b"/>`
+    + `<ellipse cx="378" cy="48" rx="46" ry="28" fill="none" stroke="#41526b" stroke-width="13"/>`
+    + `<circle cx="220" cy="48" r="9" fill="#c9d3dd" stroke="#41526b" stroke-width="3"/>`;
+  return `<svg viewBox="0 0 440 96" xmlns="http://www.w3.org/2000/svg">`
+    + (edgeUp ? g : `<g transform="translate(0 96) scale(1 -1)">${g}</g>`) + `</svg>`;
+}
+
+/* すっぽーん型の かぶ。カットイン専用の インライン絵(art.js の かぶとは べつもの) */
+function supponKabu(){
+  return `<svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">`
+    /* はっぱ 3まい(ねもとは からだで かくれる) */
+    + `<path d="M100 88 Q58 78 36 30 Q78 34 104 84 Z" fill="#5aa66b" stroke="#4a3a2c" stroke-width="4" stroke-linejoin="round"/>`
+    + `<path d="M100 88 Q142 78 164 30 Q122 34 96 84 Z" fill="#5aa66b" stroke="#4a3a2c" stroke-width="4" stroke-linejoin="round"/>`
+    + `<path d="M100 86 Q84 44 100 12 Q116 44 100 86 Z" fill="#7cc08a" stroke="#4a3a2c" stroke-width="4" stroke-linejoin="round"/>`
+    /* しろい まるい からだ + した に のびる ね */
+    + `<path d="M42 140 A58 58 0 1 1 158 140 Q152 194 100 240 Q48 194 42 140 Z" fill="#fffdf5" stroke="#4a3a2c" stroke-width="5" stroke-linejoin="round"/>`
+    /* むらさきがかった あたま */
+    + `<path d="M46 118 A58 58 0 0 1 154 118 Q100 138 46 118 Z" fill="#c9a6d8" stroke="#4a3a2c" stroke-width="5" stroke-linejoin="round"/>`
+    + `</svg>`;
+}
+/* とび ちる つちの つぶ(ほうしゃじょうに ちらす) */
+function supponDirt(){
+  let s = '';
+  for(let i = 0; i < 7; i++){
+    const a = (i / 7) * Math.PI * 2 + 0.4;
+    const d = 26 + (i % 3) * 8;                      /* とぶ きょり(vw) */
+    const sz = 11 + (i % 4) * 4;
+    s += `<span class="sp-dirt" style="width:${sz}px;height:${sz}px;`
+      + `--dx:${(Math.cos(a) * d).toFixed(1)}vw;--dy:${(Math.sin(a) * d).toFixed(1)}vw;`
+      + `animation-delay:${(0.26 + i * 0.03).toFixed(2)}s"></span>`;
+  }
+  return s;
+}
+
+/* けむり型の たまてばこ。カットイン専用の インライン絵(くろぬり+きんの ひも) */
+function tamatebako(){
+  return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">`
+    /* はこの 本体と ふた */
+    + `<rect x="26" y="60" width="148" height="68" rx="7" fill="#241f1c" stroke="#0d0b0a" stroke-width="4"/>`
+    + `<rect x="18" y="36" width="164" height="30" rx="7" fill="#39302a" stroke="#0d0b0a" stroke-width="4"/>`
+    /* きんの ひも(よこ・たて) */
+    + `<rect x="18" y="45" width="164" height="8" fill="#e8c46a" opacity=".95"/>`
+    + `<rect x="92" y="62" width="16" height="66" fill="#e8c46a" opacity=".95"/>`
+    /* むすびめ */
+    + `<path d="M100 45 q-30 -24 -37 -3 q17 12 37 3 z" fill="#f2d488" stroke="#b8933f" stroke-width="3" stroke-linejoin="round"/>`
+    + `<path d="M100 45 q30 -24 37 -3 q-17 12 -37 3 z" fill="#f2d488" stroke="#b8933f" stroke-width="3" stroke-linejoin="round"/>`
+    + `<circle cx="100" cy="46" r="9" fill="#e8c46a" stroke="#b8933f" stroke-width="3"/>`
+    + `</svg>`;
+}
+/* けむり型の しろい けむり。まるを かさねた もこもこの かたち */
+function kemuriCloud(){
+  const balls = [[100,170,46],[52,176,34],[148,176,34],[22,182,22],[178,182,22],
+                 [76,132,40],[126,132,42],[100,96,44],[58,100,28],[142,102,28],
+                 [100,54,32],[72,60,22],[130,58,22],[100,22,20]];
+  let s = '';
+  balls.forEach(b=>{ s += `<circle cx="${b[0]}" cy="${b[1]}" r="${b[2]}" fill="#fffdf8"/>`; });
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+/* ふうふう型の かぜ。ながい カーブの ながれ線(さきに うずまきを つける ことが ある) */
+function windLine(swirl){
+  const line = `<path d="M6 44 Q66 20 138 42 Q208 64 276 40" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>`;
+  const sw = `<path d="M276 40 a17 17 0 1 1 -13 -13 a9 9 0 1 0 8 8" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>`;
+  return `<svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">${line}${swirl ? sw : ''}</svg>`;
+}
+/* たかさ% / はば(vw) / びょうすう / おくらせ(びょう) / うずまきの あり なし */
+function fuuWind(){
+  const rows = [[8,44,1.05,0.00,1],[22,34,1.30,0.35,0],[36,52,0.95,0.15,1],[50,30,1.20,0.55,0],
+                [64,46,1.10,0.25,1],[78,36,1.35,0.45,0],[90,28,1.00,0.65,0]];
+  return rows.map(r => `<span class="fu-line" style="top:${r[0]}%;width:${r[1]}vw;`
+    + `animation-duration:${r[2]}s;animation-delay:${r[3]}s">${windLine(!!r[4])}</span>`).join('');
+}
+/* ふうふう型で まいあがる かけら。wara=わら(きいろ) / eda=きの えだ(ちゃいろ) */
+function fuuDebris(kind){
+  const col = {wara:['#f2d488','#b8933f'], eda:['#b9803f','#7a5c34']}[kind];
+  if(!col) return '';
+  let s = '';
+  for(let i = 0; i < 14; i++){
+    s += `<span class="fu-bit" style="top:${6 + (i * 37) % 84}%;`
+      + `width:${16 + (i % 5) * 6}px;height:${5 + (i % 3) * 2}px;`
+      + `background:${col[0]};border:2px solid ${col[1]};`
+      + `--dy:${(i * 29) % 40 - 20}vh;--rot:${((i % 2) ? 1 : -1) * (360 + i * 40)}deg;`
+      + `animation-duration:${(0.9 + (i % 4) * 0.12).toFixed(2)}s;`
+      + `animation-delay:${(i * 0.07).toFixed(2)}s"></span>`;
+  }
+  return s;
+}
+
+function showCutin(c, then){
+  const box = $('cutin');
+  clearTimeout(cutinTimer);
+  box.className = '';
+  box.classList.add('on', c.type);
+  Sound.se(c.se || SE_BY_CUTIN[c.type]);
+  let inner = '';
+  let dur = 1300;
+  if(c.type === 'waza'){
+    const th = WAZA_TH[c.theme] || WAZA_TH.orange;
+    const icon = c.icon ? `<div class="ci-icon" style="width:min(30vh,190px)">${charIconSvg(c.icon)}</div>` : '';
+    inner = `<div class="ci-inner">`
+      + `<div class="stripe-bg" style="background:repeating-linear-gradient(45deg,${th[0]} 0 28px,${th[1]} 28px 56px)"></div>`
+      + icon + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1300;
+  }else if(c.type === 'join'){
+    const stars = [[12,18],[78,8],[86,72],[8,66],[50,88],[92,38]]
+      .map((p,i)=>`<span class="ci-star" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${i*0.15}s">✦</span>`).join('');
+    inner = `<div class="ci-inner">`
+      + focusLines('rgba(255,255,255,.55)') + stars
+      + `<div class="join-ring"></div>`
+      + `<div class="ci-face">${charFaceSvg(c.chara)}</div>`
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1600;
+  }else if(c.type === 'paka'){
+    inner = `<div class="ci-inner">`
+      + `<svg class="paka-svg" viewBox="0 0 260 240" xmlns="http://www.w3.org/2000/svg">`
+      + `<g class="pburst"><circle cx="130" cy="110" r="78" fill="#fff" opacity=".9"/></g>`
+      + `<g class="pbaby"><circle cx="130" cy="104" r="30" fill="#ffe3c2" stroke="#4a3a2c" stroke-width="3"/><path d="M130 76 q-5 -12 9 -11 q7 7 -3 12 z" fill="#3a2c20"/><circle cx="120" cy="102" r="3" fill="#333"/><circle cx="140" cy="102" r="3" fill="#333"/><path d="M123 113 q7 7 14 0" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/><circle cx="112" cy="112" r="4" fill="rgba(255,140,140,.6)"/><circle cx="148" cy="112" r="4" fill="rgba(255,140,140,.6)"/></g>`
+      + `<g class="phL"><path d="M130 32 a78 78 0 0 0 0 156 z" fill="#ffa8ba" stroke="#4a3a2c" stroke-width="4"/><path d="M130 46 a64 64 0 0 0 0 128 z" fill="#ffd9a8"/></g>`
+      + `<g class="phR"><path d="M130 32 a78 78 0 0 1 0 156 z" fill="#ffa8ba" stroke="#4a3a2c" stroke-width="4"/><path d="M130 46 a64 64 0 0 1 0 128 z" fill="#ffd9a8"/><g transform="rotate(-32 158 40)"><ellipse cx="158" cy="40" rx="18" ry="9" fill="#5aa66b" stroke="#4a3a2c" stroke-width="3"/></g></g>`
+      + `</svg>`
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1700;
+  }else if(c.type === 'flash'){
+    inner = `<div class="ci-inner">`
+      + `<div class="fl-slash" style="top:38%"></div>`
+      + `<div class="fl-slash fl2" style="top:58%;--rot:11deg"></div>`
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1200;
+  }else if(c.type === 'kao'){
+    const bg = CUTIN_BG[c.face] || '#f2b04f';
+    inner = `<div class="ci-inner" style="background:${bg}">`
+      + focusLines('rgba(255,255,255,.5)')
+      + `<div class="ci-face">${faceSvg(c.face, F)}</div>`
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1500;
+  }else if(c.type === 'vs'){
+    const sparks = [[44,26],[54,68],[47,50]]
+      .map((p,i)=>`<span class="ci-star" style="left:${p[0]}%;top:${p[1]}%;color:#ffd76e;z-index:3;animation-delay:${.45+i*0.12}s">✧</span>`).join('');
+    inner = `<div class="ci-inner">`
+      + `<div class="vs-half vs-left"></div><div class="vs-half vs-right"></div>` + sparks
+      + `<div class="ci-face f1">${faceSvg(c.faces[0], F)}</div>`
+      + `<div class="ci-text">${c.text}</div>`
+      + `<div class="ci-face f2">${faceSvg(c.faces[1], F)}</div>`
+      + `</div>`;
+    dur = 1800;
+  }else if(c.type === 'dark'){
+    inner = `<div class="ci-inner"><div class="ci-text">${c.text}</div></div>`;
+    dur = 2800;
+  }else if(c.type === 'pakuri'){
+    inner = `<div class="ci-inner">`
+      + `<div class="pk-jaw pk-top">${pakuriJaw(false)}</div>`
+      + `<div class="pk-jaw pk-bot">${pakuriJaw(true)}</div>`
+      + `<div class="pk-dark"></div>`
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1600;
+  }else if(c.type === 'chokkin'){
+    const sparks = [[46,34],[54,62],[50,48]]
+      .map((p,i)=>`<span class="ci-star" style="left:${p[0]}%;top:${p[1]}%;color:#8fa6c4;z-index:3;animation-delay:${.4+i*0.12}s">✧</span>`).join('');
+    inner = `<div class="ci-inner">`
+      + `<div class="ck-blade ck-b1">${scissorBlade(false)}</div>`
+      + `<div class="ck-blade ck-b2">${scissorBlade(true)}</div>`
+      + `<div class="ck-flash"></div>` + sparks
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1300;
+  }else if(c.type === 'suppon'){
+    inner = `<div class="ci-inner">`
+      + focusLines('rgba(255,255,255,.6)') + supponDirt()
+      + `<div class="ci-text">${c.text}</div>`
+      + `<div class="sp-kabu">${supponKabu()}</div></div>`;
+    dur = 1700;
+  }else if(c.type === 'kemuri'){
+    inner = `<div class="ci-inner">`
+      + `<div class="km-box">${tamatebako()}</div>`
+      + `<div class="km-smoke">${kemuriCloud()}</div>`
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 2200;
+  }else if(c.type === 'fuu'){
+    /* still=レンガの いえ。ゆれも かけらも 出さず、かぜだけが とおりすぎる */
+    inner = `<div class="ci-inner${c.still ? ' still' : ''}">`
+      + fuuWind() + (c.still ? '' : fuuDebris(c.debris))
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1600;
+  }
+  box.innerHTML = inner;
+  cutinNext = then;
+  cutinShownAt = Date.now();
+  cutinTimer = setTimeout(endCutin, dur);
+}
+function endCutin(){
+  clearTimeout(cutinTimer);
+  const box = $('cutin');
+  if(!box.classList.contains('on')) return;
+  box.className = '';
+  box.innerHTML = '';
+  const n = cutinNext; cutinNext = null;
+  if(typeof n === 'function'){ n(); }
+  else if(n){ go(n); }
+}
+$('cutin').addEventListener('click', ()=>{
+  if(Date.now() - cutinShownAt < CUTIN_SKIP_MS) return;
+  endCutin();
+});
+
+/* ================= すすめかた ================= */
+let F = {};
+let currentStory = 'momo';
+
+/* 2.2びょうは 1ページを みる(連打防止)+ 画面タップで進行 */
+const READ_MS = 2200;
+let sceneReadyAt = 0, sceneReadyTimer = null, tapAdvance = null;
+function lockButtons(){
+  sceneReadyAt = Date.now() + READ_MS;
+  clearTimeout(sceneReadyTimer);
+  const btns = Array.from($('chs').querySelectorAll('button'));
+  btns.forEach(b=>{ b.disabled = true; });
+  sceneReadyTimer = setTimeout(()=>{
+    btns.forEach(b=>{
+      b.disabled = false;
+      if(b.classList.contains('next')) b.classList.add('ready');
+    });
+  }, READ_MS);
+}
+$('scGame').addEventListener('click', e=>{
+  if(e.target.closest('button')) return;
+  if(!tapAdvance) return;
+  if(Date.now() < sceneReadyAt) return;
+  Sound.se('page');
+  tapAdvance();
+});
+/* 最初のタップからBGM開始(各ボタンのclick処理の後に走るbubble段で) */
+document.addEventListener('click', ()=>{ Sound.tap(); });
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  $(id).classList.add('on');
+  window.scrollTo(0,0);
+  if(id === 'scTitle') refreshContBtn();
+}
+
+/* ================= つづきから よむ =================
+   よみかけの ばしょを 1つだけ おぼえておく。すてる のは
+   けつまつに ついた とき / おはなし えらびへ もどった とき / きろくを けした とき */
+function saveCur(rec){ saveJson(CUR_KEY, rec); }
+function clearCur(){
+  try{ localStorage.removeItem(CUR_KEY); }catch(e){}
+  refreshContBtn();
+}
+/* 記録が ふるい(おはなしや シーンが もう ない)ときは つかわず すてる */
+function loadCur(){
+  const c = loadJson(CUR_KEY, null);
+  if(!c) return null;
+  if(c.mode){
+    const src = c.mode === 'recap' ? RECAP[c.key] : (FIRST_RUNS || {})[c.key];
+    const list = src && src.scenes;
+    if(!list || !(c.idx >= 0 && c.idx < list.length)) return null;
+    return c;
+  }
+  if(!c.story || !STORIES[c.story] || !CUR_SC()[c.scene]) return null;
+  return c;
+}
+function refreshContBtn(){
+  const b = $('btnCont');
+  if(!b) return;
+  b.textContent = t('cont');
+  b.style.display = loadCur() ? '' : 'none';
+}
+function resumeCur(){
+  const c = loadCur();
+  if(!c){ refreshContBtn(); return; }
+  F = Object.assign({dango:null, dog:0, saru:0, kiji:0, gate:null, style:null}, c.f || {});
+  if(c.story) currentStory = c.story;
+  if(c.mode){
+    seqKey = c.key;
+    seqMode = c.mode;
+    seqList = (c.mode === 'recap' ? RECAP[c.key] : FIRST_RUNS[c.key]).scenes;
+    seqIdx = c.idx;
+    showScreen('scGame');
+    playStep();
+    return;
+  }
+  seqList = null;
+  showScreen('scGame');
+  go(c.scene);
+}
+
+function startStory(story){
+  currentStory = story;
+  /* その おはなしの 本編(momo / akz)を まだ クリアしていないなら 正統ルートの 一本道 */
+  const tale = taleOf(story);
+  const fr = FIRST_RUNS[tale];
+  if(story === tale && fr && !taleCleared(tale)){
+    F = Object.assign({dango:null, dog:0, saru:0, kiji:0, gate:null, style:null}, fr.init);
+    seqList = fr.scenes;
+    seqIdx = 0;
+    seqMode = 'first';
+    seqKey = tale;
+    showScreen('scGame');
+    playStep();
+    return;
+  }
+  seqList = null;
+  F = Object.assign({dango:null, dog:0, saru:0, kiji:0, gate:null, style:null}, STORIES[story].init);
+  showScreen('scGame');
+  go(STORIES[story].start);
+}
+
+function go(id){
+  const s = CUR_SC()[id];
+  if(!s){ console.error('scene not found: '+id); return; }
+  if(s.cutin){
+    const then = (typeof s.then === 'function') ? s.then(F) : s.then;
+    showCutin(s.cutin, then);
+    return;
+  }
+  render(s, id);
+}
+
+function render(s, id){
+  window.scrollTo(0,0);
+  if(s.enter) Object.assign(F, s.enter);
+  $('stage').innerHTML = s.art && ART[s.art] ? ART[s.art](F) : '';
+  if(s.art) Sound.setTrack(TRACK_BY_ART[s.art]);
+  const text = (typeof s.text === 'function') ? s.text(F) : (s.text || '');
+  const chs = $('chs');
+  chs.innerHTML = '';
+
+  if(s.ending !== undefined){
+    tapAdvance = null;
+    finishEnding(s, text);
+    return;
+  }
+  saveCur({story:currentStory, scene:id, f:F});
+  $('tbox').textContent = text;
+
+  if(s.choices){
+    const list = (typeof s.choices === 'function') ? s.choices(F) : s.choices;
+    list.forEach(c=>{
+      const b = document.createElement('button');
+      b.textContent = c.t;
+      b.addEventListener('click', ()=>{ Sound.se('pi'); if(c.set) Object.assign(F, c.set); go(c.go); });
+      chs.appendChild(b);
+    });
+    tapAdvance = null;
+  }else if(s.next){
+    const b = document.createElement('button');
+    b.className = 'next';
+    b.textContent = t('next');
+    b.addEventListener('click', ()=>{ Sound.se('page'); go(s.next); });
+    chs.appendChild(b);
+    tapAdvance = ()=>go(s.next);
+  }
+  lockButtons();
+}
+
+function pressSeal(){
+  const d = document.createElement('div');
+  d.className = 'seal';
+  const chars = t('seal');
+  let texts = '';
+  if(PREF.lang === 'en'){
+    texts = `<text x="100" y="88" text-anchor="middle" font-size="42" font-weight="900" fill="#c0392b" opacity=".95" font-family="inherit">${chars[0]}</text>`
+      + `<text x="100" y="138" text-anchor="middle" font-size="42" font-weight="900" fill="#c0392b" opacity=".9" font-family="inherit">${chars[1]}</text>`;
+  }else{
+    texts = chars.map((ch,i)=>`<text x="100" y="${60+i*39}" text-anchor="middle" font-size="37" font-weight="900" fill="#c0392b" opacity="${i%2?.9:.95}" font-family="inherit">${ch}</text>`).join('');
+  }
+  d.innerHTML = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="92" fill="none" stroke="#c0392b" stroke-width="7" stroke-linecap="round" stroke-dasharray="128 5 84 4 156 7 46 5 90 6"/>
+    <circle cx="100" cy="100" r="80" fill="none" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="96 5 130 6 64 4 110 7"/>
+    ${texts}
+  </svg>`;
+  $('stage').appendChild(d);
+  setTimeout(()=>Sound.se('stamp'), 520);
+}
+
+function finishEnding(s, text){
+  const eid = (typeof s.ending === 'function') ? s.ending(F) : s.ending;
+  const tale = taleOf(currentStory);
+  const wasCleared = taleCleared(tale);
+  const hadKiji = !!unlocks.kiji;
+  const hadGma = !!unlocks.gma;
+  const hadMouse = !!unlocks.mouse;
+  const hadHime = !!unlocks.hime;
+  const hadPrenga = !!unlocks.prenga;
+  const isNew = !zukan.includes(eid);
+  clearCur();                                   /* けつまつに ついたら よみかけは おわり */
+  if(isNew){ zukan.push(eid); saveJson(SAVE_KEY, zukan); Sound.se('kira'); }
+  if(currentStory === 'momo' && F.kiji === 1 && !unlocks.kiji){
+    unlocks.kiji = true; saveJson(UNLOCK_KEY, unlocks);
+  }
+  if(eid === 'za_chie' && !unlocks.gma){
+    unlocks.gma = true; saveJson(UNLOCK_KEY, unlocks);
+  }
+  /* かぶの はなし(かぶ視点)の けつまつを 1つでも みつけたら ねずみの はなしが ひらく */
+  if(/^kt_/.test(eid) && !unlocks.mouse){
+    unlocks.mouse = true; saveJson(UNLOCK_KEY, unlocks);
+  }
+  /* うらしまたろうの「つるに なった たろう」か「あけなかった たまてばこ」で おとひめの はなしが ひらく */
+  if((eid === 'u_tsuru' || eid === 'u_akenai') && !unlocks.hime){
+    unlocks.hime = true; saveJson(UNLOCK_KEY, unlocks);
+  }
+  /* さんびきの こぶたの「イギリスの ほんとうの おはなし」か「さいしょから 3びきで」で レンガの いえの はなしが ひらく */
+  if((eid === 'pb_genten' || eid === 'pb_kyoryoku') && !unlocks.prenga){
+    unlocks.prenga = true; saveJson(UNLOCK_KEY, unlocks);
+  }
+
+  let msg = text + '\n\n';
+  msg += isNew ? t('newEnd')(zkName(eid)) : t('dupEnd')(zkName(eid));
+  if(!wasCleared && taleCleared(tale)){
+    msg += '\n' + t('unlockChoice') + '\n' + t('unlockNote')
+      + '\n' + t(TALE_UNLOCK_MSG[tale] || 'unlockOni');
+  }
+  if(!hadKiji && unlocks.kiji){
+    msg += '\n' + t('unlockKiji');
+  }
+  if(!hadGma && unlocks.gma){
+    msg += '\n' + t('unlockGma');
+  }
+  if(!hadMouse && unlocks.mouse){
+    msg += '\n' + t('unlockMouse');
+  }
+  if(!hadHime && unlocks.hime){
+    msg += '\n' + t('unlockHime');
+  }
+  if(!hadPrenga && unlocks.prenga){
+    msg += '\n' + t('unlockPrenga');
+  }
+  $('tbox').textContent = msg;
+
+  const chs = $('chs');
+  const bZ = document.createElement('button');
+  bZ.className = 'zk';
+  bZ.textContent = t('btnZukan');
+  bZ.addEventListener('click', ()=>{ renderZukan(); showScreen('scZukan'); });
+  chs.appendChild(bZ);
+
+  const bR = document.createElement('button');
+  bR.className = 'next';
+  bR.textContent = t('btnAgain');
+  bR.addEventListener('click', ()=>startStory(currentStory));
+  chs.appendChild(bR);
+
+  const bS = document.createElement('button');
+  bS.className = 'next';
+  bS.textContent = t('btnSelect');
+  bS.addEventListener('click', ()=>{ renderSelect(); showScreen('scSelect'); });
+  chs.appendChild(bS);
+
+  tapAdvance = null;
+  lockButtons();
+  pressSeal();
+}
+
+/* ================= 一本道再生(はじめての1かいめ / ずかんの振り返り) =================
+   seqKey は その列の もとに なった キー(first=tale / recap=けつまつID)。つづきの ふっかつに つかう */
+let seqList = null, seqIdx = 0, seqMode = null, seqKey = null;
+
+function startRecap(eid){
+  const r = RECAP[eid];
+  if(!r) return;
+  F = Object.assign({dango:null, dog:0, saru:0, kiji:0, gate:null, style:null}, r.f || {});
+  seqList = r.scenes;
+  seqIdx = 0;
+  seqMode = 'recap';
+  seqKey = eid;
+  showScreen('scGame');
+  playStep();
+}
+function exitRecap(){
+  seqList = null;
+  clearCur();
+  renderZukan();
+  showScreen('scZukan');
+}
+function playStep(){
+  if(!seqList || seqIdx >= seqList.length){
+    if(seqMode === 'recap') exitRecap();
+    return;
+  }
+  const s = CUR_SC()[seqList[seqIdx++]];
+  if(!s){ seqList = null; return; }
+  if(s.enter) Object.assign(F, s.enter);
+  if(s.cutin){ showCutin(s.cutin, playStep); return; }
+  window.scrollTo(0,0);
+  $('stage').innerHTML = s.art && ART[s.art] ? ART[s.art](F) : '';
+  if(s.art) Sound.setTrack(TRACK_BY_ART[s.art]);
+  const text = (typeof s.text === 'function') ? s.text(F) : (s.text || '');
+  const chs = $('chs');
+  chs.innerHTML = '';
+  if(s.ending !== undefined){
+    const mode = seqMode;
+    seqList = null;
+    if(mode === 'first'){
+      tapAdvance = null;
+      finishEnding(s, text);
+      return;
+    }
+    $('tbox').textContent = text;
+    const b = document.createElement('button');
+    b.className = 'zk';
+    b.textContent = t('btnZBack');
+    b.addEventListener('click', exitRecap);
+    chs.appendChild(b);
+    tapAdvance = null;
+    lockButtons();
+    pressSeal();
+    return;
+  }
+  /* seqIdx は もう つぎを さしている ので、いま だしている 1つ 前を おぼえる */
+  saveCur({story:currentStory, mode:seqMode, key:seqKey, idx:seqIdx - 1, f:F});
+  $('tbox').textContent = text;
+  const b = document.createElement('button');
+  b.className = 'next';
+  b.textContent = t('next');
+  b.addEventListener('click', ()=>{ Sound.se('page'); playStep(); });
+  chs.appendChild(b);
+  tapAdvance = playStep;
+  lockButtons();
+}
+
+/* ================= おはなしえらび =================
+   ならびは この配列のとおり。tagFirst=その話を まだ クリアしていないときの タグ、
+   open=あそべる条件(なければ さいしょから あそべる)、lock=とじているときの タグ、
+   soon=じゅんびちゅう。シナリオが まだ よみこまれていない話も じゅんびちゅうに する */
+const SELECT_CARDS = [
+  {story:'momo', ico:'🍑', nm:'momoName', tag:'momoTag', tagFirst:'momoTagFirst', tale:'momo'},
+  {story:'oni',  ico:'👹', nm:'oniName',  tag:'oniTag',  lock:'oniLock',  open:()=>taleCleared('momo')},
+  {story:'kiji', ico:'🐦', nm:'kijiName', tag:'kijiTag', lock:'kijiLock', open:()=>!!unlocks.kiji},
+  {story:'akz',  ico:'🧺', nm:'akzName',  tag:'akzTag',  tagFirst:'akzTagFirst', tale:'akz'},
+  {story:'wolf', ico:'🐺', nm:'wolfName', tag:'wolfTag', lock:'wolfLock', open:()=>taleCleared('akz')},
+  {story:'gma',  ico:'🧶', nm:'gmaName',  tag:'gmaTag',  lock:'gmaLock',  open:()=>!!unlocks.gma},
+  /* かぶの アイコンは かりおき(絵文字に かぶが ないため 🌱と🧅で だいよう)。あとで さしかえる ことが ある */
+  {story:'kabu',   ico:'🌱', nm:'kabuName',   tag:'kabuTag',   tagFirst:'kabuTagFirst', tale:'kabu'},
+  {story:'turnip', ico:'🧅', nm:'turnipName', tag:'turnipTag', lock:'turnipLock', open:()=>taleCleared('kabu')},
+  {story:'mouse',  ico:'🐭', nm:'mouseName',  tag:'mouseTag',  lock:'mouseLock',  open:()=>!!unlocks.mouse},
+  /* うらしまたろう: 本編は つりざお(🎣)。かめは 視点ちがいの がわで 🐢を つかう */
+  {story:'ura',  ico:'🎣', nm:'uraName',  tag:'uraTag',  tagFirst:'uraTagFirst', tale:'ura'},
+  {story:'kame', ico:'🐢', nm:'kameName', tag:'kameTag', lock:'kameLock', open:()=>taleCleared('ura')},
+  {story:'hime', ico:'🐚', nm:'himeName', tag:'himeTag', lock:'himeLock', open:()=>!!unlocks.hime},
+  /* さんびきの こぶた: 本編は こぶた(🐷)。オオカミ視点は ふうふう(💨)、レンガの いえ視点は 🧱 */
+  {story:'buta',   ico:'🐷', nm:'butaName',   tag:'butaTag',   tagFirst:'butaTagFirst', tale:'buta'},
+  {story:'pwolf',  ico:'💨', nm:'pwolfName',  tag:'pwolfTag',  lock:'pwolfLock',  open:()=>taleCleared('buta')},
+  {story:'prenga', ico:'🧱', nm:'prengaName', tag:'prengaTag', lock:'prengaLock', open:()=>!!unlocks.prenga}
+];
+
+function renderSelect(){
+  const box = $('cards');
+  box.innerHTML = '';
+  $('selTitle').textContent = t('selTitle');
+  $('btnSelBack').textContent = t('titleBack');
+
+  const mk = (ico, nm, tg, onClick, cls) => {
+    const d = document.createElement('div');
+    d.className = 'card' + (cls ? ' ' + cls : '');
+    d.innerHTML = '<div class="ico">'+ico+'</div><div><div class="nm">'+nm+'</div><div class="tg">'+tg+'</div></div>';
+    if(onClick) d.addEventListener('click', onClick);
+    return d;
+  };
+
+  SELECT_CARDS.forEach(c=>{
+    if(c.soon || !STORIES[c.story]){
+      box.appendChild(mk(c.ico, t(c.nm), t('prep'), null, 'dim'));
+      return;
+    }
+    if(c.open && !c.open()){
+      box.appendChild(mk('🔒', t('unknown'), t(c.lock), null, 'locked'));
+      return;
+    }
+    const tg = (c.tagFirst && !taleCleared(c.tale)) ? t(c.tagFirst) : t(c.tag);
+    box.appendChild(mk(c.ico, t(c.nm), tg, ()=>startStory(c.story)));
+  });
+}
+
+/* ================= ずかん ================= */
+function renderZukan(){
+  const grid = $('zgrid');
+  grid.innerHTML = '';
+  $('zTitle').textContent = t('zTitle');
+  $('znote').textContent = t('zNote');
+  $('btnZBack').textContent = t('back');
+  let n = 0, total = 0;
+  CUR_ZK().forEach(z=>{
+    /* おはなしごとの みだし行(全幅・かずには 入れない) */
+    if(z.section){
+      const h = document.createElement('div');
+      h.className = 'zsec';
+      h.textContent = z.section;
+      grid.appendChild(h);
+      return;
+    }
+    total++;
+    const got = zukan.includes(z.id);
+    if(got) n++;
+    const d = document.createElement('div');
+    d.className = 'zcell' + (got ? '' : ' lock');
+    d.innerHTML = got
+      ? '<div class="zn">⭐ ' + z.n + '</div><div class="zh">' + t('zFound') + '</div>'
+      : '<div class="zn">' + t('unknown') + '</div><div class="zh">' + t('zHint') + z.h + '</div>';
+    if(got && typeof RECAP !== 'undefined' && RECAP[z.id]){
+      d.style.cursor = 'pointer';
+      d.addEventListener('click', ()=>startRecap(z.id));
+    }
+    grid.appendChild(d);
+  });
+  $('zcount').textContent = t('zCount')(n, total);
+}
+
+/* ================= せってい ================= */
+let settingsBack = 'scTitle';
+
+function applyFs(){
+  document.body.setAttribute('data-fs', PREF.fs);
+}
+function savePref(){ saveJson(PREF_KEY, PREF); }
+
+function seg(el, opts, curIdx, onPick){
+  el.innerHTML = '';
+  opts.forEach((label, i)=>{
+    const b = document.createElement('button');
+    b.textContent = label;
+    if(i === curIdx) b.classList.add('on');
+    b.addEventListener('click', ()=>{ onPick(i); renderSettings(); });
+    el.appendChild(b);
+  });
+}
+function renderSettings(){
+  $('setTitle').textContent = t('setTitle');
+  $('lblFs').textContent = t('lblFs');
+  $('lblBgm').textContent = t('lblBgm');
+  $('lblSe').textContent = t('lblSe');
+  $('lblLang').textContent = t('lblLang');
+  $('btnSetBack').textContent = t('back');
+  const fsKeys = ['s','m','l'];
+  seg($('segFs'), t('fsOpts'), fsKeys.indexOf(PREF.fs), i=>{ PREF.fs = fsKeys[i]; applyFs(); savePref(); });
+  seg($('segBgm'), t('volOpts'), PREF.bgm, i=>{ PREF.bgm = i; Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se]); savePref(); });
+  seg($('segSe'), t('volOpts'), PREF.se, i=>{ PREF.se = i; Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se]); savePref(); Sound.se('pi'); });
+  seg($('segLang'), ['にほんご','English'], PREF.lang==='en' ? 1 : 0, i=>{
+    PREF.lang = i===1 ? 'en' : 'ja';
+    savePref();
+    applyLang();
+    seqList = null;
+    settingsBack = 'scTitle';
+  });
+}
+
+/* ================= タイトル文言 ================= */
+function applyLang(){
+  document.documentElement.lang = PREF.lang;
+  $('ttl').innerHTML = t('title');
+  $('ttlSub').textContent = t('subtitle');
+  $('btnStart').textContent = t('start');
+  refreshContBtn();
+  $('btnZukan').textContent = t('zukan');
+  $('btnSettings').textContent = t('settings');
+  $('btnGameBack').textContent = t('selBack');
+  $('footBox').innerHTML = t('footVer') + '<br>'
+    + t('footOrig') + '<br>' + t('footFirst') + '<br>' + t('footCreate') + '<br>'
+    + '<a href="https://soudansoyogi.com/" target="_blank" rel="noopener">' + t('credit') + '</a><br>'
+    + '<a href="privacy.html">' + t('privacy') + '</a><br><br>'
+    + '<button id="btnReset">' + t('reset') + '</button>';
+  bindReset();
+  renderSettings();
+}
+
+/* ================= ボタン ================= */
+$('btnStart').addEventListener('click', ()=>{ renderSelect(); showScreen('scSelect'); });
+$('btnCont').addEventListener('click', ()=>resumeCur());
+$('btnZukan').addEventListener('click', ()=>{ renderZukan(); showScreen('scZukan'); });
+$('btnSettings').addEventListener('click', ()=>{ settingsBack = 'scTitle'; renderSettings(); showScreen('scSettings'); });
+$('btnGear').addEventListener('click', ()=>{ settingsBack = 'scGame'; renderSettings(); showScreen('scSettings'); });
+$('btnSetBack').addEventListener('click', ()=>{ showScreen(settingsBack); });
+$('btnSelBack').addEventListener('click', ()=>showScreen('scTitle'));
+$('btnZBack').addEventListener('click', ()=>showScreen('scTitle'));
+$('btnGameBack').addEventListener('click', ()=>{ seqList = null; clearCur(); renderSelect(); showScreen('scSelect'); });
+
+let resetArmed = null;
+function bindReset(){
+  const b = $('btnReset');
+  if(!b) return;
+  b.addEventListener('click', ()=>{
+    if(resetArmed){
+      clearTimeout(resetArmed);
+      resetArmed = null;
+      try{ localStorage.removeItem(SAVE_KEY); localStorage.removeItem(UNLOCK_KEY); localStorage.removeItem(CUR_KEY); }catch(e){}
+      location.reload();
+      return;
+    }
+    b.textContent = t('resetConfirm');
+    b.style.color = '#c0392b';
+    b.style.borderColor = '#c0392b';
+    resetArmed = setTimeout(()=>{
+      resetArmed = null;
+      b.textContent = t('reset');
+      b.style.color = '';
+      b.style.borderColor = '';
+    }, 5000);
+  });
+}
+
+/* ================= 起動 ================= */
+applyFs();
+applyLang();
+/* 🔴起動時は状態を合わせるだけで鳴らさない(最初のタップから) */
+Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se], false);
+
+/* Web版(GitHub Pages)の オフライン対応。file:// では 登録しない */
+if('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>

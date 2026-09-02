@@ -172,7 +172,7 @@
   Object.assign(T.SCENES_EN, JUNISHI_EN);
 
   T.ZK_EN.push(
-    {section:'How the Twelve Animals Were Chosen'},
+    {section:'How the Twelve Animals Were Chosen', note:'In some lands across the sea, the cat is one of the twelve. In Japan there are also word-play tales about a thirteenth animal, such as a weasel or a frog.'},
     {id:'ju_seishi',  n:'The Twelve Names',              h:'The tale as it is told, from your very first read'},
     {id:'ju_ushi',    n:"On the Ox's Back",              h:'At the gate, stay on instead of jumping down...'},
     {id:'ju_kao',     n:'A Greeting Every Year',         h:'Wash your face and come to the gate once more...'},

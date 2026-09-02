@@ -36,6 +36,10 @@ body{
 
 /* ---- タイトル ---- */
 .titlebox{text-align:center;padding:26px 10px 10px}
+/* タイトルの絵(v1.7.0〜・世界の物語の とびら)。はばは titlebox いっぱい(最大380px)・たかさは 絵の比率のまま */
+.titlebox .titleArt{max-width:380px;margin:0 auto}
+.titlebox .titleArt svg{width:100%;height:auto;display:block}
+/* art.js に まだ 絵が ない ときの ひかえ(これまでの 🍑) */
 .titlebox .momo{font-size:60px;line-height:1}
 h1{font-size:32px;letter-spacing:.04em;margin:18px 0 6px;line-height:1.5}
 h1 rt{font-size:11px;letter-spacing:.2em;color:#8a7a62}
@@ -681,6 +685,57 @@ body[data-fs="l"] .znote{font-size:13px}
   animation:pop .5s 1.45s cubic-bezier(.2,1.6,.4,1) backwards;
 }
 
+/* ひざし専用型(ぽかぽか)
+   あたたかい いろの ほうしゃせんが ゆっくり まわり、まんなかが やわらかく あかるい。
+   🔴fuu型(あおい かぜ)と ならべて 出す ので、いろは クリーム〜だいだいだけに して 見わけを つける。
+   strong=2だんめ(さんさん)。ほうしゃが はやく こく、すこし あかみを おびる。
+   ゆれ(shake)は 入れない(ひざしは ふきつけない) */
+#cutin.poka{background:#f2b04f}
+#cutin.poka .ci-inner{
+  background:radial-gradient(circle at 50% 44%, #fffbe8 0%, #ffeec0 30%, #ffd68a 58%, #f2b04f 100%);
+  overflow:hidden;justify-content:flex-end;
+}
+#cutin.poka .ci-inner.strong{
+  background:radial-gradient(circle at 50% 44%, #fffdf2 0%, #ffe6a8 26%, #ffbf6a 56%, #e08a3a 100%);
+}
+/* ほうしゃせん。まんなかへ よせる translate(-50%,-50%)を けさない ように キーフレームにも 書く */
+.pk-rays{
+  position:absolute;left:50%;top:44%;z-index:1;
+  /* がめんの すみまで とどく おおきさ(たてよこの ながい ほうに あわせる) */
+  width:max(150vw,150vh);height:max(150vw,150vh);
+  transform:translate(-50%,-50%);opacity:.5;
+  animation:pkSpin 26s linear infinite;
+}
+.pk-rays svg{width:100%;height:100%;display:block}
+#cutin.poka .strong .pk-rays{opacity:.7;animation-duration:9s}
+@keyframes pkSpin{
+  0%{transform:translate(-50%,-50%) rotate(0)}
+  100%{transform:translate(-50%,-50%) rotate(360deg)}
+}
+/* まんなかの やわらかい あかるみ。ゆっくり ふくらんで しぼむ */
+.pk-glow{
+  position:absolute;left:50%;top:44%;z-index:2;
+  width:min(62vw,62vh);height:min(62vw,62vh);border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,
+    #fffdf4 0%, rgba(255,248,220,.9) 32%, rgba(255,228,156,.5) 60%, rgba(255,214,110,0) 80%);
+  animation:pkBreath 2.2s ease-in-out infinite;
+}
+#cutin.poka .strong .pk-glow{animation-duration:1.1s}
+@keyframes pkBreath{
+  0%,100%{transform:translate(-50%,-50%) scale(.92);opacity:.82}
+  50%{transform:translate(-50%,-50%) scale(1.07);opacity:1}
+}
+#cutin.poka .ci-text{
+  position:relative;z-index:3;max-width:92%;margin-bottom:11%;
+  /* あかるい ひざしの 上に のせる ので、しろい 字に こい だいだいの ふち。
+     はばに あわせて 字を ちぢめる(ふうふう型・いわの とびら型と おなじ) */
+  font-size:min(46px,7.5vw);font-weight:900;color:#fffdf0;letter-spacing:.08em;text-align:center;line-height:1.4;
+  white-space:pre-line;
+  text-shadow:3px 3px 0 #c9762a,-2px -2px 0 #c9762a,2px -2px 0 #c9762a,-2px 2px 0 #c9762a,0 6px 16px rgba(0,0,0,.28);
+  animation:pop .5s cubic-bezier(.2,1.6,.4,1);
+}
+
 /* おしまいの印影(結末の絵の上に押す・背景透過) */
 .seal{
   position:absolute;right:5%;top:7%;width:44%;max-width:220px;
@@ -712,7 +767,7 @@ body[data-fs="l"] .znote{font-size:13px}
   #cutin.chokkin .ci-text{font-size:32px}
   #cutin.suppon .ci-text{font-size:34px}
   #cutin.kemuri .ci-text{font-size:26px}
-  /* fuu と okashi と hikari と kasane と namae と hata と goma は min()で じどうに ちぢむので ここでは いじらない */
+  /* fuu と okashi と hikari と kasane と namae と hata と goma と poka は min()で じどうに ちぢむので ここでは いじらない */
   h1{font-size:26px}
 }
 </style>
@@ -722,7 +777,7 @@ body[data-fs="l"] .znote{font-size:13px}
 
   <div id="scTitle" class="screen on">
     <div class="titlebox">
-      <div class="momo">🍑</div>
+      <div class="titleArt" id="titleArt"></div>
       <h1 id="ttl"></h1>
       <div class="subtitle" id="ttlSub"></div>
       <div class="menu">
@@ -783,6 +838,7 @@ body[data-fs="l"] .znote{font-size:13px}
 <script src="story_junishi.js"></script>
 <script src="story_tsuru.js"></script>
 <script src="story_alibaba.js"></script>
+<script src="story_kitakaze.js"></script>
 <script src="story_en.js"></script>
 <script src="story_akazukin_en.js"></script>
 <script src="story_kabu_en.js"></script>
@@ -794,6 +850,7 @@ body[data-fs="l"] .znote{font-size:13px}
 <script src="story_junishi_en.js"></script>
 <script src="story_tsuru_en.js"></script>
 <script src="story_alibaba_en.js"></script>
+<script src="story_kitakaze_en.js"></script>
 <script src="audio.js"></script>
 <script>
 "use strict";
@@ -828,7 +885,8 @@ const TALE_OF = {momo:'momo', oni:'momo', kiji:'momo', akz:'akz', wolf:'akz', gm
                  br:'br', dorobou:'br', ondori:'br',
                  ju:'ju', jneko:'ju', jnezumi:'ju',
                  ts:'ts', tsuru:'ts', tbaa:'ts',
-                 ab:'ab', moru:'ab', kashira:'ab'};
+                 ab:'ab', moru:'ab', kashira:'ab',
+                 kz:'kz', kitakaze:'kz', taiyou:'kz'};
 /* ura の /^u_/ は 本編の けつまつだけに あたる(視点ちがいは uh_ / uv_ で はじまる)
    buta の /^pb_/ も おなじ(視点ちがいは pw_ / ps_ で はじまる)
    hg の /^hg_/ も おなじ(視点ちがいは hw_ / hb_ で はじまる ので あたらない)
@@ -837,16 +895,17 @@ const TALE_OF = {momo:'momo', oni:'momo', kiji:'momo', akz:'akz', wolf:'akz', gm
    ju の /^ju_/ も おなじ(視点ちがいは jn_ / jz_ で はじまる ので あたらない)
    ts の /^ts_/ も おなじ(視点ちがいは tz_ / tb_ で はじまる ので あたらない)
    ab の /^ab_/ も おなじ(視点ちがいは am_ / at_ で はじまる ので あたらない)
+   kz の /^kz_/ も おなじ(視点ちがいは kk_ / kh_ で はじまる ので あたらない)
    ※ももたろうの /^(a_|b_|c_|d_)/ は a の つぎに _ を もとめる ので、ab_ には あたらない
    ※ももたろうの /^(a_|b_|c_|d_)/ は b の つぎに _ を もとめる ので、br_ には あたらない
    ※うらしまの /^u_/ は あたまから みる ので、ju_ には あたらない
    ※ここは「本編を クリアしたか」の 判定。かぶ視点の /^kt_/(ねずみの解放)とは べつの しくみ */
 const TALE_END = {momo:/^(a_|b_|c_|d_)/, akz:/^za_/, kabu:/^kb_/, ura:/^u_/, buta:/^pb_/, hg:/^hg_/,
-                  kg:/^kg_/, br:/^br_/, ju:/^ju_/, ts:/^ts_/, ab:/^ab_/};
+                  kg:/^kg_/, br:/^br_/, ju:/^ju_/, ts:/^ts_/, ab:/^ab_/, kz:/^kz_/};
 /* 本編を クリアした ときに 出す「視点ちがいが あそべます」の 文言 */
 const TALE_UNLOCK_MSG = {momo:'unlockOni', akz:'unlockWolf', kabu:'unlockTurnip', ura:'unlockKame',
                          buta:'unlockPwolf', hg:'unlockMajo', kg:'unlockOkina', br:'unlockDorobou',
-                         ju:'unlockJneko', ts:'unlockTsuru', ab:'unlockMoru'};
+                         ju:'unlockJneko', ts:'unlockTsuru', ab:'unlockMoru', kz:'unlockKitakaze'};
 const taleOf = story => TALE_OF[story] || story;
 function taleCleared(tale){
   const re = TALE_END[tale];
@@ -859,7 +918,7 @@ ja:{
   title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
   subtitle:'えらぶたびに、おはなしが かわる',
   start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
-  footVer:'v1.6.0',
+  footVer:'v1.7.0',
   footOrig:'ぶんしょうと えは すべて オリジナルです',
   footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
   footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
@@ -948,6 +1007,13 @@ ja:{
   kashiraName:'とうぞくの かしらの はなし',
   kashiraTag:'ひみつを しられた とうぞくの かしらの はなし　けつまつ 2しゅるい',
   kashiraLock:'けつまつ『なわと やくにん』か『かしらは にげた』を みつけると あそべます',
+  kzName:'きたかぜと たいよう',
+  kzTagFirst:'はじめての 1かいめは、もとの おはなしを とおしで',
+  kzTag:'イソップに つたわる おはなし・うわぎを ぬがせる しょうぶ　けつまつ 4しゅるい',
+  kitakazeName:'きたかぜの はなし', kitakazeTag:'つよく ふくのが しごとの きたかぜの はなし　けつまつ 2しゅるい',
+  kitakazeLock:'きたかぜと たいようを 1かい さいごまで よむと あそべます',
+  taiyouName:'たいようの はなし', taiyouTag:'てらすのが しごとの たいようの はなし　けつまつ 2しゅるい',
+  taiyouLock:'けつまつ『ふたりの せんたくびより』か『こかげで ひとやすみ』を みつけると あそべます',
   prep:'じゅんびちゅう',
   titleBack:'タイトルへ もどる', selBack:'おはなし えらびへ もどる', next:'つぎへ ▼', back:'もどる',
   zTitle:'けつまつ ずかん',
@@ -980,6 +1046,8 @@ ja:{
   unlockTbaa:'★「おばあさんの ふゆの はなし」が あそべるように なりました！',
   unlockMoru:'★「モルジアナの はなし」も あそべるように なりました！',
   unlockKashira:'★「とうぞくの かしらの はなし」が あそべるように なりました！',
+  unlockKitakaze:'★「きたかぜの はなし」も あそべるように なりました！',
+  unlockTaiyou:'★「たいようの はなし」が あそべるように なりました！',
   btnZukan:'けつまつ ずかんを みる', btnAgain:'おなじ おはなしを もういちど',
   btnSelect:'おはなし えらびへ', btnZBack:'ずかんへ もどる',
   setTitle:'せってい', lblFs:'もじの おおきさ', lblBgm:'おんがく', lblSe:'こうかおん', lblLang:'ことば / Language',
@@ -990,7 +1058,7 @@ en:{
   title:'Be the Hero of Tales!',
   subtitle:'The story changes with every choice',
   start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
-  footVer:'v1.6.0',
+  footVer:'v1.7.0',
   footOrig:'All text and art are original.',
   footFirst:'Your first read follows the original tale.',
   footCreate:'Branching stories and endings are original creations for this app.',
@@ -1079,6 +1147,13 @@ en:{
   /* 🔴ブレーメンの The Robbers' Tale と まぎれない ように The Captain's Tale に する */
   kashiraName:"The Captain's Tale", kashiraTag:'The captain whose secret was found out — 2 endings',
   kashiraLock:'Find the ending "Ropes and the Magistrate" or "The Captain Fled" to unlock',
+  kzName:'The North Wind and the Sun',
+  kzTagFirst:'Your first read follows the original tale',
+  kzTag:'An Aesop fable of a contest over a coat — 4 endings',
+  kitakazeName:"The North Wind's Tale", kitakazeTag:"Blowing hard is the North Wind's work — 2 endings",
+  kitakazeLock:'Finish The North Wind and the Sun once to unlock',
+  taiyouName:"The Sun's Tale", taiyouTag:"Shining is the Sun's work — 2 endings",
+  taiyouLock:'Find the ending "A Fine Day for Laundry" or "A Rest in the Shade" to unlock',
   prep:'Coming soon',
   titleBack:'Back to Title', selBack:'Back to Tale Select', next:'Next ▼', back:'Back',
   zTitle:'Ending Collection',
@@ -1111,6 +1186,8 @@ en:{
   unlockTbaa:'★ "The Old Woman\'s Winter" is now unlocked!',
   unlockMoru:'★ "Morgiana\'s Tale" is now unlocked!',
   unlockKashira:'★ "The Captain\'s Tale" is now unlocked!',
+  unlockKitakaze:'★ "The North Wind\'s Tale" is now unlocked!',
+  unlockTaiyou:'★ "The Sun\'s Tale" is now unlocked!',
   btnZukan:'See the Ending Collection', btnAgain:'Read this tale again',
   btnSelect:'Back to Tale Select', btnZBack:'Back to the Collection',
   setTitle:'Settings', lblFs:'Text size', lblBgm:'Music', lblSe:'Sound effects', lblLang:'ことば / Language',
@@ -1214,12 +1291,20 @@ const TRACK_BY_ART = {
   ab_ie:'ab_ichiba', ab_kashimu:'ab_ichiba', ab_kutsunaoshi:'ab_ichiba', ab_shirushi:'ab_ichiba',
   ab_odori:'ab_ichiba', ab_jiyuu:'ab_ichiba', ab_owari:'ab_ichiba',
   am_daidokoro:'ab_ichiba', am_michi:'ab_ichiba',
-  ab_yoru_hakobu:'night', ab_tsubo:'night', ab_abura:'night'
+  ab_yoru_hakobu:'night', ab_tsubo:'night', ab_abura:'night',
+  /* ---- きたかぜと たいよう(せんようの 2きょく + eu_mori / warm / ura_umi の ながれ)
+         🔴15キー ぜんぶ 書く。1つでも ぬけると、その 場面で 前の 話の きょくが ながれつづける ---- */
+  kz_sora:'kz_hinata', kz_hinata1:'kz_hinata', kz_hinata2:'kz_hinata',
+  kz_kawa:'kz_hinata', kz_sentaku:'kz_hinata',
+  kz_asa:'eu_mori',
+  kz_kaze1:'kz_kaze', kz_kaze2:'kz_kaze', kz_kaze3:'kz_kaze', kz_kumo:'kz_kaze',
+  kz_kokage:'warm', kk_nohara:'warm', kh_kumo:'warm', kh_yuuhi:'warm',
+  kk_umi:'ura_umi'
 };
 const SE_BY_CUTIN = {
   waza:'don', kao:'dodon', vs:'zugan', flash:'shakin', join:'fanfare', paka:'pon', dark:'gong',
   pakuri:'gabu', chokkin:'shakin', suppon:'suppon', kemuri:'kemuri', fuu:'fuu', okashi:'pafu',
-  hikari:'hikari', kasane:'kasane', namae:'namae', hata:'tonkarari', goma:'goma'
+  hikari:'hikari', kasane:'kasane', namae:'namae', hata:'tonkarari', goma:'goma', poka:'poka'
 };
 
 /* ================= カットイン ================= */
@@ -1249,7 +1334,8 @@ const CUTIN_BG = { momo:'#f2b04f', oyabun:'#8a4a5a', aka:'#c96a52', kiji:'#5a9a6
                    roba:'#8a7a66', inu:'#6b7a5a', neko:'#4a4f6a', ondori:'#b85a3a', dorobou:'#3a3f4a',
                    jnezumi:'#8a8a9a', jneko:'#c9a25a', jushi:'#6b5a4a', jutori:'#b85a3a',
                    tsmusume:'#e8eef5', tsjii:'#6b5a4a', tsbaa:'#8a6a5a', tstsuru:'#dfe8ee',
-                   alibaba:'#c98a3a', morgiana:'#8a3a5a', kashimu:'#6a5a8a', kashira:'#3a3a4a' };
+                   alibaba:'#c98a3a', morgiana:'#8a3a5a', kashimu:'#6a5a8a', kashira:'#3a3a4a',
+                   tabibito:'#6a8a5a', kitakaze:'#7a9ab8', taiyou:'#e0a030' };
 const WAZA_TH = {
   orange:['#f7b733','#f79a33'], blue:['#6ec6e8','#3f9fd4'], green:['#9fd48a','#5aa66b'],
   gold:['#ffd76e','#f2b04f'], red:['#e06868','#c04848'], brown:['#d9a05b','#b9803f']
@@ -1370,9 +1456,10 @@ function fuuWind(){
   return rows.map(r => `<span class="fu-line" style="top:${r[0]}%;width:${r[1]}vw;`
     + `animation-duration:${r[2]}s;animation-delay:${r[3]}s">${windLine(!!r[4])}</span>`).join('');
 }
-/* ふうふう型で まいあがる かけら。wara=わら(きいろ) / eda=きの えだ(ちゃいろ) */
+/* ふうふう型で まいあがる かけら。wara=わら(きいろ) / eda=きの えだ(ちゃいろ) / ha=きの は(みどり)。
+   🔴ここに ない kind を わたすと かけらが 1つも 出ない ので、あたらしい かけらは かならず 足す */
 function fuuDebris(kind){
-  const col = {wara:['#f2d488','#b8933f'], eda:['#b9803f','#7a5c34']}[kind];
+  const col = {wara:['#f2d488','#b8933f'], eda:['#b9803f','#7a5c34'], ha:['#8ec46f','#4a7a3a']}[kind];
   if(!col) return '';
   let s = '';
   for(let i = 0; i < 14; i++){
@@ -1547,6 +1634,25 @@ function gomaSparks(){
   return rows.map(r => `<span class="gm-spark" style="left:${r[0]}%;top:${r[1]}%;--d:${r[2]}s">✦</span>`).join('');
 }
 
+/* ひざし型の ほうしゃせん。あたたかい いろの くさびを まるく ならべる。
+   strong=2だんめ(さんさん)。ほんすうを ふやし、はばを ひろげ、すこし あかみの ある いろに する。
+   まわす のは CSS(.pk-rays)の しごと。ここは かたちだけを つくる */
+function pokaRays(strong){
+  const n = strong ? 30 : 20;
+  const col = strong ? ['#ffd07a','#ffbe62'] : ['#fff2cc','#ffe3a8'];
+  const w = strong ? 0.052 : 0.038;
+  let s = `<svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">`;
+  for(let i = 0; i < n; i++){
+    const a = (i / n) * Math.PI * 2;
+    const r1 = 150, r2 = 24;
+    const x1 = 100 + Math.cos(a - w) * r1, y1 = 100 + Math.sin(a - w) * r1;
+    const x2 = 100 + Math.cos(a + w) * r1, y2 = 100 + Math.sin(a + w) * r1;
+    const x3 = 100 + Math.cos(a) * r2,     y3 = 100 + Math.sin(a) * r2;
+    s += `<polygon points="${x1.toFixed(1)},${y1.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)} ${x3.toFixed(1)},${y3.toFixed(1)}" fill="${col[i % 2]}"/>`;
+  }
+  return s + '</svg>';
+}
+
 function showCutin(c, then){
   const box = $('cutin');
   clearTimeout(cutinTimer);
@@ -1697,6 +1803,15 @@ function showCutin(c, then){
       + `<div class="gm-door gm-L"></div><div class="gm-door gm-R"></div>`
       + `<div class="ci-text">${c.text}</div></div>`;
     dur = 2400;
+  }else if(c.type === 'poka'){
+    /* ひざし専用型(ぽかぽか)。あたたかい ほうしゃせんが ゆっくり まわり、まんなかが やわらかく あかるい。
+       c.strong=true(2だんめ・さんさん)で ほうしゃが はやく こく、すこし あかみを おびる。
+       🔴ゆれ(shake)は 入れない。ひざしは ふきつけない */
+    inner = `<div class="ci-inner${c.strong ? ' strong' : ''}">`
+      + `<span class="pk-rays">${pokaRays(!!c.strong)}</span>`
+      + `<div class="pk-glow"></div>`
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 2200;
   }
   box.innerHTML = inner;
   cutinNext = then;
@@ -1747,10 +1862,19 @@ $('scGame').addEventListener('click', e=>{
 /* 最初のタップからBGM開始(各ボタンのclick処理の後に走るbubble段で) */
 document.addEventListener('click', ()=>{ Sound.tap(); });
 
+/* 物語の外の画面(タイトル・おはなしえらび・ずかん・せってい)は 国を特定しない タイトルの曲。
+   物語の場面に 入れば これまでどおり TRACK_BY_ART が その場面の曲に かえる。
+   ※ゲーム画面から 歯車で ひらいた せっていは 物語の つづきなので 曲は かえない */
+function isOutOfStory(id){
+  if(id === 'scSettings') return settingsBack !== 'scGame';
+  return id === 'scTitle' || id === 'scSelect' || id === 'scZukan';
+}
+
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
   $(id).classList.add('on');
   window.scrollTo(0,0);
+  if(isOutOfStory(id)) Sound.setTrack('title');
   if(id === 'scTitle') refreshContBtn();
 }
 
@@ -1904,6 +2028,7 @@ function finishEnding(s, text){
   const hadJnezumi = !!unlocks.jnezumi;
   const hadTbaa = !!unlocks.tbaa;
   const hadKashira = !!unlocks.kashira;
+  const hadTaiyou = !!unlocks.taiyou;
   const isNew = !zukan.includes(eid);
   clearCur();                                   /* けつまつに ついたら よみかけは おわり */
   if(isNew){ zukan.push(eid); saveJson(SAVE_KEY, zukan); Sound.se('kira'); }
@@ -1949,6 +2074,10 @@ function finishEnding(s, text){
   if((eid === 'ab_rouya' || eid === 'ab_nigeta') && !unlocks.kashira){
     unlocks.kashira = true; saveJson(UNLOCK_KEY, unlocks);
   }
+  /* きたかぜと たいようの「ふたりの せんたくびより」か「こかげで ひとやすみ」で たいようの はなしが ひらく */
+  if((eid === 'kz_futari' || eid === 'kz_kokage') && !unlocks.taiyou){
+    unlocks.taiyou = true; saveJson(UNLOCK_KEY, unlocks);
+  }
 
   let msg = text + '\n\n';
   msg += isNew ? t('newEnd')(zkName(eid)) : t('dupEnd')(zkName(eid));
@@ -1988,6 +2117,9 @@ function finishEnding(s, text){
   }
   if(!hadKashira && unlocks.kashira){
     msg += '\n' + t('unlockKashira');
+  }
+  if(!hadTaiyou && unlocks.taiyou){
+    msg += '\n' + t('unlockTaiyou');
   }
   $('tbox').textContent = msg;
 
@@ -2136,7 +2268,13 @@ const SELECT_CARDS = [
      つかいずみ なので つかわない */
   {story:'ab',      ico:'🏺', nm:'abName',      tag:'abTag',      tagFirst:'abTagFirst', tale:'ab'},
   {story:'moru',    ico:'💃', nm:'moruName',    tag:'moruTag',    lock:'moruLock',    open:()=>taleCleared('ab')},
-  {story:'kashira', ico:'🗝️', nm:'kashiraName', tag:'kashiraTag', lock:'kashiraLock', open:()=>!!unlocks.kashira}
+  {story:'kashira', ico:'🗝️', nm:'kashiraName', tag:'kashiraTag', lock:'kashiraLock', open:()=>!!unlocks.kashira},
+  /* きたかぜと たいよう: 本編は たびびと(🚶)。きたかぜ視点は 🌬️、たいよう視点は 🌞。
+     💨は こぶたの オオカミ、🌕は つきの つかい、🧥は あたらしい 絵文字で ふるい たんまつでは
+     出ない ことが ある ので つかわない */
+  {story:'kz',       ico:'🚶', nm:'kzName',       tag:'kzTag',       tagFirst:'kzTagFirst', tale:'kz'},
+  {story:'kitakaze', ico:'🌬️', nm:'kitakazeName', tag:'kitakazeTag', lock:'kitakazeLock', open:()=>taleCleared('kz')},
+  {story:'taiyou',   ico:'🌞', nm:'taiyouName',   tag:'taiyouTag',   lock:'taiyouLock',   open:()=>!!unlocks.taiyou}
 ];
 
 function renderSelect(){
@@ -2246,6 +2384,20 @@ function renderSettings(){
   });
 }
 
+/* ================= タイトルの絵 =================
+   art.js の ART.title(世界の物語の とびら)を えがく。まだ ない ときは これまでの 🍑 */
+function renderTitleArt(){
+  const box = $('titleArt');
+  if(!box) return;
+  if(typeof ART !== 'undefined' && typeof ART.title === 'function'){
+    box.classList.remove('momo');
+    box.innerHTML = ART.title();
+  }else{
+    box.classList.add('momo');
+    box.textContent = '🍑';
+  }
+}
+
 /* ================= タイトル文言 ================= */
 function applyLang(){
   document.documentElement.lang = PREF.lang;
@@ -2303,8 +2455,11 @@ function bindReset(){
 /* ================= 起動 ================= */
 applyFs();
 applyLang();
+renderTitleArt();
 /* 🔴起動時は状態を合わせるだけで鳴らさない(最初のタップから) */
 Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se], false);
+/* さいしょに 鳴る 1曲目が 和の里(home)に ならないよう、鳴らす前に タイトルの曲に しておく */
+Sound.setTrack('title');
 
 /* Web版(GitHub Pages)の オフライン対応。file:// では 登録しない */
 if('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){

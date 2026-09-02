@@ -119,7 +119,30 @@ const P = {
   abKashi:'#7a5f9e', abKashiD:'#5c4680', abKashiT:'#f2e2a4',
   abKashira:'#66707f', abKashiraD:'#4a5361', abKashiraNu:'#7c8494', abKashiraT:'#a6aebb',
   abTou:'#5f5a52', abTouD:'#454039',
-  abKutsu:'#8a8f6e', abKutsuD:'#6b7053'
+  abKutsu:'#8a8f6e', abKutsuD:'#6b7053',
+  /* きたかぜと たいよう: ふゆの そらと はれた そら・あまぐもの そら・たびの みちの つち・
+     くさの おか・かわの みず・とんでいく きの はと すな・ゆうひ・
+     きたかぜ（くも）と たいよう（ひの まる）と たびびとの いろ
+     🔴 きたかぜと たいようは おなじ あかるさの いろに する（かたほうだけ くらい いろに しない）
+     🔴 ゆうひの そらは かぐやの duskTop / duskBtm を つかいまわす（ふやさない）
+     🔴 うみは ももたろうの sea / seaDeep、つなは つるの tsNawaD を つかいまわす */
+  kzFuyuTop:'#a6c6de', kzFuyuBtm:'#e4eff5',
+  kzHareTop:'#7fc9ec', kzHareBtm:'#f8f6dc',
+  kzAmeTop:'#7d8896', kzAmeBtm:'#bac3cb',
+  kzKumoA:'#8e99a8', kzKumoAD:'#6e798a', kzAmesuji:'#a9c6dd',
+  kzMichi:'#d9bd84', kzMichiD:'#b59660',
+  kzOka:'#8fc06e', kzOkaD:'#6ea352', kzOkaTo:'#a9c9b2',
+  kzMizu:'#6ec2dd', kzMizuD:'#3f95b8', kzMizuA:'#a9dcea',
+  kzHa:'#5fa85f', kzHaD:'#3f8248', kzSuna:'#d9c49a',
+  kzYuuhi:'#f6a24a', kzYuuhiK:'#fcd68e', kzYuuOka:'#8a6a72', kzYuuOkaD:'#6e5460',
+  kzKaze:'#f4f9fd', kzKazeK:'#cfdde9', kzKazeH:'#9fb4c6',
+  kzTaiyou:'#fbd05e', kzTaiyouK:'#f2a63f', kzTaiyouH:'#fdeeb0',
+  kzUwagi:'#8a9ec2', kzUwagiD:'#67809f', kzUwagiK:'#a9bcd6',
+  kzFuku:'#e2d2b0', kzFukuD:'#bfab86',
+  kzBou:'#a9825a', kzBouD:'#836043',
+  kzHo:'#f8f3e4', kzHoK:'#dcd2ba', kzFune:'#8a5f36', kzFuneD:'#664226',
+  kzNuno:'#fdfbf5', kzNunoA:'#f2b8c2', kzNunoB:'#a9d2ea',
+  kzWata:'#f2ead6', kzWataD:'#c9b98a'
 };
 const O = `stroke="${P.ink}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
 
@@ -3032,6 +3055,273 @@ const musukoChar = opt => {
     suwaru:opt.suwaru, te:opt.te, senaka:opt.senaka, atama:atama}));
 };
 
+/* ---------- きたかぜと たいよう用の 背景部品と 人物 ----------
+   🔴 きたかぜ（くもの ぎじんか）と たいよう（ひの まる）の かおは おなじ ぶひん kzKao で つくる。
+      かたほうだけ おこった かお・いじわるな かお・かちほこった かおには しない
+   🔴 たびびとは なまえも せいべつも わからない つくり（かみは ぼうしの 下に かくす・からだつきは 中せい）
+   🔴 みずあびは かたまで みずに つかった ところだけ かく（うわぎは きしに おく）
+   流用: sun / cloud / kazeUzu / waraKire / edaKire / tree / hana / chou / mtns / house / spark */
+/* くさの おかと、まんなかから 手まえに ひろがる つちの みち。y=ちへいせん・yu で ゆうがたの いろ */
+const kzJimen = (y,yu) => pt('M0 ' + y + ' Q140 ' + (y - 24) + ' 262 ' + (y - 6)
+    + ' Q382 ' + (y + 12) + ' 480 ' + (y - 12) + ' L480 300 L0 300 z', yu ? P.kzYuuOka : P.kzOka)
+  + el(240,y + 58,430,58, yu ? P.kzYuuOkaD : P.kzOkaD)
+  + pt('M208 ' + (y - 5) + ' L264 ' + (y - 5) + ' L392 300 L92 300 z', yu ? '#a9846e' : P.kzMichi)
+  + ln('M236 ' + (y + 4) + ' Q252 250 306 300', yu ? '#8a6a58' : P.kzMichiD,2.6);
+/* とんでいく きの は。r で かたむける */
+const kzHaKire = (x,y,s,r) => gr(x,y,s,r || 0, pto('M-11 3 q-1 -15 11 -17 q5 14 -11 17 z',P.kzHa)
+  + ln('M-9 2 L2 -12',P.kzHaD,1.8));
+/* まいあがる すな。🔴 みちの 上でも 見えるように つちより こい いろに する */
+const kzSunaKire = (x,y,s) => g(x,y,s, ci(-14,-4,2.8,P.kzMichiD) + ci(3,-11,2.2,P.kzMichiD)
+  + ci(14,2,3,P.kzMichiD) + ci(-4,7,2,'#8a6f42') + ci(20,-7,2,'#8a6f42'));
+/* くもの かたち（きたかぜの からだ・あまぐも に つかう） */
+const kzKumoKata = c => pto('M-46 24 a24 24 0 0 1 0 -48 a30 30 0 0 1 50 -14 a26 26 0 0 1 42 14 a24 24 0 0 1 0 48 q-23 12 -46 0 q-23 -12 -46 0 z',c);
+/* あまぐも。ame で あめの すじを たす */
+const kzAmagumo = (x,y,s,o) => {
+  o = o || {};
+  return g(x,y,s, kzKumoKata(P.kzKumoA)
+    + ln('M-36 8 q36 12 72 -2',P.kzKumoAD,2.6)
+    + ln('M-20 -16 q20 -8 40 0',P.kzKumoAD,2.2)
+    + (o.ame ? ln('M-40 30 l-7 28',P.kzAmesuji,3.4) + ln('M-16 33 l-7 32',P.kzAmesuji,3.4)
+        + ln('M8 33 l-7 30',P.kzAmesuji,3.4) + ln('M32 30 l-7 26',P.kzAmesuji,3.4) : ''));
+};
+/* かわ（て前を よこぎる ながれ）。y=みずぎわ。きしの すなと あさせを 手まえに おく */
+const kzKawa = y => pt('M0 ' + (y - 8) + ' Q120 ' + (y - 20) + ' 244 ' + (y - 10)
+    + ' Q368 ' + y + ' 480 ' + (y - 14) + ' L480 ' + (y + 8) + ' L0 ' + (y + 8) + ' z',P.kzSuna)
+  + pt('M0 ' + y + ' Q120 ' + (y - 12) + ' 244 ' + (y - 2)
+    + ' Q368 ' + (y + 8) + ' 480 ' + (y - 6) + ' L480 300 L0 300 z',P.kzMizuA)
+  + pt('M0 ' + (y + 14) + ' Q120 ' + (y + 2) + ' 244 ' + (y + 12)
+    + ' Q368 ' + (y + 22) + ' 480 ' + (y + 8) + ' L480 300 L0 300 z',P.kzMizu)
+  + pt('M0 ' + (y + 34) + ' Q160 ' + (y + 20) + ' 320 ' + (y + 36)
+    + ' Q400 ' + (y + 44) + ' 480 ' + (y + 34) + ' L480 300 L0 300 z',P.kzMizuD)
+  + waveRow(y + 16,.5) + waveRow(y + 56,.4);
+/* おおきな きと、その したの こかげ */
+const kzKokage = (x,y,s) => g(x,y,s, el(-6,8,100,23,'rgba(56,84,50,.36)')
+  + rco(-11,-86,22,86,P.woodD,4)
+  + ln('M0 -54 l-26 -18',P.woodD,6) + ln('M0 -66 l24 -16',P.woodD,6)
+  + cio(-40,-106,32,P.grass2) + cio(38,-102,30,P.grass2) + cio(0,-128,38,P.grass2)
+  + cio(-16,-88,25,P.grass) + cio(22,-84,23,P.grass));
+/* せんたくものの ぬの 1まい。kaze で かぜの ほうへ ふくらませる */
+const kzHosuNuno = (x,y,w,h,c,kaze) => pto('M' + (x - w) + ' ' + y + ' L' + (x + w) + ' ' + y
+  + ' L' + (x + w + (kaze ? 9 : 0)) + ' ' + (y + h) + ' q' + (-w) + ' ' + (kaze ? 13 : 9) + ' '
+  + (-2 * w - (kaze ? 9 : 0)) + ' 0 z',c);
+/* むらの せんたくもの（2本の さおに わたした つなと、かぜに なびく ぬの） */
+const kzSentaku = (x,y,s,o) => {
+  o = o || {};
+  const k = o.kaze ? 1 : 0;
+  return g(x,y,s, rco(-98,-98,8,98,P.woodD,3) + rco(90,-98,8,98,P.woodD,3)
+    + ln('M-94 -94 Q0 -84 94 -94',P.tsNawaD,3)
+    + kzHosuNuno(-58,-90,21,44,P.kzNuno,k)
+    + kzHosuNuno(0,-87,25,50,P.kzNunoA,k)
+    + kzHosuNuno(58,-90,19,40,P.kzNunoB,k)
+    + ln('M-64 -78 q6 14 4 26','#dcd7cc',2.2) + ln('M-8 -74 q6 16 4 30','#dda6b0',2.2));
+};
+/* ほぶね。ho で ほを ふくらませる（かぜを うけて いる） */
+const kzHobune = (x,y,s,o) => {
+  o = o || {};
+  return g(x,y,s, rco(-3,-98,6,88,P.kzFuneD,2)
+    + (o.ho ? pto('M0 -94 Q58 -62 32 -16 L0 -16 z',P.kzHo) + ln('M9 -84 Q48 -56 27 -22',P.kzHoK,2.4)
+            : pto('M0 -94 Q16 -56 9 -16 L0 -16 z',P.kzHo) + ln('M3 -84 Q11 -56 6 -22',P.kzHoK,2.2))
+    + pto('M3 -98 L27 -92 L3 -86 z',P.kzNunoA)
+    + pto('M-52 -14 Q0 4 52 -14 L42 12 Q0 24 -42 12 z',P.kzFune)
+    + ln('M-44 -6 L44 -6',P.kzFuneD,3));
+};
+/* のの はな（たねを つけた もの）と、かぜに のる わたげ
+   🔴 わたげは ほそい 線を ひろげた かたち。ふちどりを すると むしのように 見えて しまう */
+const kzTane = (x,y,s) => g(x,y,s, ln('M0 0 q4 -18 0 -30',P.leafG,2.6)
+  + ln('M1 -11 q-9 -3 -12 -10',P.leafG,2.2) + ln('M1 -18 q9 -3 12 -9',P.leafG,2.2)
+  + ci(0,-40,12,'rgba(246,240,224,.85)')
+  + ln('M0 -40 L-11 -50',P.kzWataD,1.5) + ln('M0 -40 L-4 -53',P.kzWataD,1.5)
+  + ln('M0 -40 L4 -53',P.kzWataD,1.5) + ln('M0 -40 L11 -50',P.kzWataD,1.5)
+  + ln('M0 -40 L-13 -41',P.kzWataD,1.5) + ln('M0 -40 L13 -41',P.kzWataD,1.5)
+  + ci(0,-38,3,P.kzWataD));
+const kzWatage = (x,y,s,r) => gr(x,y,s,r || 0, el(0,-14,9,7,'rgba(246,240,224,.9)')
+  + ln('M0 0 L0 -9',P.kzWataD,1.5)
+  + ln('M0 -9 l-7 -9',P.kzWata,1.8) + ln('M0 -9 l0 -11',P.kzWata,1.8) + ln('M0 -9 l7 -9',P.kzWata,1.8)
+  + ci(0,1,2,P.kzWataD));
+/* はたけの め（ふたばと くき）。🔴 ちいさいので ふちどりを しない */
+const kzMe = (x,y,s) => g(x,y,s, ln('M0 0 L0 -9',P.leafG2,2.2)
+  + pt('M0 -8 q-12 -2 -13 -10 q11 -1 13 10 z',P.leafG)
+  + pt('M0 -8 q12 -2 13 -10 q-11 -1 -13 10 z',P.leafG));
+/* きしに おいた うわぎと ふくろ（みずあびの ばめん） */
+const kzNugiUwagi = (x,y,s) => g(x,y,s, pto('M-27 0 q-7 -18 5 -25 q15 -8 28 0 q12 7 5 25 z',P.kzUwagi)
+  + ln('M-19 -9 q19 6 38 0',P.kzUwagiD,2.4)
+  + pto('M16 0 q-5 -17 4 -21 q8 4 12 -2 q9 8 6 23 z','#c9a86b')
+  + ln('M20 -11 q10 5 18 0','#a9803f',2.2));
+/* たびの ぼうし。🔴 かみを かくす ために かならず かぶせる（つばで あたまを ぜんぶ おおう） */
+const kzBoushi = (x,y,s) => g(x,y,s, pto('M-12 -10 q-1 -20 12 -20 q13 0 12 20 z',P.kzBou)
+  + elo(0,-11,21,5.5,P.kzBouD)
+  + ln('M-10 -13 q10 -4 20 0','#6b4a30',2.2));
+/* たいようの ほうしゃせん。n本を まわりに ならべる */
+const kzHikari = (x,y,r1,r2,n,c,w) => {
+  let s = '';
+  for(let i = 0; i < n; i++){
+    s += gr(x,y,1,i * 360 / n, ln('M0 ' + (-r1) + ' L0 ' + (-r2),c,w));
+  }
+  return s;
+};
+/* きたかぜと たいようの かお（かおの まんなかを 0,0 に する）
+   🔴 2人とも この ぶひんで つくる。かたほうだけ こわい かおには しない
+   me: 'ake'（まるい 目）/ 'hoso'（目を ほそめる）/ 'niko'（わらった 目）/ 'yasumi'（ゆるく とじた 目）
+   kuchi: 'fuku'（まるく すぼめる）/ 'niko'（ほほえみ）/ 'ho'（ふうっと ひといき）
+   hoo に いろを わたすと ほおを ふくらませる */
+function kzKao(o){
+  o = o || {};
+  const me = o.me || 'ake', kuchi = o.kuchi || 'niko', mayu = o.mayu || '#8a9aa8';
+  /* ほおは くちの よこに、ふちどりを しない たいらな だ円で おく
+     （まるく ふちどると 目が 4つ あるように 見えて しまう） */
+  let s = o.hoo ? el(-18,9,11,8,o.hoo) + el(18,9,11,8,o.hoo) : '';
+  /* 🔴 まゆは うちがわを 上げる（下げると おこった かおに 見える） */
+  s += ln('M-19 -15 l9 -3',mayu,2.6) + ln('M19 -15 l-9 -3',mayu,2.6);
+  if(me === 'niko') s += ln('M-17 -3 q7 -9 14 0','#333',3) + ln('M3 -3 q7 -9 14 0','#333',3);
+  else if(me === 'hoso') s += ln('M-17 -5 q7 7 14 0','#333',3) + ln('M3 -5 q7 7 14 0','#333',3);
+  else if(me === 'yasumi') s += ln('M-18 -5 q8 8 16 0','#333',2.8) + ln('M2 -5 q8 8 16 0','#333',2.8);
+  else s += ci(-10,-3,4.6,'#333') + ci(10,-3,4.6,'#333')
+    + ci(-8.2,-4.8,1.8,'#fff') + ci(11.8,-4.8,1.8,'#fff');
+  s += ci(-18,11,5,'rgba(255,140,140,.42)') + ci(18,11,5,'rgba(255,140,140,.42)');
+  if(kuchi === 'fuku') s += elo(0,11,5,6.5,'#a04040');
+  else if(kuchi === 'ho') s += elo(0,11,8,4.5,'#a04040');
+  else s += pto('M-9 7 q9 10 18 0 q-3 11 -9 11 q-6 0 -9 -11 z','#a04040');
+  return s;
+}
+/* カットイン用（200x200）。kzKao と おなじ つくりで 大きさだけ かえる
+   🔴 きたかぜと たいようで 目・まゆ・ほおの いちは まったく おなじに する */
+function kzKaoF(o){
+  o = o || {};
+  const me = o.me || 'ake', kuchi = o.kuchi || 'niko', mayu = o.mayu || '#8a9aa8';
+  /* ほおは くちの よこに、ふちどりを しない たいらな だ円で おく
+     （まるく ふちどると 目が 4つ あるように 見えて しまう） */
+  let s = o.hoo ? el(62,132,23,17,o.hoo) + el(138,132,23,17,o.hoo) : '';
+  s += ln('M58 84 l22 -6',mayu,5) + ln('M142 84 l-22 -6',mayu,5);
+  if(me === 'niko') s += ln('M64 106 q14 -18 28 0','#333',6) + ln('M108 106 q14 -18 28 0','#333',6);
+  else if(me === 'hoso') s += ln('M64 102 q14 14 28 0','#333',6) + ln('M108 102 q14 14 28 0','#333',6);
+  else if(me === 'yasumi') s += ln('M62 102 q16 16 32 0','#333',5.5) + ln('M106 102 q16 16 32 0','#333',5.5);
+  else s += ci(78,106,10,'#333') + ci(122,106,10,'#333')
+    + ci(81.5,102,3.6,'#fff') + ci(125.5,102,3.6,'#fff');
+  s += ci(62,135,10,'rgba(255,140,140,.42)') + ci(138,135,10,'rgba(255,140,140,.42)');
+  if(kuchi === 'fuku') s += elo(100,132,11,13.5,'#a04040');
+  else if(kuchi === 'ho') s += elo(100,132,16,9,'#a04040');
+  else s += pto('M82 126 q18 20 36 0 q-6 22 -18 22 q-12 0 -18 -22 z','#a04040');
+  return s;
+}
+/* たびびと: なまえも せいべつも わからない つくり（personChar と おなじ たかさ）
+   🔴 かみは ぼうしの 下に かくす。かたに かける ふくろは いつも おなじ もの
+   coat: 'on'（えりを 立てて 手を そえる）/ 'tight'（りょうてで おさえる）/
+         'kasane'（2まい かさねて おさえる）/ 'kata'（かたに かける）/ 'off'（ぬいで 手に もつ）
+   mood は kgKao と おなじ（normal / hohoemi / odoroki / namida）。senaka で うしろすがた */
+function tabibitoChar(opt){
+  opt = opt || {};
+  const coat = opt.coat || 'on';
+  const c = P.kzUwagi, cd = P.kzUwagiD, ck = P.kzUwagiK;
+  const naka = P.kzFuku, nakaD = P.kzFukuD;
+  const kasane = coat === 'kasane';
+  const kiru = coat === 'on' || coat === 'tight' || kasane;
+  const osae = coat === 'tight' || kasane;
+  const sode = kiru ? c : naka, sodeD = kiru ? cd : nakaD;
+  let s = el(0,2,15,4,'rgba(0,0,0,.12)')
+    + rco(-9,-16,7,16,'#5b4632',3) + rco(2,-16,7,16,'#5b4632',3)
+    /* かたに かけた ふくろ。🔴 うでの まえには かかない（からだの うしろがわに さげる） */
+    + rco(-30,-40,8,6,'#a9803f',2)
+    + elo(-26,-28,13,11,'#c9a86b')
+    + ln('M-35 -31 q9 5 17 -1','#a9803f',2.2)
+    /* したの ふく */
+    + rco(-13,-55,26,41,naka,10) + ln('M-13 -31 L13 -31',nakaD,2.2);
+  /* うわぎ。2まいめを かさねた ときは ひとまわり おおきく する
+     🔴 ふちどりの ある かたちを かさねない（りんかくが 2じゅうに なって よごれて 見える） */
+  if(kiru){
+    const w = kasane ? 18 : 15, tk = kasane ? 46 : 42, ty = kasane ? -59 : -55;
+    s += rco(-w,ty,w * 2,tk,c,11);
+    /* 🔴 うしろすがたの ときは まえあわせと えりを かかない */
+    if(opt.senaka) s += ln('M' + (3 - w) + ' ' + (ty + 5) + ' L' + (w - 3) + ' ' + (ty + 5),cd,2.4);
+    else s += ln('M0 ' + (ty + 7) + ' L0 -13',cd,2.2)
+      + pto('M' + (2 - w) + ' ' + (ty - 2) + ' L-3 ' + (ty + 8) + ' L' + (2 - w) + ' ' + (ty + 13) + ' z',cd)
+      + pto('M' + (w - 2) + ' ' + (ty - 2) + ' L3 ' + (ty + 8) + ' L' + (w - 2) + ' ' + (ty + 13) + ' z',cd);
+    /* 🔴 2まいめは「下に きた うわぎが えりから のぞく」かたちで しめす */
+    if(kasane && !opt.senaka) s += pt('M-12 -48 L0 -38 L12 -48 L12 -41 L0 -31 L-12 -41 z',ck);
+  }
+  /* ふくろの ひも（むね・せなかを ななめに わたす） */
+  s += ln('M9 -57 L-27 -38',sodeD,2.6);
+  /* うしろから 見た えりあし（🔴 かみは 出さない。ぬのの えりだけ） */
+  if(opt.senaka) s += rco(-10,-62,20,7,P.kzFukuD,3);
+  /* うで */
+  if(osae){
+    /* りょうてで うわぎを ぎゅっと おさえる */
+    s += gr(-15,-52,1,-34, rco(-4,0,8,22,sode,4)) + cio(-8,-36,5,P.skin)
+      + gr(15,-52,1,34, rco(-4,0,8,22,sode,4)) + cio(8,-36,5,P.skin);
+  } else if(coat === 'on'){
+    /* かたほうの 手を えりに そえる */
+    s += rco(-22,-53,8,22,sode,4) + cio(-18,-29,4.6,P.skin)
+      + gr(14,-52,1,34, rco(-4,0,8,17,sode,4)) + cio(3,-39,4.6,P.skin);
+  } else if(coat === 'off'){
+    /* ぬいだ うわぎを 手に もつ */
+    s += rco(-22,-53,8,22,sode,4) + cio(-18,-29,4.6,P.skin)
+      + rco(14,-53,8,22,sode,4) + cio(18,-29,4.6,P.skin)
+      + pto('M11 -27 q15 -5 21 8 q5 13 -2 22 q-11 4 -17 -5 q-6 -11 -2 -25 z',c)
+      + ln('M16 -21 q9 8 7 21',cd,2.2);
+  } else {
+    s += rco(-22,-53,8,22,sode,4) + cio(-18,-29,4.6,P.skin)
+      + rco(14,-53,8,22,sode,4) + cio(18,-29,4.6,P.skin);
+  }
+  /* かたに かけた うわぎ。ふくろと ぶつからないように みぎの かたに かける
+     （たたんで かたに のせ、まえに すこし たらす） */
+  if(coat === 'kata'){
+    s += gr(17,-55,1,16, rco(-13,-7,26,14,c,6))
+      + pto('M27 -51 q6 12 4 25 l-11 2 q3 -13 -1 -25 z',c)
+      + ln('M24 -41 q2 9 0 17',cd,2);
+  }
+  /* あたま。🔴 かみは ぼうしで かくす
+     うしろすがたは ぼうしの うしろがわ（まるい やまと つば）だけを 見せる */
+  if(opt.senaka){
+    s += rc(-5,-65,10,9,P.skin)
+      + cio(0,-76,16,P.kzBou) + elo(0,-72,22,6,P.kzBouD)
+      + ln('M-11 -82 q11 -4 22 0','#6b4a30',2.2);
+  } else {
+    s += cio(0,-72,16,P.skin) + g(0,-70,1,kgKao(opt.mood)) + kzBoushi(0,-72,1);
+  }
+  return s;
+}
+/* きたかぜ: くもの ぎじんか。ほおを ふくらませて いきを ふく
+   mood: 'fuku'（ふく）/ 'hohoemi' / 'tsukare'（ひとやすみ）
+   🔴 おこった かお・いじわるな かおは つくらない（たいようと おなじ かおの ぶひん） */
+function kitakazeChar(opt){
+  opt = opt || {};
+  const mood = opt.mood || 'fuku';
+  let s = kzKumoKata(P.kzKaze)
+    + ln('M-34 16 q34 10 68 -2',P.kzKazeK,2.6)
+    + ln('M-24 -20 q24 -8 48 0',P.kzKazeK,2.2);
+  s += g(0,-2,1.15, mood === 'fuku'
+      ? kzKao({me:'niko', kuchi:'fuku', hoo:P.kzKazeK, mayu:P.kzKazeH})
+      : mood === 'tsukare'
+        ? kzKao({me:'yasumi', kuchi:'ho', mayu:P.kzKazeH})
+        : kzKao({me:'ake', kuchi:'niko', mayu:P.kzKazeH}));
+  if(mood === 'fuku') s += kazeUzu(44,20,.46,.85) + kazeUzu(50,34,.32,.6);
+  if(mood === 'tsukare') s += yuge(40,10,.34,.45);
+  return s;
+}
+/* たいよう: ひの まると ほうしゃせんと かお
+   mood: 'nikkori' / 'giragira'
+   🔴「ぎらぎら」は 目を ほそめる ていどに する（にらむ かお・いばる かおには しない）
+   🔴 きたかぜと おなじ かおの ぶひんを つかう */
+function taiyouChar(opt){
+  opt = opt || {};
+  const gira = opt.mood === 'giragira';
+  /* yuu で ゆうがたの いろ（にしに しずむ ところ） */
+  let s = ci(0,0,66,gira ? 'rgba(255,222,140,.42)' : 'rgba(255,225,150,.28)')
+    + kzHikari(0,0,46,gira ? 72 : 62,gira ? 18 : 12,opt.yuu ? P.kzYuuhiK : P.kzTaiyouK,gira ? 5 : 4)
+    + cio(0,0,44,opt.yuu ? P.kzYuuhi : P.kzTaiyou)
+    + el(-24,-27,11,7,P.kzTaiyouH)
+    + g(0,0,1.15, kzKao(gira
+        ? {me:'hoso', kuchi:'niko', mayu:'#c98a3f'}
+        : {me:'ake', kuchi:'niko', mayu:'#c98a3f'}));
+  return s;
+}
+/* かわで みずあびを する たびびと
+   🔴 かたまで みずに つかった ところだけ かく（うわぎは きしに おく・ぼうしは かぶったまま） */
+const kzMizuabi = (x,y,s,mood) => g(x,y,s, pto('M-30 14 q6 -24 30 -24 q24 0 30 24 z',P.skin)
+  + cio(0,-16,16,P.skin) + g(0,-14,1,kgKao(mood || 'hohoemi')) + kzBoushi(0,-16,1)
+  + el(0,14,42,8,'rgba(110,194,221,.5)')
+  + ln('M-48 12 q22 -9 44 0','rgba(255,255,255,.7)',3)
+  + ln('M6 20 q22 -9 44 0','rgba(255,255,255,.6)',3));
+
 /* ---------- カットイン用の顔 (200x200) ---------- */
 const FACES = {
   momo: f => {
@@ -3527,11 +3817,110 @@ const FACES = {
       + ci(54,144,9,'rgba(255,140,140,.35)') + ci(146,144,9,'rgba(255,140,140,.35)')
       + pto('M34 142 q66 -22 132 0 q-8 60 -66 60 q-58 0 -66 -60 z',P.abKashiraNu)
       + ln('M42 152 q58 -18 116 0','#616a79',2.6)
-      + ln('M50 170 q50 -14 100 0','#616a79',2.2)
+      + ln('M50 170 q50 -14 100 0','#616a79',2.2),
+
+  /* たびびと: なまえも せいべつも わからない つくり
+     🔴 かみの けを 1本も 出さない（ぼうしの つばで あたまを ぜんぶ かくす）
+     🔴 ひげ・かざり・かみがたで 男女が わかる しるしは つけない */
+  tabibito: f => cio(100,120,60,P.skin)
+      + ci(78,124,9,'#333') + ci(122,124,9,'#333') + ci(81,120,3.2,'#fff') + ci(125,120,3.2,'#fff')
+      + ln('M60 104 q12 -6 24 -1','#6b5a4a',4.5) + ln('M140 104 q-12 -6 -24 -1','#6b5a4a',4.5)
+      + ci(52,148,9,'rgba(255,140,140,.45)') + ci(148,148,9,'rgba(255,140,140,.45)')
+      + pto('M84 154 q16 13 32 0 q-4 14 -16 14 q-12 0 -16 -14 z','#a04040')
+      + pto('M56 62 q-4 -46 44 -46 q48 0 44 46 z',P.kzBou)
+      + elo(100,64,74,17,P.kzBouD)
+      + ln('M62 56 q38 -14 76 0','#6b4a30',3),
+
+  /* きたかぜ: くもの ぎじんか。ほおを ふくらませて いきを ふく
+     🔴 たいようと おなじ かおの ぶひん（kzKaoF）で つくる。目・まゆ・ほおの いちも おなじ
+     🔴 おこった かお・いじわるな かおには しない */
+  kitakaze: f => pto('M28 158 a38 38 0 0 1 0 -76 a46 46 0 0 1 78 -22 a40 40 0 0 1 66 22 a38 38 0 0 1 0 76 q-36 18 -72 0 q-36 -18 -72 0 z',P.kzKaze)
+      + ln('M42 66 q36 -14 72 -2',P.kzKazeK,4)
+      + kzKaoF({me:'ake', kuchi:'fuku', hoo:P.kzKazeK, mayu:P.kzKazeH})
+      + kazeUzu(114,178,.6,.8),
+
+  /* たいよう: ひの まると ほうしゃせん
+     🔴 きたかぜと おなじ かおの ぶひん（kzKaoF）。「ぎらぎら」でも 目を ほそめる ていどに とどめる */
+  taiyou: f => ci(100,110,98,'rgba(255,225,150,.26)')
+      + kzHikari(100,110,78,98,18,P.kzTaiyouK,5)
+      + cio(100,110,74,P.kzTaiyou)
+      + el(58,62,17,10,P.kzTaiyouH)
+      + kzKaoF({me:'ake', kuchi:'niko', mayu:'#c98a3f'})
 };
+
+/* ---------- タイトルの 絵（せかいの ものがたりの とびら）の 部品 ----------
+   🔴 場面の 絵（480x300）とは べつの 400x260。index.html が 小さく して 出す
+   🔴 和ふうの 部品（まつ・とりい・ふじさん・さくら）は 1つも 入れない
+   🔴 せかい地図は まるい かたまりの あつまりだけ。くにざかいの 線は 引かない・
+      どこかの 国を 大きく しない */
+const tiWrap = i => '<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img">' + i + '</svg>';
+const tiSora = '<defs><linearGradient id="g_title" x1="0" y1="0" x2="0" y2="1">'
+  + '<stop offset="0" stop-color="#e4f1fb"/><stop offset="1" stop-color="#fdf4e0"/></linearGradient></defs>'
+  + '<rect width="400" height="260" fill="url(#g_title)"/>';
+/* うすい 大陸の かげ（ただの だえん）。よこに ならべて 地図の おびに 見せる
+   🔴 くもに 見えないように たてに つぶし、キャラの あたま（y=140より下）には かからない */
+const tiChizu = () => {
+  const c = 'rgba(112,164,126,.26)';
+  /* 世界地図の わく（よこながの だえん＝うみ）。この 中に 大陸を おくと くもに 見えない。
+     2まい かさねて ふちを やわらかく する */
+  return el(200,100,172,62,'rgba(142,196,226,.09)') + el(200,100,160,54,'rgba(142,196,226,.13)')
+    /* にしの りく（きたと みなみを ほそく つなぐ） */
+    + el(90,78,26,13,c) + el(84,93,13,8,c) + el(98,112,12,16,c) + el(102,131,8,10,c)
+    /* まんなかの りく */
+    + el(176,70,21,8,c) + el(185,90,15,19,c) + el(189,113,10,10,c)
+    /* ひがしの りく */
+    + el(272,72,42,15,c) + el(292,91,21,11,c) + el(250,85,13,7,c)
+    /* みなみの しま */
+    + el(316,118,13,8,c);
+};
+/* 小さな ほし（きんいろの きらきら＋つぶ） */
+const tiHoshi = '<g opacity=".55">' + spark(36,46,.72) + spark(122,30,.52) + spark(210,50,.5)
+  + spark(296,30,.6) + spark(372,96,.5) + spark(154,104,.42) + spark(240,96,.4) + '</g>'
+  + ci(88,26,1.8,'#f0d79a') + ci(268,62,1.6,'#f0d79a') + ci(196,22,1.6,'#f0d79a')
+  + ci(342,132,1.6,'#f0d79a') + ci(30,120,1.6,'#f0d79a');
+/* ひらいた 本（クリームの ページ・あかちゃの ひょうし）。
+   🔴 主人公たちより あとに かさねる（ページの ふちで 足もとを かくす ため） */
+const tiHon = () => el(200,252,178,10,'rgba(74,58,44,.10)')
+  + pto('M24 200 Q116 174 200 204 Q284 174 376 200 L376 250 Q284 224 200 254 Q116 224 24 250 z','#b3603f')
+  + pto('M30 190 Q118 164 200 194 Q282 164 370 190 L370 240 Q282 214 200 244 Q118 214 30 240 z','#fffdf5')
+  + ln('M200 194 L200 244',P.ink,3)
+  + ln('M58 208 Q108 202 154 216','#c9a86b',2.4) + ln('M58 222 Q108 216 154 230','#c9a86b',2.4)
+  + ln('M342 208 Q292 202 246 216','#c9a86b',2.4) + ln('M342 222 Q292 216 246 230','#c9a86b',2.4);
+/* ページから かおを 出す 主人公たち。🔴 きそんの キャラ関数を そのまま よぶ（新しい 絵は つくらない）
+   🔴 足もとは ページの ふちより 下に おく（本が かくして くれる）
+   🔴 後列（本の おく）は 前列より 小さく・高い ところに おく。
+      前列の あたまで かおが かくれないように、いちばん せの ひくい ネズミの うしろに ならべる */
+const tiMinna = () =>
+  /* 後列: ヘンゼルとグレーテル */
+    g(250,182,.55, gretelChar({mood:'niko'}))
+  /* 前列 */
+  + g(52,214,.66, akazukinChar(false))
+  + g(85,206,.64, butaChar({size:'m', mood:'yasashii'}))
+  + g(100,232,.72, tsuruChar({}))
+  + g(150,206,.64, momoChar('#fff'))
+  + g(182,218,.66, kaguyaChar({}))
+  + g(220,218,.66, morgianaChar({mood:'hohoemi'}))
+  + g(246,196,.72, jnezumiChar({}))
+  + g(276,196,.62, jnekoChar({}))
+  + g(310,216,.60, robaChar({tate:1, mood:'niko'}))
+  + g(352,214,.66, tabibitoChar({coat:'on', mood:'hohoemi'}));
+/* ひらいた ページの 上に いる 2つ（うらしまの かめ・おおきな かぶ）。
+   🔴 tiHon() の あとに かさねる（ページの 手前に のって いるように 見せる）
+   🔴 ページの ふちから はみ出さない 大きさに とどめる */
+const tiTemae = () =>
+    g(74,220,.72, kameChar())
+  + g(330,229,.29, kabuArt(false));
 
 /* ---------- 場面 ---------- */
 const ART = {
+
+/* ----- タイトル画面（せかいの ものがたりの とびら） ----- */
+title: f => tiWrap(tiSora + tiChizu() + tiHoshi
+  + g(54,60,.42, kitakazeChar({mood:'hohoemi'}))
+  + g(346,60,.40, taiyouChar({}))
+  + tiMinna()
+  + tiHon()
+  + tiTemae()),
 
 yama: f => wrap(grad('g_yama',P.skyTop,P.skyBtm) + sun(414,54) + cloud(120,56,1) + cloud(330,84,.8)
   + mtns() + el(110,258,160,72,P.grass2) + el(400,266,180,84,P.grass)
@@ -6008,7 +6397,182 @@ at_sabaku: f => wrap(grad('g_atsaba',P.abYuuTop,P.abYuuBtm)
   + g(238,252,.74,kashiraChar({senaka:1}))
   + abTouKage(190,254,.6) + abTouKage(288,258,.56)
   + el(238,256,26,5,'rgba(120,84,60,.25)') + el(336,258,30,5,'rgba(120,84,60,.22)')
-  + abKusa(80,276,1.2) + abKusa(438,292,1.3))
+  + abKusa(80,276,1.2) + abKusa(438,292,1.3)),
+
+/* ----- きたかぜと たいよう（本編・きたかぜの はなし・たいようの はなし） -----
+   🔴 きたかぜと たいようは どちらも おだやかな かお。かちほこる かお・くやしがる かおは 1まいも かかない
+   🔴 たびびとは なまえも せいべつも わからない つくり（かみは ぼうしの 下・からだつきは 中せい）
+   🔴 みずあびは かたまで みずに つかった ところだけ。うわぎは きしに おく
+   🔴 かぜは ひだりから みぎへ ながす（3だんかいで kazeUzu の 本すうを ふやす） */
+kz_sora: f => wrap(grad('g_kzsora',P.kzHareTop,P.kzHareBtm)
+  + cloud(238,42,.36) + cloud(62,176,.44) + cloud(424,184,.36)
+  + mtns()
+  + pt('M0 232 Q120 208 262 228 Q380 244 480 222 L480 250 L0 250 z',P.kzOkaTo)
+  + kzJimen(238)
+  + tree(34,268,.7) + tree(452,272,.62)
+  + g(124,98,1.05,kitakazeChar({mood:'hohoemi'}))
+  + g(362,94,1,taiyouChar({mood:'nikkori'}))),
+
+kz_asa: f => wrap(grad('g_kzasa',P.juAsaTop,P.juAsaBtm)
+  + sun(408,58) + cloud(112,50,.62) + cloud(286,36,.44)
+  + mtns()
+  + kzJimen(216)
+  + house(76,214,.78) + house(160,204,.58) + tree(24,240,.8) + tree(216,208,.46)
+  + g(320,292,1.05,tabibitoChar({coat:'on', mood:'hohoemi'}))
+  + hana(438,290,'#fff',.8) + hana(414,298,'#f2b8c2',.7) + chou(384,216,.6)),
+
+/* かぜ 1だんかい: うずは 1本。たびびとは えりに 手を そえる */
+kz_kaze1: f => wrap(grad('g_kzkaze1',P.kzFuyuTop,P.kzFuyuBtm)
+  + cloud(330,48,.5) + cloud(206,74,.38)
+  + mtns()
+  + kzJimen(220)
+  + tree(56,248,.82)
+  + g(98,90,.52,kitakazeChar({mood:'fuku'}))
+  + kazeUzu(146,214,1.25,.75)
+  + gr(334,292,1.02,-4,tabibitoChar({coat:'on', mood:'normal'}))
+  + kzHaKire(262,168,.85,-24)),
+
+/* かぜ 2だんかい: うずは 2本と きの は。たびびとは もう いちまい かさねて りょうてで おさえる */
+kz_kaze2: f => wrap(grad('g_kzkaze2',P.kzFuyuTop,P.kzFuyuBtm)
+  + cloud(344,42,.5) + cloud(214,72,.36)
+  + mtns()
+  + kzJimen(220)
+  + tree(52,250,.82)
+  + g(100,86,.58,kitakazeChar({mood:'fuku'}))
+  + kazeUzu(140,212,1.35,.8) + kazeUzu(152,252,1.05,.6)
+  + gr(336,292,1.02,-7,tabibitoChar({coat:'kasane', mood:'normal'}))
+  + kzHaKire(238,166,.95,-26) + kzHaKire(292,132,.85,34) + kzHaKire(392,180,.8,-12)),
+
+/* かぜ 3だんかい: うずは 3本と きの はと すな。それでも うわぎは はなさない */
+kz_kaze3: f => wrap(grad('g_kzkaze3',P.kzFuyuTop,P.kzFuyuBtm)
+  + cloud(352,38,.48) + cloud(222,70,.34)
+  + mtns()
+  + kzJimen(222)
+  + tree(48,252,.82)
+  + g(102,82,.66,kitakazeChar({mood:'fuku'}))
+  + kazeUzu(134,206,1.45,.85) + kazeUzu(146,246,1.15,.65) + kazeUzu(156,282,.9,.5)
+  + gr(338,294,1.02,-10,tabibitoChar({coat:'kasane', mood:'normal'}))
+  + kzHaKire(228,158,1,-30) + kzHaKire(286,120,.9,38) + kzHaKire(384,168,.85,-16)
+  + kzHaKire(422,112,.75,44) + kzHaKire(258,204,.7,20)
+  + kzSunaKire(268,280,1.05) + kzSunaKire(196,292,.9) + kzSunaKire(404,286,.8)),
+
+/* ひざし 1だんかい: ほどほどに てらす。かさねた うわぎを いちまい ぬいだ ところ */
+kz_hinata1: f => wrap(grad('g_kzhina1',P.kzHareTop,P.kzHareBtm)
+  + cloud(104,62,.5) + cloud(258,44,.36)
+  + mtns()
+  + kzJimen(218)
+  + tree(50,248,.82)
+  + g(396,86,.55,taiyouChar({mood:'nikkori'}))
+  + g(296,292,1.05,tabibitoChar({coat:'on', mood:'hohoemi'}))
+  + hana(436,294,'#fff',.75) + chou(154,196,.6) + spark(348,150,.6)),
+
+/* ひざし 2だんかい: もっと つよく てらす。うわぎは かたに かける */
+kz_hinata2: f => wrap(grad('g_kzhina2',P.kzHareTop,P.kzHareBtm)
+  + cloud(112,66,.4)
+  + mtns()
+  + kzJimen(218)
+  + tree(46,250,.8)
+  + g(390,80,.72,taiyouChar({mood:'giragira'}))
+  + ln('M148 268 q10 -14 0 -28','rgba(255,214,140,.5)',3.4)
+  + ln('M190 276 q10 -14 0 -28','rgba(255,214,140,.42)',3)
+  + ln('M406 272 q10 -14 0 -28','rgba(255,214,140,.42)',3)
+  + g(292,294,1.05,tabibitoChar({coat:'kata', mood:'normal'}))
+  + spark(240,158,.7) + spark(342,190,.6)),
+
+/* 🔴 みずあびは かたまで みずに つかった ところだけ。うわぎと ふくろは きしに おく */
+kz_kawa: f => wrap(grad('g_kzkawa',P.kzHareTop,P.kzHareBtm)
+  + cloud(96,54,.52) + cloud(300,38,.4)
+  + mtns()
+  + rc(0,198,480,102,P.kzOka) + el(240,226,440,42,P.kzOkaD)
+  + tree(44,226,.78) + kzKokage(438,232,.62)
+  + g(392,74,.5,taiyouChar({mood:'giragira'}))
+  + kzKawa(234)
+  + kzNugiUwagi(112,222,1)
+  + kzMizuabi(268,266,1.15,'hohoemi')
+  + hana(66,214,'#fff',.7) + spark(206,208,.6) + chou(160,178,.55)),
+
+kz_kokage: f => wrap(grad('g_kzkoka',P.kzHareTop,P.kzHareBtm)
+  + sun(54,52) + cloud(300,46,.48)
+  + mtns()
+  + kzJimen(216)
+  + kzKokage(344,274,1.18)
+  + g(288,292,1.02,tabibitoChar({coat:'on', mood:'hohoemi'}))
+  + hana(76,292,'#fff',.8) + hana(120,300,'#f7d06e',.7) + chou(178,222,.6)
+  + kzTane(438,296,.8)),
+
+/* 🔴 きたかぜと たいようは そらに ならべて おく（どちらも おなじ 大きさ・おなじ たかさ） */
+kz_sentaku: f => wrap(grad('g_kzsen',P.kzHareTop,P.kzHareBtm)
+  + cloud(240,190,.42)
+  + mtns()
+  + kzJimen(214)
+  + house(60,216,.7) + house(422,210,.58)
+  + kzSentaku(238,296,1,{kaze:1})
+  + g(146,86,.62,kitakazeChar({mood:'fuku'}))
+  + g(340,86,.62,taiyouChar({mood:'nikkori'}))
+  + hana(26,292,'#fff',.8) + chou(126,222,.6)),
+
+kz_kumo: f => wrap(grad('g_kzkumo',P.kzAmeTop,P.kzAmeBtm)
+  + kzAmagumo(126,84,1.05,{ame:1}) + kzAmagumo(322,68,.86,{ame:1}) + kzAmagumo(436,122,.6,{})
+  + mtns()
+  + kzJimen(218)
+  + ln('M56 186 l-8 30',P.kzAmesuji,3) + ln('M212 196 l-8 32',P.kzAmesuji,3)
+  + ln('M282 176 l-8 28',P.kzAmesuji,2.8) + ln('M404 200 l-8 30',P.kzAmesuji,2.8)
+  + ln('M150 236 l-7 26',P.kzAmesuji,2.6) + ln('M348 248 l-7 24',P.kzAmesuji,2.6)
+  + kzKokage(348,278,1.12)
+  + g(330,294,1,tabibitoChar({coat:'on', mood:'normal'}))
+  + tree(46,254,.7)),
+
+/* ----- きたかぜの はなし ----- */
+kk_umi: f => wrap(grad('g_kkumi',P.kzFuyuTop,P.kzFuyuBtm)
+  + cloud(310,54,.5) + cloud(196,36,.36)
+  + pt('M0 176 L92 156 L180 178 L286 152 L392 176 L480 160 L480 182 L0 182 z','rgba(150,190,210,.55)')
+  + pt('M0 176 L480 164 L480 300 L0 300 z',P.sea)
+  + waveRow(202,.6) + waveRow(240,.48) + waveRow(282,.38)
+  + kazeUzu(150,182,1.1,.6) + kazeUzu(134,238,.85,.45)
+  + kzHobune(112,214,.5,{ho:1})
+  + kzHobune(304,268,1.05,{ho:1})
+  + g(112,80,.6,kitakazeChar({mood:'fuku'}))
+  + g(422,116,.9,toriTobu()) + g(452,138,.7,toriTobu())),
+
+kk_nohara: f => wrap(grad('g_kknoha',P.kzHareTop,P.kzHareBtm)
+  + cloud(372,50,.48) + cloud(196,70,.36)
+  + mtns()
+  + rc(0,208,480,92,P.kzOka) + el(240,242,440,58,P.kzOkaD)
+  + kzTane(80,288,1.1) + kzTane(134,298,1) + kzTane(410,292,1.05) + kzTane(452,300,.86)
+  + hana(184,294,'#fff',.8) + hana(232,300,'#f2b8c2',.7) + hana(298,296,'#f7d06e',.75)
+  + kazeUzu(92,176,1.15,.7) + kazeUzu(114,224,.85,.5)
+  + kzWatage(218,196,1,18) + kzWatage(270,162,.9,-14) + kzWatage(324,190,.85,26)
+  + kzWatage(372,140,.8,-8) + kzWatage(164,148,.7,32)
+  + g(86,84,.6,kitakazeChar({mood:'fuku'}))
+  + chou(428,208,.6)),
+
+/* ----- たいようの はなし ----- */
+/* 🔴 くもは たのまれて ひかげを つくる。たいようを わるく 見せる こうずには しない */
+kh_kumo: f => wrap(grad('g_khkumo',P.kzHareTop,P.kzHareBtm)
+  + cloud(128,54,.44)
+  + mtns()
+  + rc(0,198,480,26,P.kzOka) + el(240,214,440,22,P.kzOkaD)
+  + house(46,198,.5) + tree(430,200,.5)
+  + rc(0,220,480,80,P.soil)
+  + pt('M0 238 L480 234 L480 250 L0 256 z','rgba(122,92,52,.34)')
+  + pt('M0 272 L480 268 L480 288 L0 296 z','rgba(122,92,52,.3)')
+  + kzMe(46,236,.62) + kzMe(134,235,.62) + kzMe(222,234,.62) + kzMe(310,233,.62) + kzMe(398,232,.62)
+  + kzMe(88,270,.85) + kzMe(200,269,.85) + kzMe(312,268,.85) + kzMe(424,267,.85)
+  + kzMe(56,300,1.05) + kzMe(198,299,1.05) + kzMe(340,298,1.05)
+  + el(200,264,150,44,'rgba(74,96,118,.2)')
+  + kzAmagumo(200,152,1.05,{})
+  + g(400,78,.56,taiyouChar({mood:'nikkori'}))),
+
+/* 🔴 ゆうひは しずむ ところ。たびびとは とおくの せなかだけ（かおは かかない） */
+kh_yuuhi: f => wrap(grad('g_khyuu',P.duskTop,P.duskBtm)
+  + cloud(92,64,.6) + cloud(246,42,.42)
+  + ci(374,204,86,'rgba(255,206,140,.26)')
+  + pt('M0 210 L70 150 L140 205 L210 160 L300 215 L390 165 L480 210 L480 225 L0 225 z','rgba(138,102,112,.5)')
+  + g(374,206,.62,taiyouChar({mood:'nikkori', yuu:1}))
+  + kzJimen(214,1)
+  + g(248,268,.66,tabibitoChar({coat:'on', senaka:1}))
+  + tree(44,252,.68)
+  + g(118,104,.55,toriTobu()) + g(150,120,.42,toriTobu()))
 
 };
 

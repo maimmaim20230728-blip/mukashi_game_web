@@ -8,7 +8,7 @@ var UIT_SV = {
   title:'Bli huvudpersonen i sagorna!',
   subtitle:'Sagan ändras varje gång du väljer',
   start:'Börja', cont:'Läs vidare', zukan:'Samling av slut', settings:'⚙️ Inställningar',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'All text och alla bilder är original.',
   footFirst:'Din första läsning följer den ursprungliga sagan.',
   footCreate:'Sagorna och sluten som ändras av dina val är original bara för den här appen.',

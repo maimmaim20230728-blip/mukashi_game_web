@@ -16,7 +16,7 @@ var UIT_KO = {
   title:'명작의 주인공이 되자!',
   subtitle:'고를 때마다 이야기가 달라집니다',
   start:'시작하기', cont:'이어서 읽기', zukan:'결말 도감', settings:'⚙️ 설정',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'글과 그림은 모두 창작입니다',
   footFirst:'첫 1회차는 원래 이야기 그대로 진행됩니다',
   footCreate:'골라서 달라지는 이야기와 결말은 이 앱만의 창작입니다',

@@ -8,7 +8,7 @@ var UIT_DE = {
   title:'Werde die Hauptfigur der Märchen!',
   subtitle:'Die Geschichte ändert sich mit jeder Wahl',
   start:'Starten', cont:'Weiterlesen', zukan:'Sammlung der Enden', settings:'⚙️ Einstellungen',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'Alle Texte und Bilder sind Originale.',
   footFirst:'Dein erster Durchgang folgt der ursprünglichen Geschichte.',
   footCreate:'Die verzweigten Geschichten und Enden sind Originale nur für diese App.',

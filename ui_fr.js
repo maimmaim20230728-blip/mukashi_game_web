@@ -8,7 +8,7 @@ var UIT_FR = {
   title:'Deviens le héros des contes !',
   subtitle:'L\'histoire change à chaque choix',
   start:'Commencer', cont:'Reprendre la lecture', zukan:'Collection des fins', settings:'⚙️ Réglages',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'Tous les textes et toutes les images sont originaux.',
   footFirst:'Ta première lecture suit l\'histoire d\'origine.',
   footCreate:'Les histoires à choix et les fins sont des créations originales pour cette application.',

@@ -8,7 +8,7 @@ var UIT_IT = {
   title:'Diventa il protagonista delle fiabe!',
   subtitle:'A ogni scelta la storia cambia',
   start:'Inizia', cont:'Continua a leggere', zukan:'Raccolta dei finali', settings:'⚙️ Impostazioni',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'Tutti i testi e i disegni sono originali.',
   footFirst:'La tua prima lettura segue la storia originale.',
   footCreate:'Le storie con le scelte e i finali sono creazioni originali solo per questa app.',

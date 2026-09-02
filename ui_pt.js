@@ -9,7 +9,7 @@ var UIT_PT = {
   title:'Seja a personagem principal dos contos!',
   subtitle:'A história muda a cada escolha',
   start:'Começar', cont:'Continuar a leitura', zukan:'Coleção de finais', settings:'⚙️ Ajustes',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'Todos os textos e desenhos são originais.',
   footFirst:'A sua primeira leitura segue o conto original.',
   footCreate:'As histórias que mudam com as escolhas e os finais são criações originais deste app.',

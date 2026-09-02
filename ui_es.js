@@ -10,7 +10,7 @@ var UIT_ES = {
   title:'¡Sé el protagonista de los cuentos!',
   subtitle:'La historia cambia con cada elección',
   start:'Empezar', cont:'Continuar', zukan:'Colección de finales', settings:'⚙️ Ajustes',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'Todos los textos y las imágenes son originales.',
   footFirst:'Tu primera lectura sigue el cuento original.',
   footCreate:'Las historias con ramas y los finales son creaciones originales solo para esta app.',

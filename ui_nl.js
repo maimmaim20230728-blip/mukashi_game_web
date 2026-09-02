@@ -8,7 +8,7 @@ var UIT_NL = {
   title:'Word de hoofdpersoon van de sprookjes!',
   subtitle:'Het verhaal verandert bij elke keuze',
   start:'Beginnen', cont:'Verder lezen', zukan:'Verzameling van eindes', settings:'⚙️ Instellingen',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'Alle teksten en tekeningen zijn origineel.',
   footFirst:'Je eerste keer volgt het oorspronkelijke verhaal.',
   footCreate:'De vertakkende verhalen en eindes zijn origineel, alleen voor deze app.',

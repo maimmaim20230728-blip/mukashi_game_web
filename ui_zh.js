@@ -8,7 +8,7 @@ var UIT_ZH = {
   title:'来当名作的主人公吧！',
   subtitle:'每选择一次，故事就会改变',
   start:'开始', cont:'接着读', zukan:'结局图鉴', settings:'⚙️ 设置',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'文字和图画全都是原创的。',
   footFirst:'第一次游玩时，会照着原本的故事往下走。',
   footCreate:'选择后改变的故事和结局，是这个应用独有的原创内容。',

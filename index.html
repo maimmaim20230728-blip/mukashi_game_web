@@ -120,8 +120,13 @@ body[data-fs="l"] .znote{font-size:13px}
   border:2px solid var(--frame);background:#f1e9d8;color:#8a7a62;
 }
 .seg button.on{background:var(--accent);border-color:var(--accent-dark);color:#fff;font-weight:700}
-/* ことばの えらび(12ことば)。ながい 名まえも 入るよう 2れつで ならべる */
-#segLang button{flex:0 0 calc(50% - 4px);min-width:0;font-size:14px;padding:12px 4px}
+/* ---- ことばの えらび(独立した 画面) ---- */
+.langlist{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:420px;margin:0 auto}
+.langlist button{
+  min-height:52px;font-size:16px;padding:12px 8px;border-radius:12px;cursor:pointer;font-family:inherit;
+  border:2px solid var(--frame);background:#f1e9d8;color:#8a7a62;
+}
+.langlist button.on{background:var(--accent);border-color:var(--accent-dark);color:#fff;font-weight:700}
 
 /* ---- ことばの よみこみちゅう ---- */
 #langLoad{
@@ -799,6 +804,7 @@ body[data-fs="l"] .znote{font-size:13px}
         <button id="btnStart"></button>
         <button id="btnCont" class="sub" style="display:none"></button>
         <button id="btnZukan" class="sub"></button>
+        <button id="btnLang" class="sub"></button>
         <button id="btnSettings" class="sub"></button>
       </div>
       <div class="foot" id="footBox"></div>
@@ -818,6 +824,7 @@ body[data-fs="l"] .znote{font-size:13px}
     <div class="choices" id="chs"></div>
     <div class="gamefoot">
       <button id="btnGameBack"></button>
+      <button id="btnLangGame" class="gearbtn">🌐</button>
       <button id="btnGear" class="gearbtn">⚙️</button>
     </div>
   </div>
@@ -835,8 +842,14 @@ body[data-fs="l"] .znote{font-size:13px}
     <div class="setrow"><div class="sl" id="lblFs"></div><div class="seg" id="segFs"></div></div>
     <div class="setrow"><div class="sl" id="lblBgm"></div><div class="seg" id="segBgm"></div></div>
     <div class="setrow"><div class="sl" id="lblSe"></div><div class="seg" id="segSe"></div></div>
-    <div class="setrow"><div class="sl" id="lblLang"></div><div class="seg" id="segLang"></div></div>
     <div class="backrow"><button id="btnSetBack"></button></div>
+  </div>
+
+  <!-- ことばの えらび。せっていとは べつの 画面にしてある(ほかの くにの ひとが「せってい」の 文字を よめなくても 🌐 から えらべるように) -->
+  <div id="scLang" class="screen">
+    <h2 id="langTitle"></h2>
+    <div class="langlist" id="langList"></div>
+    <div class="backrow"><button id="btnLangBack"></button></div>
   </div>
 
 </div>
@@ -956,7 +969,7 @@ ja:{
   title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
   subtitle:'えらぶたびに、おはなしが かわる',
   start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'ぶんしょうと えは すべて オリジナルです',
   footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
   footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
@@ -1096,7 +1109,7 @@ en:{
   title:'Be the Hero of Tales!',
   subtitle:'The story changes with every choice',
   start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
-  footVer:'v1.8.0',
+  footVer:'v1.8.1',
   footOrig:'All text and art are original.',
   footFirst:'Your first read follows the original tale.',
   footCreate:'Branching stories and endings are original creations for this app.',
@@ -2028,11 +2041,12 @@ $('scGame').addEventListener('click', e=>{
 /* 最初のタップからBGM開始(各ボタンのclick処理の後に走るbubble段で) */
 document.addEventListener('click', ()=>{ Sound.tap(); });
 
-/* 物語の外の画面(タイトル・おはなしえらび・ずかん・せってい)は 国を特定しない タイトルの曲。
+/* 物語の外の画面(タイトル・おはなしえらび・ずかん・せってい・ことば)は 国を特定しない タイトルの曲。
    物語の場面に 入れば これまでどおり TRACK_BY_ART が その場面の曲に かえる。
    ※ゲーム画面から 歯車で ひらいた せっていは 物語の つづきなので 曲は かえない */
 function isOutOfStory(id){
   if(id === 'scSettings') return settingsBack !== 'scGame';
+  if(id === 'scLang') return langBack !== 'scGame';
   return id === 'scTitle' || id === 'scSelect' || id === 'scZukan';
 }
 
@@ -2529,6 +2543,7 @@ function renderZukan(){
 
 /* ================= せってい ================= */
 let settingsBack = 'scTitle';
+let langBack = 'scTitle';      /* ことばの えらび画面を どこから ひらいたか(タイトル or 物語の とちゅう) */
 
 function applyFs(){
   document.body.setAttribute('data-fs', PREF.fs);
@@ -2550,15 +2565,11 @@ function renderSettings(){
   $('lblFs').textContent = t('lblFs');
   $('lblBgm').textContent = t('lblBgm');
   $('lblSe').textContent = t('lblSe');
-  $('lblLang').textContent = t('lblLang');
   $('btnSetBack').textContent = t('back');
   const fsKeys = ['s','m','l'];
   seg($('segFs'), t('fsOpts'), fsKeys.indexOf(PREF.fs), i=>{ PREF.fs = fsKeys[i]; applyFs(); savePref(); });
   seg($('segBgm'), t('volOpts'), PREF.bgm, i=>{ PREF.bgm = i; Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se]); savePref(); });
   seg($('segSe'), t('volOpts'), PREF.se, i=>{ PREF.se = i; Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se]); savePref(); Sound.se('pi'); });
-  /* ことばの えらび(12ことば)。いま えらんでいる ものに ✓ を つける */
-  const cur = LANG_CODES.indexOf(PREF.lang);
-  seg($('segLang'), LANGS.map((l,i)=>(i === cur ? '✓ ' : '') + l.nm), cur, i=>pickLang(LANGS[i].c));
 }
 
 /* ことばを えらんだ とき: いるものを よみこんでから 画面を 描きなおす。
@@ -2571,11 +2582,31 @@ function pickLang(code){
   applyDir();
   const done = ()=>{
     applyLang();
-    if(settingsBack === 'scGame' && redrawGame) redrawGame();
+    if(langBack === 'scGame' && redrawGame) redrawGame();
   };
   if(LANG_LOADED[code]){ done(); return; }
   showLangLoad(true, info ? info.nm : code);
   loadLang(code).then(()=>{ showLangLoad(false); done(); });
+}
+
+/* ================= ことばの えらび(独立した 画面) =================
+   せっていとは 分けてある。ほかの くにの ひとが「せってい」の 文字を よめなくても、
+   🌐 の ボタンから すぐ ことばを かえられるように(ヒロさん指示 2026-09-03) */
+function renderLangScreen(){
+  $('langTitle').textContent = t('lblLang');
+  $('btnLangBack').textContent = t('back');
+  const cur = LANG_CODES.indexOf(PREF.lang);
+  const box = $('langList');
+  box.innerHTML = '';
+  LANGS.forEach((l, i)=>{
+    const b = document.createElement('button');
+    b.textContent = (i === cur ? '✓ ' : '') + l.nm;
+    b.setAttribute('lang', l.c);
+    b.dir = l.rtl ? 'rtl' : 'ltr';
+    if(i === cur) b.classList.add('on');
+    b.addEventListener('click', ()=>{ pickLang(l.c); renderLangScreen(); });
+    box.appendChild(b);
+  });
 }
 
 /* ================= タイトルの絵 =================
@@ -2608,6 +2639,7 @@ function applyLang(){
   refreshContBtn();
   $('btnZukan').textContent = t('zukan');
   $('btnSettings').textContent = t('settings');
+  $('btnLang').textContent = '🌐 ' + t('lblLang');
   $('btnGameBack').textContent = t('selBack');
   $('footBox').innerHTML = t('footVer') + '<br>'
     + t('footOrig') + '<br>' + t('footFirst') + '<br>' + t('footCreate') + '<br>'
@@ -2616,6 +2648,7 @@ function applyLang(){
     + '<button id="btnReset">' + t('reset') + '</button>';
   bindReset();
   renderSettings();
+  renderLangScreen();
   /* ひらいたままの 画面も 描きなおす(えらび・ずかん) */
   renderSelect();
   renderZukan();
@@ -2628,6 +2661,9 @@ $('btnZukan').addEventListener('click', ()=>{ renderZukan(); showScreen('scZukan
 $('btnSettings').addEventListener('click', ()=>{ settingsBack = 'scTitle'; renderSettings(); showScreen('scSettings'); });
 $('btnGear').addEventListener('click', ()=>{ settingsBack = 'scGame'; renderSettings(); showScreen('scSettings'); });
 $('btnSetBack').addEventListener('click', ()=>{ showScreen(settingsBack); });
+$('btnLang').addEventListener('click', ()=>{ langBack = 'scTitle'; renderLangScreen(); showScreen('scLang'); });
+$('btnLangGame').addEventListener('click', ()=>{ langBack = 'scGame'; renderLangScreen(); showScreen('scLang'); });
+$('btnLangBack').addEventListener('click', ()=>{ showScreen(langBack); });
 $('btnSelBack').addEventListener('click', ()=>showScreen('scTitle'));
 $('btnZBack').addEventListener('click', ()=>showScreen('scTitle'));
 $('btnGameBack').addEventListener('click', ()=>{ seqList = null; redrawGame = null; clearCur(); renderSelect(); showScreen('scSelect'); });

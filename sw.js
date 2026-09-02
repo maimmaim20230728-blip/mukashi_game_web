@@ -3,11 +3,12 @@
  * cache-first。
  * 🔴🔴 バージョンを上げたら(index.html の footVer / manifest)、
  *      かならず下の CACHE の名前も いっしょに 変えること。
- *      例: v1.0.0 -> mukashi-v100 / v1.0.1 -> mukashi-v101 / v1.1.0 -> mukashi-v110
+ *      例: v1.0.0 -> mukashi-v100 / v1.0.1 -> mukashi-v101 / v1.1.0 -> mukashi-v110 / v1.8.0 -> mukashi-v180
  *      名前を 据え置くと、古いキャッシュが 残って 更新が 誰にも 届かない。
  * ※更新直後の 初回起動は 旧画面が 出る(cache-first)。開き直すと 新しくなる。
  */
-var CACHE = "mukashi-v170";
+var CACHE = "mukashi-v180";
+/* 日本語(正本)と 画面まわり */
 var ASSETS = [
   "./",
   "./index.html",
@@ -23,24 +24,22 @@ var ASSETS = [
   "./story_tsuru.js",
   "./story_alibaba.js",
   "./story_kitakaze.js",
-  "./story_en.js",
-  "./story_akazukin_en.js",
-  "./story_kabu_en.js",
-  "./story_urashima_en.js",
-  "./story_kobuta_en.js",
-  "./story_hansel_en.js",
-  "./story_kaguya_en.js",
-  "./story_bremen_en.js",
-  "./story_junishi_en.js",
-  "./story_tsuru_en.js",
-  "./story_alibaba_en.js",
-  "./story_kitakaze_en.js",
   "./art.js",
   "./audio.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png"
 ];
+/* ほかの 11ことば。1ことば = 基底 + さくひん11 + UI辞書 = 13ファイル(ぜんぶで 143)。
+   まだ ない ファイルは 下の add が 1件ずつ こけるだけ で、ほかは ちゃんと 入る */
+var LANGS = ["en","de","fr","es","it","pt","nl","sv","ko","zh","ar"];
+var TALES = ["akazukin","kabu","urashima","kobuta","hansel","kaguya",
+             "bremen","junishi","tsuru","alibaba","kitakaze"];
+LANGS.forEach(function(x){
+  ASSETS.push("./story_" + x + ".js");
+  TALES.forEach(function(t){ ASSETS.push("./story_" + t + "_" + x + ".js"); });
+  ASSETS.push("./ui_" + x + ".js");
+});
 
 self.addEventListener("install", function(e){
   self.skipWaiting();

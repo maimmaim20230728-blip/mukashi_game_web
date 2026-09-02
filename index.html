@@ -120,6 +120,15 @@ body[data-fs="l"] .znote{font-size:13px}
   border:2px solid var(--frame);background:#f1e9d8;color:#8a7a62;
 }
 .seg button.on{background:var(--accent);border-color:var(--accent-dark);color:#fff;font-weight:700}
+/* ことばの えらび(12ことば)。ながい 名まえも 入るよう 2れつで ならべる */
+#segLang button{flex:0 0 calc(50% - 4px);min-width:0;font-size:14px;padding:12px 4px}
+
+/* ---- ことばの よみこみちゅう ---- */
+#langLoad{
+  position:fixed;inset:0;display:none;z-index:60;align-items:center;justify-content:center;
+  background:rgba(250,243,224,.82);font-size:18px;color:var(--ink);letter-spacing:.06em;
+}
+#langLoad.on{display:flex}
 
 /* ---- ずかん ---- */
 .zgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -141,6 +150,12 @@ body[data-fs="l"] .znote{font-size:13px}
   grid-column:1 / -1;font-size:12px;color:#a08f76;line-height:1.9;
   text-align:left;margin:0 3px;
 }
+
+/* ---- みぎ→ひだりの ことば(アラビア語) ----
+   文字の ながれだけを かえす。絵(#stage)と カットイン(#cutin)は dir="ltr" の まま */
+[dir="rtl"] .choices button{text-align:right}
+[dir="rtl"] .choices button.next,[dir="rtl"] .choices button.zk{text-align:center}
+[dir="rtl"] .zsecnote{text-align:right}
 
 /* ---- カットイン ---- */
 #cutin{position:fixed;inset:0;display:none;z-index:50;cursor:pointer;overflow:hidden}
@@ -797,7 +812,8 @@ body[data-fs="l"] .znote{font-size:13px}
   </div>
 
   <div id="scGame" class="screen">
-    <div class="stage" id="stage"></div>
+    <!-- 絵は ことばに よらず ひだり→みぎの ままに する(アラビア語でも 絵は そのまま) -->
+    <div class="stage" id="stage" dir="ltr"></div>
     <div class="textbox" id="tbox"></div>
     <div class="choices" id="chs"></div>
     <div class="gamefoot">
@@ -824,7 +840,10 @@ body[data-fs="l"] .znote{font-size:13px}
   </div>
 
 </div>
-<div id="cutin"></div>
+<!-- カットインも 絵と おなじく ひだり→みぎの まま -->
+<div id="cutin" dir="ltr"></div>
+<!-- ことばを よみこんでいる あいだの しるし(ことばに よらない 表示) -->
+<div id="langLoad" dir="ltr"></div>
 
 <script src="art.js"></script>
 <script src="story.js"></script>
@@ -839,18 +858,8 @@ body[data-fs="l"] .znote{font-size:13px}
 <script src="story_tsuru.js"></script>
 <script src="story_alibaba.js"></script>
 <script src="story_kitakaze.js"></script>
-<script src="story_en.js"></script>
-<script src="story_akazukin_en.js"></script>
-<script src="story_kabu_en.js"></script>
-<script src="story_urashima_en.js"></script>
-<script src="story_kobuta_en.js"></script>
-<script src="story_hansel_en.js"></script>
-<script src="story_kaguya_en.js"></script>
-<script src="story_bremen_en.js"></script>
-<script src="story_junishi_en.js"></script>
-<script src="story_tsuru_en.js"></script>
-<script src="story_alibaba_en.js"></script>
-<script src="story_kitakaze_en.js"></script>
+<!-- 日本語(正本)だけ さいしょに よみこむ。ほかの ことばは えらばれた ときに
+     loadLang() が story_<xx>.js → story_<tale>_<xx>.js → ui_<xx>.js の じゅんで あとから よみこむ -->
 <script src="audio.js"></script>
 <script>
 "use strict";
@@ -871,7 +880,36 @@ function saveJson(key, val){
 }
 let zukan = loadJson(SAVE_KEY, []);
 let unlocks = loadJson(UNLOCK_KEY, {});
-let PREF = Object.assign({fs:'m', bgm:2, se:2, lang:'ja'}, loadJson(PREF_KEY, {}));
+
+/* ================= ことば(12ことば) =================
+   nm は その ことばでの 名まえ。rtl は みぎ→ひだりに 書く ことば。
+   日本語(ja)は 正本なので さいしょから よみこみずみ。ほかは えらばれた ときに よみこむ */
+const LANGS = [
+  {c:'ja', nm:'日本語'},
+  {c:'en', nm:'English'},
+  {c:'de', nm:'Deutsch'},
+  {c:'fr', nm:'Français'},
+  {c:'es', nm:'Español'},
+  {c:'it', nm:'Italiano'},
+  {c:'pt', nm:'Português'},
+  {c:'nl', nm:'Nederlands'},
+  {c:'sv', nm:'Svenska'},
+  {c:'ko', nm:'한국어'},
+  {c:'zh', nm:'中文'},
+  {c:'ar', nm:'العربية', rtl:true}
+];
+const LANG_CODES = LANGS.map(l => l.c);
+/* 1つの ことばの ものがたりは この 12ファイル(基底 + 11さくひん) + ui_<xx>.js */
+const TALE_FILES = ['akazukin','kabu','urashima','kobuta','hansel','kaguya','bremen','junishi','tsuru','alibaba','kitakaze'];
+/* はじめての 起動の ことば: たんまつの ことば(あたま2文字)が 12に あれば それ、なければ 英語 */
+function deviceLang(){
+  const raw = String(navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  const two = raw.slice(0, 2);                 /* zh-Hans も pt-BR も あたま2文字で みる */
+  return LANG_CODES.indexOf(two) >= 0 ? two : 'en';
+}
+const prefSaved = loadJson(PREF_KEY, {});
+let PREF = Object.assign({fs:'m', bgm:2, se:2, lang:deviceLang()}, prefSaved);
+if(LANG_CODES.indexOf(PREF.lang) < 0) PREF.lang = 'en';   /* しらない ことばが 入っていたら 英語に */
 const VOLS = [0, 0.4, 0.7, 1.0];
 
 /* ================= おはなし(tale)の単位 =================
@@ -918,7 +956,7 @@ ja:{
   title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
   subtitle:'えらぶたびに、おはなしが かわる',
   start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
-  footVer:'v1.7.0',
+  footVer:'v1.8.0',
   footOrig:'ぶんしょうと えは すべて オリジナルです',
   footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
   footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
@@ -1058,7 +1096,7 @@ en:{
   title:'Be the Hero of Tales!',
   subtitle:'The story changes with every choice',
   start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
-  footVer:'v1.7.0',
+  footVer:'v1.8.0',
   footOrig:'All text and art are original.',
   footFirst:'Your first read follows the original tale.',
   footCreate:'Branching stories and endings are original creations for this app.',
@@ -1195,10 +1233,135 @@ en:{
   seal:['The','End']
 }
 };
-const t = key => UIT[PREF.lang][key];
-const CUR_SC = () => PREF.lang === 'en' ? SCENES_EN : SCENES;
-const CUR_ZK = () => PREF.lang === 'en' ? ZK_EN : ZK;
+
+/* ================= ことばの きりかえ =================
+   日本語は 正本(SCENES / ZK / UIT.ja)。ほかの ことばは あとから よみこんだ
+   SCENES_<XX> / ZK_<XX> / UIT_<XX> を つかう。
+   その ことばに ない ところは 英語 → 日本語の じゅんに おぎなう(文が 空に ならない) */
+const LANG_LOADED = {ja:true};       /* よみこみずみの ことば(二重に よみこまない) */
+const LANG_TASK = {};                /* よみこみちゅうの やくそく(Promise) */
+let ZK_CACHE = {};                   /* ことばごとの 図鑑(くみたてずみ) */
+
+/* 🔴story_en.js は const SCENES_EN で さだめて いるので window には のらない。
+   en だけ 名まえで じかに みる(ほかの ことばは var なので window に のる) */
+function langData(xx){
+  if(xx === 'en'){
+    return {
+      sc: (typeof SCENES_EN !== 'undefined') ? SCENES_EN : window.SCENES_EN,
+      zk: (typeof ZK_EN !== 'undefined') ? ZK_EN : window.ZK_EN,
+      ui: window.UIT_EN || UIT.en
+    };
+  }
+  const XX = xx.toUpperCase();
+  return {sc: window['SCENES_' + XX], zk: window['ZK_' + XX], ui: window['UIT_' + XX]};
+}
+
+/* UI文言: UIT_<XX> → UIT.en → UIT.ja */
+function t(key){
+  if(PREF.lang !== 'ja'){
+    const d = langData(PREF.lang).ui;
+    if(d && d[key] !== undefined && d[key] !== '') return d[key];
+    if(UIT.en[key] !== undefined) return UIT.en[key];
+  }
+  return UIT.ja[key];
+}
+
+/* 1つの 場面: その ことば → 英語 → 日本語 */
+function SCENE(id){
+  if(PREF.lang !== 'ja'){
+    const s = langData(PREF.lang).sc;
+    if(s && s[id]) return s[id];
+    const e = langData('en').sc;
+    if(e && e[id]) return e[id];
+  }
+  return SCENES[id];
+}
+
+/* 図鑑は 日本語正本の ならびを ほねに、その ことばの 文だけ かぶせる。
+   ない ところは 英語 → 日本語で おぎなう */
+const zkText = (a, b, c) => {
+  if(typeof a === 'string' && a.trim()) return a;
+  if(typeof b === 'string' && b.trim()) return b;
+  return c;
+};
+function buildZk(xx){
+  const idx = arr => {
+    const m = {byId:{}, secs:[]};
+    (arr || []).forEach(z=>{ if(z.id) m.byId[z.id] = z; else if(z.section) m.secs.push(z); });
+    return m;
+  };
+  const L = idx(langData(xx).zk), E = idx(langData('en').zk);
+  let sn = 0;
+  return ZK.map(z=>{
+    if(z.section){
+      const a = L.secs[sn], b = E.secs[sn];
+      sn++;
+      const o = {section: zkText(a && a.section, b && b.section, z.section)};
+      if(z.note !== undefined) o.note = zkText(a && a.note, b && b.note, z.note);
+      return o;
+    }
+    const a = L.byId[z.id], b = E.byId[z.id];
+    return {id:z.id, n:zkText(a && a.n, b && b.n, z.n), h:zkText(a && a.h, b && b.h, z.h)};
+  });
+}
+function CUR_ZK(){
+  const x = PREF.lang;
+  if(x === 'ja') return ZK;
+  if(!ZK_CACHE[x]) ZK_CACHE[x] = buildZk(x);
+  return ZK_CACHE[x];
+}
 const zkName = id => { const z = CUR_ZK().find(x=>x.id===id); return z ? z.n : id; };
+
+/* ================= ことばの よみこみ =================
+   えらばれた ときだけ <script> を あとから さしこむ。まだ ない ことばでも とまらない */
+function loadScript(src){
+  return new Promise(resolve=>{
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = false;                              /* さしこんだ じゅんに はしらせる */
+    s.onload = ()=>resolve(true);
+    s.onerror = ()=>resolve(false);
+    document.head.appendChild(s);
+  });
+}
+function loadLang(xx){
+  if(xx === 'ja' || LANG_LOADED[xx]) return Promise.resolve();
+  if(LANG_TASK[xx]) return LANG_TASK[xx];
+  /* ①基底(ももたろう)。🔴これが ないと さくひんの ファイルは はしれない(中で 基底を さがす)ので、
+     ない ときは さくひんを よみこまず、そのまま 英語に まかせる */
+  let p = loadScript('story_' + xx + '.js').then(got=>{
+    if(!got || !langData(xx).sc) return false;
+    /* ②さくひん11本。1本 かけても のこりは 入れる(かけた ぶんは 英語で おぎなう) */
+    let q = Promise.resolve(true);
+    TALE_FILES.forEach(f=>{
+      q = q.then(ok=>loadScript('story_' + f + '_' + xx + '.js').then(g=>ok && g));
+    });
+    return q;
+  });
+  p = p.then(full=>{
+    /* ③UI辞書。英語の UIT.en は index.html の 中に あるので とりに いかない */
+    if(xx === 'en') return full;
+    return loadScript('ui_' + xx + '.js').then(()=>full);
+  }).then(full=>{
+    LANG_LOADED[xx] = true;
+    /* そろっていない ことばは、うしろだてに 英語を よみこむ(英語 → 日本語の じゅんに おぎなう)。
+       ファイルは そろっていても 場面の かずが たりない ときも おなじ */
+    const sc = langData(xx).sc;
+    const enough = full && sc && Object.keys(sc).length >= Object.keys(SCENES).length;
+    if(xx !== 'en' && !enough) return loadLang('en');
+  }).then(()=>{
+    ZK_CACHE = {};
+    delete LANG_TASK[xx];
+  });
+  LANG_TASK[xx] = p;
+  return p;
+}
+function showLangLoad(on, label){
+  const el = $('langLoad');
+  if(!el) return;
+  if(on){ el.textContent = '⌛ ' + (label || ''); el.classList.add('on'); }
+  else el.classList.remove('on');
+}
 
 /* ================= 場面BGM・効果音 ================= */
 const TRACK_BY_ART = {
@@ -1840,6 +2003,9 @@ let currentStory = 'momo';
 /* 2.2びょうは 1ページを みる(連打防止)+ 画面タップで進行 */
 const READ_MS = 2200;
 let sceneReadyAt = 0, sceneReadyTimer = null, tapAdvance = null;
+/* いま ゲーム画面に 出している ところを もういちど 描く やりかた。
+   ことばを かえた ときに、おなじ 場面を あたらしい ことばで 描きなおす ために つかう */
+let redrawGame = null;
 function lockButtons(){
   sceneReadyAt = Date.now() + READ_MS;
   clearTimeout(sceneReadyTimer);
@@ -1896,7 +2062,7 @@ function loadCur(){
     if(!list || !(c.idx >= 0 && c.idx < list.length)) return null;
     return c;
   }
-  if(!c.story || !STORIES[c.story] || !CUR_SC()[c.scene]) return null;
+  if(!c.story || !STORIES[c.story] || !SCENE(c.scene)) return null;
   return c;
 }
 function refreshContBtn(){
@@ -1946,7 +2112,7 @@ function startStory(story){
 }
 
 function go(id){
-  const s = CUR_SC()[id];
+  const s = SCENE(id);
   if(!s){ console.error('scene not found: '+id); return; }
   if(s.cutin){
     const then = (typeof s.then === 'function') ? s.then(F) : s.then;
@@ -1967,9 +2133,10 @@ function render(s, id){
 
   if(s.ending !== undefined){
     tapAdvance = null;
-    finishEnding(s, text);
+    finishEnding(s, id);
     return;
   }
+  redrawGame = ()=>go(id);
   saveCur({story:currentStory, scene:id, f:F});
   $('tbox').textContent = text;
 
@@ -1993,16 +2160,25 @@ function render(s, id){
   lockButtons();
 }
 
+/* SVGの 中に そのまま 出す ので、記号だけ よけておく */
+const escXml = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
 function pressSeal(){
   const d = document.createElement('div');
   d.className = 'seal';
-  const chars = t('seal');
+  const chars = [].concat(t('seal') || []);
   let texts = '';
-  if(PREF.lang === 'en'){
-    texts = `<text x="100" y="88" text-anchor="middle" font-size="42" font-weight="900" fill="#c0392b" opacity=".95" font-family="inherit">${chars[0]}</text>`
-      + `<text x="100" y="138" text-anchor="middle" font-size="42" font-weight="900" fill="#c0392b" opacity=".9" font-family="inherit">${chars[1]}</text>`;
+  if(PREF.lang === 'ja'){
+    /* 日本語は 1もじずつ たてに ならべる(お・し・ま・い) */
+    texts = chars.map((ch,i)=>`<text x="100" y="${60+i*39}" text-anchor="middle" font-size="37" font-weight="900" fill="#c0392b" opacity="${i%2?.9:.95}" font-family="inherit">${escXml(ch)}</text>`).join('');
   }else{
-    texts = chars.map((ch,i)=>`<text x="100" y="${60+i*39}" text-anchor="middle" font-size="37" font-weight="900" fill="#c0392b" opacity="${i%2?.9:.95}" font-family="inherit">${ch}</text>`).join('');
+    /* ほかの ことばは ことばの かずが 1〜4に なる ので、かずで おおきさを きめる
+       (英語 The / End の 2ぎょうは これまでと おなじ ばしょに なる) */
+    const n = chars.length || 1;
+    const fs = n <= 2 ? 42 : (n === 3 ? 32 : 26);
+    const step = fs + 8;
+    const y0 = 100 - (n - 1) * step / 2 + fs * 0.31;
+    texts = chars.map((w,i)=>`<text x="100" y="${Math.round(y0 + i*step)}" text-anchor="middle" font-size="${fs}" font-weight="900" fill="#c0392b" opacity="${i%2?.9:.95}" font-family="inherit">${escXml(w)}</text>`).join('');
   }
   d.innerHTML = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <circle cx="100" cy="100" r="92" fill="none" stroke="#c0392b" stroke-width="7" stroke-linecap="round" stroke-dasharray="128 5 84 4 156 7 46 5 90 6"/>
@@ -2013,7 +2189,7 @@ function pressSeal(){
   setTimeout(()=>Sound.se('stamp'), 520);
 }
 
-function finishEnding(s, text){
+function finishEnding(s, id){
   const eid = (typeof s.ending === 'function') ? s.ending(F) : s.ending;
   const tale = taleOf(currentStory);
   const wasCleared = taleCleared(tale);
@@ -2079,51 +2255,40 @@ function finishEnding(s, text){
     unlocks.taiyou = true; saveJson(UNLOCK_KEY, unlocks);
   }
 
+  /* 本文の あとに つける おしらせは キーだけ おぼえておく。
+     ことばを かえた ときに、おなじ おしらせを あたらしい ことばで 出しなおせる */
+  const msgs = [];
+  if(!wasCleared && taleCleared(tale)){
+    msgs.push('unlockChoice', 'unlockNote', TALE_UNLOCK_MSG[tale] || 'unlockOni');
+  }
+  if(!hadKiji && unlocks.kiji) msgs.push('unlockKiji');
+  if(!hadGma && unlocks.gma) msgs.push('unlockGma');
+  if(!hadMouse && unlocks.mouse) msgs.push('unlockMouse');
+  if(!hadHime && unlocks.hime) msgs.push('unlockHime');
+  if(!hadPrenga && unlocks.prenga) msgs.push('unlockPrenga');
+  if(!hadTori && unlocks.tori) msgs.push('unlockTori');
+  if(!hadTsuki && unlocks.tsuki) msgs.push('unlockTsuki');
+  if(!hadOndori && unlocks.ondori) msgs.push('unlockOndori');
+  if(!hadJnezumi && unlocks.jnezumi) msgs.push('unlockJnezumi');
+  if(!hadTbaa && unlocks.tbaa) msgs.push('unlockTbaa');
+  if(!hadKashira && unlocks.kashira) msgs.push('unlockKashira');
+  if(!hadTaiyou && unlocks.taiyou) msgs.push('unlockTaiyou');
+  paintEnding(id, eid, isNew, msgs);
+}
+
+/* けつまつ画面を 描く。ことばを かえた ときは おなじ 中身を 訳しなおして もういちど 描く */
+function paintEnding(id, eid, isNew, msgs){
+  const s = SCENE(id);
+  window.scrollTo(0,0);
+  $('stage').innerHTML = s.art && ART[s.art] ? ART[s.art](F) : '';
+  const text = (typeof s.text === 'function') ? s.text(F) : (s.text || '');
   let msg = text + '\n\n';
   msg += isNew ? t('newEnd')(zkName(eid)) : t('dupEnd')(zkName(eid));
-  if(!wasCleared && taleCleared(tale)){
-    msg += '\n' + t('unlockChoice') + '\n' + t('unlockNote')
-      + '\n' + t(TALE_UNLOCK_MSG[tale] || 'unlockOni');
-  }
-  if(!hadKiji && unlocks.kiji){
-    msg += '\n' + t('unlockKiji');
-  }
-  if(!hadGma && unlocks.gma){
-    msg += '\n' + t('unlockGma');
-  }
-  if(!hadMouse && unlocks.mouse){
-    msg += '\n' + t('unlockMouse');
-  }
-  if(!hadHime && unlocks.hime){
-    msg += '\n' + t('unlockHime');
-  }
-  if(!hadPrenga && unlocks.prenga){
-    msg += '\n' + t('unlockPrenga');
-  }
-  if(!hadTori && unlocks.tori){
-    msg += '\n' + t('unlockTori');
-  }
-  if(!hadTsuki && unlocks.tsuki){
-    msg += '\n' + t('unlockTsuki');
-  }
-  if(!hadOndori && unlocks.ondori){
-    msg += '\n' + t('unlockOndori');
-  }
-  if(!hadJnezumi && unlocks.jnezumi){
-    msg += '\n' + t('unlockJnezumi');
-  }
-  if(!hadTbaa && unlocks.tbaa){
-    msg += '\n' + t('unlockTbaa');
-  }
-  if(!hadKashira && unlocks.kashira){
-    msg += '\n' + t('unlockKashira');
-  }
-  if(!hadTaiyou && unlocks.taiyou){
-    msg += '\n' + t('unlockTaiyou');
-  }
+  msgs.forEach(k=>{ msg += '\n' + t(k); });
   $('tbox').textContent = msg;
 
   const chs = $('chs');
+  chs.innerHTML = '';
   const bZ = document.createElement('button');
   bZ.className = 'zk';
   bZ.textContent = t('btnZukan');
@@ -2145,6 +2310,7 @@ function finishEnding(s, text){
   tapAdvance = null;
   lockButtons();
   pressSeal();
+  redrawGame = ()=>paintEnding(id, eid, isNew, msgs);
 }
 
 /* ================= 一本道再生(はじめての1かいめ / ずかんの振り返り) =================
@@ -2164,6 +2330,7 @@ function startRecap(eid){
 }
 function exitRecap(){
   seqList = null;
+  redrawGame = null;
   clearCur();
   renderZukan();
   showScreen('scZukan');
@@ -2173,7 +2340,8 @@ function playStep(){
     if(seqMode === 'recap') exitRecap();
     return;
   }
-  const s = CUR_SC()[seqList[seqIdx++]];
+  const id = seqList[seqIdx++];
+  const s = SCENE(id);
   if(!s){ seqList = null; return; }
   if(s.enter) Object.assign(F, s.enter);
   if(s.cutin){ showCutin(s.cutin, playStep); return; }
@@ -2188,22 +2356,15 @@ function playStep(){
     seqList = null;
     if(mode === 'first'){
       tapAdvance = null;
-      finishEnding(s, text);
+      finishEnding(s, id);
       return;
     }
-    $('tbox').textContent = text;
-    const b = document.createElement('button');
-    b.className = 'zk';
-    b.textContent = t('btnZBack');
-    b.addEventListener('click', exitRecap);
-    chs.appendChild(b);
-    tapAdvance = null;
-    lockButtons();
-    pressSeal();
+    paintRecapEnd(id);
     return;
   }
   /* seqIdx は もう つぎを さしている ので、いま だしている 1つ 前を おぼえる */
-  saveCur({story:currentStory, mode:seqMode, key:seqKey, idx:seqIdx - 1, f:F});
+  const here = seqIdx - 1;
+  saveCur({story:currentStory, mode:seqMode, key:seqKey, idx:here, f:F});
   $('tbox').textContent = text;
   const b = document.createElement('button');
   b.className = 'next';
@@ -2212,6 +2373,26 @@ function playStep(){
   chs.appendChild(b);
   tapAdvance = playStep;
   lockButtons();
+  redrawGame = ()=>{ seqIdx = here; playStep(); };
+}
+
+/* ふりかえり(ずかん)の さいごの 場面。ことばを かえたら もういちど 描く */
+function paintRecapEnd(id){
+  const s = SCENE(id);
+  window.scrollTo(0,0);
+  $('stage').innerHTML = s.art && ART[s.art] ? ART[s.art](F) : '';
+  const chs = $('chs');
+  chs.innerHTML = '';
+  $('tbox').textContent = (typeof s.text === 'function') ? s.text(F) : (s.text || '');
+  const b = document.createElement('button');
+  b.className = 'zk';
+  b.textContent = t('btnZBack');
+  b.addEventListener('click', exitRecap);
+  chs.appendChild(b);
+  tapAdvance = null;
+  lockButtons();
+  pressSeal();
+  redrawGame = ()=>paintRecapEnd(id);
 }
 
 /* ================= おはなしえらび =================
@@ -2375,13 +2556,26 @@ function renderSettings(){
   seg($('segFs'), t('fsOpts'), fsKeys.indexOf(PREF.fs), i=>{ PREF.fs = fsKeys[i]; applyFs(); savePref(); });
   seg($('segBgm'), t('volOpts'), PREF.bgm, i=>{ PREF.bgm = i; Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se]); savePref(); });
   seg($('segSe'), t('volOpts'), PREF.se, i=>{ PREF.se = i; Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se]); savePref(); Sound.se('pi'); });
-  seg($('segLang'), ['にほんご','English'], PREF.lang==='en' ? 1 : 0, i=>{
-    PREF.lang = i===1 ? 'en' : 'ja';
-    savePref();
+  /* ことばの えらび(12ことば)。いま えらんでいる ものに ✓ を つける */
+  const cur = LANG_CODES.indexOf(PREF.lang);
+  seg($('segLang'), LANGS.map((l,i)=>(i === cur ? '✓ ' : '') + l.nm), cur, i=>pickLang(LANGS[i].c));
+}
+
+/* ことばを えらんだ とき: いるものを よみこんでから 画面を 描きなおす。
+   ものがたりの とちゅうなら、おなじ 場面を あたらしい ことばで 出しなおす */
+function pickLang(code){
+  if(code === PREF.lang) return;
+  const info = LANGS.find(l=>l.c === code);
+  PREF.lang = code;
+  savePref();
+  applyDir();
+  const done = ()=>{
     applyLang();
-    seqList = null;
-    settingsBack = 'scTitle';
-  });
+    if(settingsBack === 'scGame' && redrawGame) redrawGame();
+  };
+  if(LANG_LOADED[code]){ done(); return; }
+  showLangLoad(true, info ? info.nm : code);
+  loadLang(code).then(()=>{ showLangLoad(false); done(); });
 }
 
 /* ================= タイトルの絵 =================
@@ -2398,9 +2592,16 @@ function renderTitleArt(){
   }
 }
 
-/* ================= タイトル文言 ================= */
-function applyLang(){
+/* ================= タイトル文言 =================
+   文字の ながれ。アラビア語だけ みぎ→ひだり(絵と カットインは dir="ltr" の まま) */
+function applyDir(){
+  const L = LANGS.find(l=>l.c === PREF.lang);
   document.documentElement.lang = PREF.lang;
+  document.documentElement.dir = (L && L.rtl) ? 'rtl' : 'ltr';
+}
+
+function applyLang(){
+  applyDir();
   $('ttl').innerHTML = t('title');
   $('ttlSub').textContent = t('subtitle');
   $('btnStart').textContent = t('start');
@@ -2415,6 +2616,9 @@ function applyLang(){
     + '<button id="btnReset">' + t('reset') + '</button>';
   bindReset();
   renderSettings();
+  /* ひらいたままの 画面も 描きなおす(えらび・ずかん) */
+  renderSelect();
+  renderZukan();
 }
 
 /* ================= ボタン ================= */
@@ -2426,7 +2630,7 @@ $('btnGear').addEventListener('click', ()=>{ settingsBack = 'scGame'; renderSett
 $('btnSetBack').addEventListener('click', ()=>{ showScreen(settingsBack); });
 $('btnSelBack').addEventListener('click', ()=>showScreen('scTitle'));
 $('btnZBack').addEventListener('click', ()=>showScreen('scTitle'));
-$('btnGameBack').addEventListener('click', ()=>{ seqList = null; clearCur(); renderSelect(); showScreen('scSelect'); });
+$('btnGameBack').addEventListener('click', ()=>{ seqList = null; redrawGame = null; clearCur(); renderSelect(); showScreen('scSelect'); });
 
 let resetArmed = null;
 function bindReset(){
@@ -2454,8 +2658,17 @@ function bindReset(){
 
 /* ================= 起動 ================= */
 applyFs();
+applyDir();
 applyLang();
 renderTitleArt();
+/* 日本語いがいで はじまる ときは、その ことばを よみこんでから 描きなおす。
+   はじめての 起動で えらんだ ことば(たんまつの ことば)も ここで おぼえる */
+if(!prefSaved.lang) savePref();
+if(PREF.lang !== 'ja'){
+  const li = LANGS.find(l=>l.c === PREF.lang);
+  showLangLoad(true, li ? li.nm : PREF.lang);
+  loadLang(PREF.lang).then(()=>{ showLangLoad(false); applyLang(); });
+}
 /* 🔴起動時は状態を合わせるだけで鳴らさない(最初のタップから) */
 Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se], false);
 /* さいしょに 鳴る 1曲目が 和の里(home)に ならないよう、鳴らす前に タイトルの曲に しておく */

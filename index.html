@@ -366,6 +366,32 @@ body[data-fs="l"] .znote{font-size:13px}
   animation:pop .45s cubic-bezier(.2,1.6,.4,1);
 }
 
+/* おかし専用型(おかしの いえが あらわれる しゅんかん)
+   あまい 場面なので ゆれは 入れず、ほうしゃの グラデの 上に おかしが ふわふわ ふってくるだけに する */
+#cutin.okashi .ci-inner{
+  background:radial-gradient(circle at 50% 44%, #fff4dc 0%, #ffe2ee 46%, #cfe9f7 100%);
+  overflow:hidden;
+}
+.ok-sweet{position:absolute;top:0;z-index:1;animation:okFall linear infinite}
+.ok-sweet svg{width:100%;height:auto;display:block}
+/* --sx=よこゆれ(vw) / --rot=まわる かくど。おくらせを マイナスに して はじめから ふらせる */
+@keyframes okFall{
+  0%{transform:translate(0,-22vh) rotate(0);opacity:0}
+  10%{opacity:1}
+  50%{transform:translate(var(--sx),44vh) rotate(calc(var(--rot) / 2))}
+  88%{opacity:1}
+  100%{transform:translate(0,112vh) rotate(var(--rot));opacity:0}
+}
+#cutin.okashi .ci-text{
+  position:relative;z-index:3;max-width:92%;
+  /* 「おかしの いえ！！」など。はばに あわせて 字を ちぢめる(ふうふう型と おなじ)。
+     したじが うすい いろ なので、字は こい ローズ + しろい ふちで よめる ように する */
+  font-size:min(46px,7.5vw);font-weight:900;color:#d1567f;letter-spacing:.06em;text-align:center;line-height:1.4;
+  white-space:pre-line;
+  text-shadow:3px 3px 0 #fffdf8,-2px -2px 0 #fffdf8,2px -2px 0 #fffdf8,-2px 2px 0 #fffdf8,0 6px 14px rgba(160,90,120,.28);
+  animation:pop .45s cubic-bezier(.2,1.6,.4,1);
+}
+
 /* おしまいの印影(結末の絵の上に押す・背景透過) */
 .seal{
   position:absolute;right:5%;top:7%;width:44%;max-width:220px;
@@ -397,7 +423,7 @@ body[data-fs="l"] .znote{font-size:13px}
   #cutin.chokkin .ci-text{font-size:32px}
   #cutin.suppon .ci-text{font-size:34px}
   #cutin.kemuri .ci-text{font-size:26px}
-  /* fuu は min(46px,7.5vw)で じどうに ちぢむので ここでは いじらない */
+  /* fuu と okashi は min(46px,7.5vw)で じどうに ちぢむので ここでは いじらない */
   h1{font-size:26px}
 }
 </style>
@@ -462,11 +488,13 @@ body[data-fs="l"] .znote{font-size:13px}
 <script src="story_kabu.js"></script>
 <script src="story_urashima.js"></script>
 <script src="story_kobuta.js"></script>
+<script src="story_hansel.js"></script>
 <script src="story_en.js"></script>
 <script src="story_akazukin_en.js"></script>
 <script src="story_kabu_en.js"></script>
 <script src="story_urashima_en.js"></script>
 <script src="story_kobuta_en.js"></script>
+<script src="story_hansel_en.js"></script>
 <script src="audio.js"></script>
 <script>
 "use strict";
@@ -495,13 +523,15 @@ const VOLS = [0, 0.4, 0.7, 1.0];
 const TALE_OF = {momo:'momo', oni:'momo', kiji:'momo', akz:'akz', wolf:'akz', gma:'akz',
                  kabu:'kabu', turnip:'kabu', mouse:'kabu',
                  ura:'ura', hime:'ura', kame:'ura',
-                 buta:'buta', pwolf:'buta', prenga:'buta'};
+                 buta:'buta', pwolf:'buta', prenga:'buta',
+                 hg:'hg', majo:'hg', tori:'hg'};
 /* ura の /^u_/ は 本編の けつまつだけに あたる(視点ちがいは uh_ / uv_ で はじまる)
-   buta の /^pb_/ も おなじ(視点ちがいは pw_ / ps_ で はじまる) */
-const TALE_END = {momo:/^(a_|b_|c_|d_)/, akz:/^za_/, kabu:/^kb_/, ura:/^u_/, buta:/^pb_/};
+   buta の /^pb_/ も おなじ(視点ちがいは pw_ / ps_ で はじまる)
+   hg の /^hg_/ も おなじ(視点ちがいは hw_ / hb_ で はじまる ので あたらない) */
+const TALE_END = {momo:/^(a_|b_|c_|d_)/, akz:/^za_/, kabu:/^kb_/, ura:/^u_/, buta:/^pb_/, hg:/^hg_/};
 /* 本編を クリアした ときに 出す「視点ちがいが あそべます」の 文言 */
 const TALE_UNLOCK_MSG = {momo:'unlockOni', akz:'unlockWolf', kabu:'unlockTurnip', ura:'unlockKame',
-                         buta:'unlockPwolf'};
+                         buta:'unlockPwolf', hg:'unlockMajo'};
 const taleOf = story => TALE_OF[story] || story;
 function taleCleared(tale){
   const re = TALE_END[tale];
@@ -514,7 +544,7 @@ ja:{
   title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
   subtitle:'えらぶたびに、おはなしが かわる',
   start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
-  footVer:'v1.0.0',
+  footVer:'v1.1.0',
   footOrig:'ぶんしょうと えは すべて オリジナルです',
   footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
   footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
@@ -558,6 +588,13 @@ ja:{
   pwolfLock:'さんびきの こぶたを 1かい さいごまで よむと あそべます',
   prengaName:'レンガの いえの はなし', prengaTag:'まもる がわにも ほこりが ある　けつまつ 2しゅるい',
   prengaLock:'けつまつ『イギリスの ほんとうの おはなし』か『さいしょから 3びきで』を みつけると あそべます',
+  hgName:'ヘンゼルと グレーテル',
+  hgTagFirst:'はじめての 1かいめは、もとの おはなしを とおしで',
+  hgTag:'グリムの おはなし・おかしの いえ　けつまつ 4しゅるい',
+  majoName:'まじょの はなし', majoTag:'ひとりぼっちで おかしを つくりつづけて　けつまつ 2しゅるい',
+  majoLock:'ヘンゼルと グレーテルを 1かい さいごまで よむと あそべます',
+  toriName:'しろい とりの はなし', toriTag:'パンくずを たべたのは、わたし　けつまつ 2しゅるい',
+  toriLock:'けつまつ『かわの むこうへ』か『むらの ふゆ』を みつけると あそべます',
   prep:'じゅんびちゅう',
   titleBack:'タイトルへ もどる', selBack:'おはなし えらびへ もどる', next:'つぎへ ▼', back:'もどる',
   zTitle:'けつまつ ずかん',
@@ -578,6 +615,8 @@ ja:{
   unlockHime:'★「おとひめの はなし」が あそべるように なりました！',
   unlockPwolf:'★「はらぺこ オオカミの はなし」も あそべるように なりました！',
   unlockPrenga:'★「レンガの いえの はなし」が あそべるように なりました！',
+  unlockMajo:'★「まじょの はなし」も あそべるように なりました！',
+  unlockTori:'★「しろい とりの はなし」が あそべるように なりました！',
   btnZukan:'けつまつ ずかんを みる', btnAgain:'おなじ おはなしを もういちど',
   btnSelect:'おはなし えらびへ', btnZBack:'ずかんへ もどる',
   setTitle:'せってい', lblFs:'もじの おおきさ', lblBgm:'おんがく', lblSe:'こうかおん', lblLang:'ことば / Language',
@@ -588,7 +627,7 @@ en:{
   title:'Be the Hero of Tales!',
   subtitle:'The story changes with every choice',
   start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
-  footVer:'v1.0.0',
+  footVer:'v1.1.0',
   footOrig:'All text and art are original.',
   footFirst:'Your first read follows the original tale.',
   footCreate:'Branching stories and endings are original creations for this app.',
@@ -632,6 +671,13 @@ en:{
   pwolfLock:'Finish The Three Little Pigs once to unlock',
   prengaName:"The Brick House's Tale", prengaTag:'The one who protects has pride too — 2 endings',
   prengaLock:'Find the ending "The True English Tale" or "Three Together from the Start" to unlock',
+  hgName:'Hansel and Gretel',
+  hgTagFirst:'Your first read follows the original tale',
+  hgTag:'A Grimm tale of a house of sweets — 4 endings',
+  majoName:"The Witch's Tale", majoTag:'Baking sweets alone, all those years — 2 endings',
+  majoLock:'Finish Hansel and Gretel once to unlock',
+  toriName:"The White Bird's Tale", toriTag:'I was the one who ate the breadcrumbs — 2 endings',
+  toriLock:'Find the ending "Across the River" or "The Village\'s Winter" to unlock',
   prep:'Coming soon',
   titleBack:'Back to Title', selBack:'Back to Tale Select', next:'Next ▼', back:'Back',
   zTitle:'Ending Collection',
@@ -652,6 +698,8 @@ en:{
   unlockHime:'★ "Princess Otohime\'s Tale" is now unlocked!',
   unlockPwolf:'★ "The Hungry Wolf\'s Tale" is now unlocked!',
   unlockPrenga:'★ "The Brick House\'s Tale" is now unlocked!',
+  unlockMajo:'★ "The Witch\'s Tale" is now unlocked!',
+  unlockTori:'★ "The White Bird\'s Tale" is now unlocked!',
   btnZukan:'See the Ending Collection', btnAgain:'Read this tale again',
   btnSelect:'Back to Tale Select', btnZBack:'Back to the Collection',
   setTitle:'Settings', lblFs:'Text size', lblBgm:'Music', lblSe:'Sound effects', lblLang:'ことば / Language',
@@ -702,11 +750,19 @@ const TRACK_BY_ART = {
   buta_fuki_wara:'eu_wolf', buta_fuki_eda:'eu_wolf', buta_entotsu:'eu_wolf',
   buta_naka:'eu_wolf', buta_nabe:'eu_wolf',
   buta_soup:'eu_owari', buta_nigeru:'eu_owari',
-  pwolf_yama:'eu_fuyu'
+  pwolf_yama:'eu_fuyu',
+  /* ---- ヘンゼルと グレーテル(ヨーロッパのセット + せんようの 2きょく) ---- */
+  hg_ie:'eu_home', hg_saikai:'eu_home',
+  hg_yoru:'eu_fuyu', hg_mori:'eu_fuyu', hg_mayou:'eu_fuyu', hg_pankuzu:'eu_fuyu',
+  hg_koishi:'eu_mori', hg_tori:'eu_mori', tori_sora:'eu_mori',
+  hg_okashi:'hg_okashi', hg_kajiru:'hg_okashi',
+  hg_majo:'hg_majo', hg_ori:'hg_majo', hg_hone:'hg_majo', majo_daidokoro:'hg_majo',
+  hg_kamado:'eu_wolf',
+  hg_takara:'eu_sukui', hg_ahiru:'eu_sukui'
 };
 const SE_BY_CUTIN = {
   waza:'don', kao:'dodon', vs:'zugan', flash:'shakin', join:'fanfare', paka:'pon', dark:'gong',
-  pakuri:'gabu', chokkin:'shakin', suppon:'suppon', kemuri:'kemuri', fuu:'fuu'
+  pakuri:'gabu', chokkin:'shakin', suppon:'suppon', kemuri:'kemuri', fuu:'fuu', okashi:'pafu'
 };
 
 /* ================= カットイン ================= */
@@ -730,7 +786,8 @@ function focusLines(color){
 const faceSvg = (key, f) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">${FACES[key](f)}</svg>`;
 
 const CUTIN_BG = { momo:'#f2b04f', oyabun:'#8a4a5a', aka:'#c96a52', kiji:'#5a9a6f',
-                   jii:'#c9a05b', kabu:'#9a7fb5', nezumi:'#8fa6b8' };
+                   jii:'#c9a05b', kabu:'#9a7fb5', nezumi:'#8fa6b8',
+                   majo:'#5a4a72', hansel:'#7a8a63', gretel:'#7a8a63', tori:'#6fb4d8' };
 const WAZA_TH = {
   orange:['#f7b733','#f79a33'], blue:['#6ec6e8','#3f9fd4'], green:['#9fd48a','#5aa66b'],
   gold:['#ffd76e','#f2b04f'], red:['#e06868','#c04848'], brown:['#d9a05b','#b9803f']
@@ -864,6 +921,39 @@ function fuuDebris(kind){
   return s;
 }
 
+/* おかし型の ドロップ。いろちがいで 2しゅるい つくる */
+const okashiDrop = (a, b) => `<path d="M30 8 q17 22 17 31 a17 17 0 0 1 -34 0 q0 -9 17 -31 z" fill="${a}" stroke="${b}" stroke-width="3" stroke-linejoin="round"/>`
+  + `<ellipse cx="23" cy="35" rx="4" ry="6.5" fill="#fffdf8" opacity=".75"/>`;
+/* おかし型の おかし 1こ。じっさいの おかしの かたちは かりず、まるい クッキー・つつみキャンディ・
+   ドロップの 3しゅるいで えがく(cookie / candy / drop / dropm) */
+function okashiPiece(kind){
+  const g = {
+    cookie: `<circle cx="30" cy="30" r="23" fill="#e8b978" stroke="#a9763a" stroke-width="3"/>`
+      + `<circle cx="22" cy="23" r="4" fill="#6b4526"/><circle cx="38" cy="29" r="3.5" fill="#6b4526"/>`
+      + `<circle cx="27" cy="40" r="3.5" fill="#6b4526"/><circle cx="40" cy="42" r="2.5" fill="#6b4526"/>`,
+    candy: `<path d="M9 17 L22 30 L9 43 Z" fill="#ffd0de" stroke="#c9718f" stroke-width="3" stroke-linejoin="round"/>`
+      + `<path d="M51 17 L38 30 L51 43 Z" fill="#ffd0de" stroke="#c9718f" stroke-width="3" stroke-linejoin="round"/>`
+      + `<ellipse cx="30" cy="30" rx="14" ry="12" fill="#f7a8c0" stroke="#c9718f" stroke-width="3"/>`
+      + `<path d="M25 24 q6 6 0 12" fill="none" stroke="#fffdf8" stroke-width="3" stroke-linecap="round" opacity=".85"/>`,
+    drop: okashiDrop('#9fd8ef', '#4d8ba3'),
+    dropm: okashiDrop('#d8b6e8', '#8a6da3')
+  }[kind] || '';
+  return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+}
+/* 上から ふわふわ ふってくる おかし。
+   しゅるい / よこいち(%) / おおきさ(px) / びょうすう / おくらせ(びょう) / よこゆれ(vw) */
+function okashiFall(){
+  const rows = [['cookie',4,42,3.4,-2.6,4], ['candy',16,34,2.9,-1.1,-5], ['drop',28,30,3.8,-3.0,6],
+                ['dropm',40,38,3.1,-0.4,-4], ['cookie',52,28,3.6,-2.1,5], ['candy',64,40,2.7,-1.6,-6],
+                ['drop',76,32,3.5,-0.8,4], ['dropm',88,36,3.0,-2.4,-5], ['cookie',10,26,2.8,-1.5,-3],
+                ['candy',34,28,3.3,-2.9,5], ['drop',58,24,3.7,-2.2,-4], ['dropm',82,30,2.6,-0.9,3],
+                ['candy',46,24,3.2,-1.8,4], ['cookie',70,22,3.9,-0.6,-3], ['drop',22,26,2.5,-2.0,5],
+                ['dropm',94,24,3.4,-1.4,-4]];
+  return rows.map((r, i) => `<span class="ok-sweet" style="left:${r[1]}%;width:${r[2]}px;`
+    + `animation-duration:${r[3]}s;animation-delay:${r[4]}s;`
+    + `--sx:${r[5]}vw;--rot:${((i % 2) ? 1 : -1) * (60 + i * 14)}deg">${okashiPiece(r[0])}</span>`).join('');
+}
+
 function showCutin(c, then){
   const box = $('cutin');
   clearTimeout(cutinTimer);
@@ -956,6 +1046,11 @@ function showCutin(c, then){
     /* still=レンガの いえ。ゆれも かけらも 出さず、かぜだけが とおりすぎる */
     inner = `<div class="ci-inner${c.still ? ' still' : ''}">`
       + fuuWind() + (c.still ? '' : fuuDebris(c.debris))
+      + `<div class="ci-text">${c.text}</div></div>`;
+    dur = 1600;
+  }else if(c.type === 'okashi'){
+    /* おかしの いえが あらわれる しゅんかん。ゆれは 入れず、おかしが ふわふわ ふってくるだけ */
+    inner = `<div class="ci-inner">` + okashiFall()
       + `<div class="ci-text">${c.text}</div></div>`;
     dur = 1600;
   }
@@ -1159,6 +1254,7 @@ function finishEnding(s, text){
   const hadMouse = !!unlocks.mouse;
   const hadHime = !!unlocks.hime;
   const hadPrenga = !!unlocks.prenga;
+  const hadTori = !!unlocks.tori;
   const isNew = !zukan.includes(eid);
   clearCur();                                   /* けつまつに ついたら よみかけは おわり */
   if(isNew){ zukan.push(eid); saveJson(SAVE_KEY, zukan); Sound.se('kira'); }
@@ -1179,6 +1275,10 @@ function finishEnding(s, text){
   /* さんびきの こぶたの「イギリスの ほんとうの おはなし」か「さいしょから 3びきで」で レンガの いえの はなしが ひらく */
   if((eid === 'pb_genten' || eid === 'pb_kyoryoku') && !unlocks.prenga){
     unlocks.prenga = true; saveJson(UNLOCK_KEY, unlocks);
+  }
+  /* ヘンゼルと グレーテルの「かわの むこうへ」か「むらの ふゆ」で しろい とりの はなしが ひらく */
+  if((eid === 'hg_kawa' || eid === 'hg_mura') && !unlocks.tori){
+    unlocks.tori = true; saveJson(UNLOCK_KEY, unlocks);
   }
 
   let msg = text + '\n\n';
@@ -1201,6 +1301,9 @@ function finishEnding(s, text){
   }
   if(!hadPrenga && unlocks.prenga){
     msg += '\n' + t('unlockPrenga');
+  }
+  if(!hadTori && unlocks.tori){
+    msg += '\n' + t('unlockTori');
   }
   $('tbox').textContent = msg;
 
@@ -1317,7 +1420,11 @@ const SELECT_CARDS = [
   /* さんびきの こぶた: 本編は こぶた(🐷)。オオカミ視点は ふうふう(💨)、レンガの いえ視点は 🧱 */
   {story:'buta',   ico:'🐷', nm:'butaName',   tag:'butaTag',   tagFirst:'butaTagFirst', tale:'buta'},
   {story:'pwolf',  ico:'💨', nm:'pwolfName',  tag:'pwolfTag',  lock:'pwolfLock',  open:()=>taleCleared('buta')},
-  {story:'prenga', ico:'🧱', nm:'prengaName', tag:'prengaTag', lock:'prengaLock', open:()=>!!unlocks.prenga}
+  {story:'prenga', ico:'🧱', nm:'prengaName', tag:'prengaTag', lock:'prengaLock', open:()=>!!unlocks.prenga},
+  /* ヘンゼルと グレーテル: 本編は おかし(🍬)。まじょ視点は 🧙、しろい とり視点は 🕊️(🐦は キジで つかいずみ) */
+  {story:'hg',   ico:'🍬', nm:'hgName',   tag:'hgTag',   tagFirst:'hgTagFirst', tale:'hg'},
+  {story:'majo', ico:'🧙', nm:'majoName', tag:'majoTag', lock:'majoLock', open:()=>taleCleared('hg')},
+  {story:'tori', ico:'🕊️', nm:'toriName', tag:'toriTag', lock:'toriLock', open:()=>!!unlocks.tori}
 ];
 
 function renderSelect(){

@@ -218,7 +218,21 @@ var Sound = (function () {
       koto: [[0,D3,1.3],[.25,A4,.8],[.5,A2,1.1],[.625,D5,.8],[.75,D3,.9],[.875,F5,.7]],
       kotoAlt: [[0,D3,1.3],[.25,F4,.8],[.5,A2,1.1],[.625,A4,.8],[.75,D3,.9],[.875,D5,.7]],
       fue: [[0,D5,.2],[.25,F5,.2],[.5,A5,.35]], fueAlt: [[0,E5,.2],[.25,D5,.2],[.5,F5,.4]],
-      suzu: [.25,.75], taiko: [0,.5], tsuzumi: [.25,.75], drone: D2 }
+      suzu: [.25,.75], taiko: [0,.5], tsuzumi: [.25,.75], drone: D2 },
+
+    /* ---- 和風追加(じゅうにしの はじまり) ---- */
+    /* がんたん: 鈴と笛の はれやかな あさ(ゆっくり4拍子・陽旋法) */
+    ju_gantan: { bar: 4.0, vol: 0.044,
+      koto: [[0,D3,1.1],[.25,A3],[.5,D4],[.75,E4]],
+      kotoAlt: [[0,G3,1.1],[.25,D4],[.5,G4],[.75,A4]],
+      fue: [[0,A4,.3],[.5,D5,.45]], fueAlt: [[.25,B4,.3],[.5,A4,.25],[.75,G4,.2]],
+      suzu: [0,.5], taiko: [], tsuzumi: [.75], drone: null },
+    /* かけっこ: はやい 太鼓と 鼓・にぎやか(勝負の緊迫ではなく お祭りの かけあし) */
+    ju_kake: { bar: 1.5, vol: 0.046,
+      koto: [[0,D4],[.25,A4],[.5,D5],[.75,A4]],
+      kotoAlt: [[0,G4],[.25,B4],[.5,D5],[.75,B4]],
+      fue: [[0,A5,.15],[.5,D5,.2]], fueAlt: [[0,G5,.15],[.25,A5,.15],[.5,B4,.25]],
+      suzu: [.5], taiko: [0,.5,.75], tsuzumi: [.25], drone: null }
   };
 
   function ensure() {
@@ -597,6 +611,16 @@ var Sound = (function () {
       setTimeout(s.nyaa, 750);
       setTimeout(s.kokekokko, 1050);
       setTimeout(function () { s.hiho(); s.wan(); s.nyaa(); s.kokekokko(); s.fanfare(); }, 1450);
+    },
+    namae: function () { /* としの なまえ(鈴の ひとうち + 印を おす とん) */
+      [2800, 4200].forEach(function (f, i) { tone(f, 0.5, { vol: i ? 0.03 : 0.05 }); });
+      tone(180, 0.1, { to: 70, vol: 0.14, at: 0.2 });
+      noiseHit(0.05, 500, 0.08, 0.2);
+    },
+    tobiori: function () { /* ぴょん */
+      tone(700, 0.12, { to: 1300, vol: 0.09 });
+      tone(1100, 0.1, { to: 500, vol: 0.07, at: 0.14 });
+      noiseHit(0.04, 1500, 0.05, 0.24);
     }
   };
 

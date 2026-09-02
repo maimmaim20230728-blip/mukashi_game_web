@@ -60,7 +60,25 @@ const P = {
   ondoriHa:'#c2683c', ondoriHaD:'#9c4d2c', ondoriO:'#3f5246', ondoriTosaka:'#d94f3f', ondoriKuchi:'#f2ce6a',
   doroA:'#5f6b7a', doroAD:'#495462', doroB:'#8a7350', doroBD:'#6e5a3e', doroC:'#7a6070', doroCD:'#5f4a57',
   madoAkari:'#f7d98a', madoAkariD:'#e8b45a',
-  kona:'#efe6d2', machiKabe:'#f4ead6', machiYane:'#a8563f'
+  kona:'#efe6d2', machiKabe:'#f4ead6', machiYane:'#a8563f',
+  /* じゅうにしの はじまり: 12ひきの けなみ・がんじつの あさぞら・おおみそかの ゆきみち・おふれの わし
+     🔴 ごてんの しゅと しらきは かぐやの gotenAka / shiraki を そのまま つかう
+     🔴 ネズミは かぶの nezumi、ネコは ブレーメンの brNeko とは べつの けいろに する */
+  juNezu:'#bdb6ad', juNezuD:'#978f86', juNezuHara:'#efe9df', juNezuMimi:'#f0c2ca',
+  juNeko:'#e0a862', juNekoD:'#bd8440', juNekoHara:'#fbf1dc', juNekoShima:'#a86f2f',
+  juUshi:'#5c5751', juUshiD:'#423e39', juUshiHara:'#ece6d8', juTsuno:'#e6dcc0',
+  juTora:'#e2a251', juToraD:'#bb7d31', juToraHara:'#f9edd6', juShima:'#4a3a2c',
+  juUsagi:'#f8f4ec', juUsagiD:'#ddd6c8', juUsagiMimi:'#f2bfc8',
+  juTatsu:'#5f9e8a', juTatsuD:'#437a68', juTatsuHara:'#ecdfa6', juTatsuTate:'#c2683c',
+  juHebi:'#8fae5a', juHebiD:'#6e8c42', juHebiHara:'#eee7c2',
+  juUma:'#a9743f', juUmaD:'#86592c', juUmaTate:'#4a3a2c', juUmaHara:'#e4cba6',
+  juHitsuji:'#f6f1e4', juHitsujiKao:'#c2ae90',
+  juIno:'#7a5a42', juInoD:'#5a4030', juInoHara:'#a98a6a', juInoKiba:'#f6f1e2',
+  juAsaTop:'#ffd7a4', juAsaBtm:'#fdf4de',
+  juYoruTop:'#1b2a4e', juYoruBtm:'#3d5484',
+  juYuki:'#f2f8fd', juYukiK:'#d2e2ef', juYukiYo:'#c2d2e6', juYukiYoK:'#8ea4c4',
+  juWashi:'#f7f1e0', juSumi:'#3a332c', juShuin:'#c9403a',
+  juMatsu:'#4f8f5f', juMatsuD:'#3b7049', juTake:'#8fb562'
 };
 const O = `stroke="${P.ink}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
 
@@ -232,7 +250,8 @@ function oniSit(c, mood){
 }
 const oniKid = mood => g(0,0,0.62, oniChar(P.oniG, {mood: mood || 'sad'}));
 
-const dogChar = () => el(0,2,15,4,'rgba(0,0,0,.13)')
+/* いぬ（ももたろう）。🔴 opt.kubiwa===false で くびわを はずす（じゅうにしの イヌは くびわ なし） */
+const dogChar = (opt) => el(0,2,15,4,'rgba(0,0,0,.13)')
   + pto('M-15 -20 q-11 -3 -9 -13 q9 -3 10 7 z','#c98a4b')
   + elo(0,-14,17,11,'#f6efe2')
   + rco(-11,-9,6,9,'#efe4d2',2) + rco(5,-9,6,9,'#efe4d2',2)
@@ -241,7 +260,7 @@ const dogChar = () => el(0,2,15,4,'rgba(0,0,0,.13)')
   + el(21,-25,5,4,'#fff')
   + ci(24,-27,2.2,'#3a2c20') + ci(13,-29,2.2,'#333')
   + pt('M22 -21 q2 4 -2 5 l-1 -4 z','#e08a8a')
-  + rco(7,-20,13,4,'#d95555',2);
+  + ((opt && opt.kubiwa === false) ? '' : rco(7,-20,13,4,'#d95555',2));
 
 const saruChar = () => el(0,2,13,4,'rgba(0,0,0,.13)')
   + ln('M-12 -13 q-12 1 -9 -12','#a9743f',4.5)
@@ -1678,7 +1697,7 @@ function robaChar(opt){
     /* たてがみは みじかい ふさふさ（くびわに 見えない ように 線では かかない） */
     + ln('M22 -58 l-4 -8',h,3.2) + ln('M29 -62 l-3 -8',h,3.2) + ln('M36 -66 l-3 -8',h,3.2)
     + ln('M43 -70 l-2 -8',h,3.2) + ln('M50 -73 l-1 -8',h,3.2);
-  const shippo = ln('M-32 -44 q-14 10 -12 24',cd,4) + pto('M-46 -28 q-8 9 -5 18 q9 2 10 -8 q1 -8 -5 -10 z',h);
+  const shippo = ln('M-32 -44 q-13 11 -11 23',cd,4) + pto('M-43 -25 q-7 8 -4 16 q8 2 9 -7 q1 -7 -5 -9 z',h);
   let s;
   if(opt.tate){
     s = shippo + ashi(-28) + ashi(-15) + karada
@@ -1797,7 +1816,8 @@ function bremenNekoChar(opt){
     + rco(5,-13,7,13,cd,3) + rco(13,-13,7,13,cd,3)
     + g(18,-30,1, bremenNekoHead(opt.mood,hikaru));
 }
-/* オンドリ: あかちゃの はねと あかい とさか。naku で くびを 上げて 鳴く */
+/* オンドリ: あかちゃの はねと あかい とさか。naku で くびを 上げて 鳴く
+   🔴 opt.wakai で しろい まつげを けす（じゅうにしの トリは としを とった すがたに しない） */
 function ondoriChar(opt){
   opt = opt || {};
   const c = P.ondoriHa, cd = P.ondoriHaD;
@@ -1805,7 +1825,7 @@ function ondoriChar(opt){
     let s = cio(0,0,9,c)
       + pto('M-8 -8 q2 -8 5 -3 q3 -8 6 -2 q4 -7 6 1 q-8 4 -17 4 z',P.ondoriTosaka)
       + pto('M4 7 q5 8 0 11 q-5 -3 -4 -11 z',P.ondoriTosaka)
-      + ln('M-7 -6 l7 2',P.shiraga,2);
+      + (opt.wakai ? '' : ln('M-7 -6 l7 2',P.shiraga,2));
     if(mood === 'naku'){
       s += pto('M8 -3 l14 -3 l-13 6 z',P.ondoriKuchi)
         + pto('M8 1 l13 6 l-13 1 z',P.ondoriKuchi)
@@ -1836,7 +1856,7 @@ function dorobouChar(c,opt){
   const cd = (c === P.doroB) ? P.doroBD : (c === P.doroC ? P.doroCD : P.doroAD);
   const mood = opt.mood || 'futsu';
   const ashi = opt.nige
-    ? gr(-5,-16,1,-26, rco(-4,0,8,17,'#4f412f',3)) + gr(5,-16,1,28, rco(-4,0,8,17,'#4f412f',3))
+    ? gr(-5,-16,1,-38, rco(-4,0,8,17,'#4f412f',3)) + gr(6,-17,1,42, rco(-4,0,8,17,'#4f412f',3))
     : rco(-9,-16,7,16,'#4f412f',3) + rco(2,-16,7,16,'#4f412f',3);
   let ude;
   if(opt.te === 'age' || opt.nige){
@@ -1879,7 +1899,7 @@ function dorobouChar(c,opt){
     + pt('M-11 -63 q11 6 22 0 q-9 9 -22 0 z','rgba(74,58,44,.22)')
     + kao;
   if(opt.te === 'matchi') s += matchiBi(24,-58,.9);
-  if(opt.nige) return gr(0,0,1,-9, s);
+  if(opt.nige) return gr(0,0,1,-13, s);
   return s;
 }
 /* あるじ: とぐちの かげ・うしろすがた。🔴 かおは 出さない（ひょうかを 誰にも 言わせない ため） */
@@ -1891,6 +1911,407 @@ const shujinChar = () => el(0,2,16,5,'rgba(0,0,0,.16)')
   + ci(0,-72,16,'#332c26')
   + pt('M-17 -74 q0 -15 17 -15 q17 0 17 15 q-17 -5 -34 0 z','#2a241f')
   + ln('M-13 -84 q13 -6 26 0','rgba(255,255,255,.10)',2);
+
+/* ---------- じゅうにしの はじまり用の 背景部品 ---------- */
+/* ゆきの じめん。yoru で よるの いろに かえる */
+const juYukiNo = (y,yoru) => rc(0,y,480,300 - y, yoru ? P.juYukiYoK : P.juYukiK)
+  + el(240,y + 26,400,52, yoru ? P.juYukiYo : P.juYuki);
+/* ちらつく ゆき。🔴 いちは きめうち（まいかい かわると 絵が おちつかない） */
+const juYukiFuru = op => {
+  const a = [[38,44,3.2],[112,86,2.4],[186,38,2.8],[262,104,2.2],[330,58,3],[404,96,2.6],
+    [72,148,2.2],[228,168,2.6],[356,152,2.2],[442,42,2.4],[152,206,2],[300,214,2.2]];
+  let s = '';
+  for(const p of a) s += ci(p[0],p[1],p[2],'rgba(255,255,255,' + (op || .8) + ')');
+  return s;
+};
+/* ゆきを かぶった まつ（うらしまの matsu に ゆきを のせる） */
+const juMatsuYuki = (x,y,s) => matsu(x,y,s) + g(x,y,s,
+    el(-20,-61,15,4.5,'#fff') + el(18,-67,14,4.5,'#fff')
+  + el(-4,-78,18,5,'#fff') + el(3,-57,11,3.4,'#fff'));
+/* うごきの 線（はしる・とびおりる ときに そえる） */
+const juUgoki = (x,y,s,r,c) => gr(x,y,s,r || 0, ln('M0 0 l-28 0',c || 'rgba(74,58,44,.22)',3.4)
+  + ln('M2 -10 l-20 0',c || 'rgba(74,58,44,.17)',2.8)
+  + ln('M2 10 l-20 0',c || 'rgba(74,58,44,.17)',2.8));
+/* たてふだ（おふれの こうさつ）。🔴 もじは かかない（すみの 行を 線で しめすだけ） */
+const juFuda = (x,y,s) => {
+  let moji = '';
+  for(let i = 0; i < 5; i++) moji += ln('M' + (-30 + i * 12) + ' -66 l0 -' + (i % 2 ? 32 : 40),P.juSumi,2.4);
+  return g(x,y,s, rco(-7,-58,14,58,P.woodD,3)
+    + rco(-42,-120,84,66,P.juWashi,3)
+    + moji
+    + cio(30,-62,6,P.juShuin)
+    + pto('M-50 -120 L50 -120 L40 -132 L-40 -132 z',P.woodD));
+};
+/* かどまつ（もんの わきの まつと たけ） */
+const juKadomatsu = (x,y,s) => g(x,y,s,
+    pto('M-10 -22 L-10 -50 L-3 -57 L-3 -22 z','#a9cf7e')
+  + pto('M-1 -22 L-1 -64 L7 -72 L7 -22 z',P.juTake)
+  + pto('M9 -22 L9 -42 L16 -49 L16 -22 z','#a9cf7e')
+  + ln('M-3 -54 L-3 -26','#6e9a48',2) + ln('M7 -68 L7 -26','#6e9a48',2)
+  + elo(-15,-32,10,7,P.juMatsu) + elo(18,-36,9,6,P.juMatsu) + elo(2,-27,12,7,P.juMatsuD)
+  + rco(-16,-22,32,22,'#dcc78e',3)
+  + ln('M-16 -15 L16 -15','#b8a068',2.4) + ln('M-16 -8 L16 -8','#b8a068',2.4));
+/* ついじべい（もんの りょうわきに つづく かべ） */
+const juHei = (x0,x1,y) => rc(x0,y - 40,x1 - x0,40,'#e2d6bc')
+  + ln('M' + x0 + ' ' + (y - 22) + ' L' + x1 + ' ' + (y - 22),'#c2b394',2.6)
+  + rc(x0,y - 49,x1 - x0,10,'#8a8f9a')
+  + ln('M' + x0 + ' ' + (y - 39) + ' L' + x1 + ' ' + (y - 39),P.ink,2.5);
+/* ごてんの もん（しらきの はしら・しゅの かもい・かわらの やね）
+   o.aki=とびらを ひらく / o.oku=とびらの おくに おく 絵（かみさまの かげ など） */
+const juMon = (x,y,s,o) => {
+  o = o || {};
+  const naka = o.aki
+    ? rco(-31,-80,62,76,'#2f2a24',3) + (o.oku || '')
+      + pto('M-31 -80 L-31 -4 L-53 -13 L-53 -71 z','#6e5138')
+      + pto('M31 -80 L31 -4 L53 -13 L53 -71 z','#6e5138')
+    : rco(-31,-80,62,76,'#7a5c34',3) + ln('M0 -80 L0 -4','#5f4426',2.6)
+      + cio(-14,-42,3.6,P.gotenAka) + cio(14,-42,3.6,P.gotenAka);
+  return g(x,y,s, naka
+    + rco(-66,-90,22,90,P.shiraki,3) + rco(44,-90,22,90,P.shiraki,3)
+    + rc(-60,-84,9,84,P.shirakiD) + rc(51,-84,9,84,P.shirakiD)
+    + rco(-76,-107,152,18,P.gotenAka,3)
+    + pto('M-94 -107 L-74 -131 L74 -131 L94 -107 z','#7c8698')
+    + ln('M-78 -119 L78 -119','#67707f',3)
+    + pto('M-17 -131 L17 -131 L11 -144 L-11 -144 z',P.gotenAkaD));
+};
+/* わふうの こや（ゆきの さとの いえ）。akari で しょうじに あかりが ともる */
+const juKoya = (x,y,s,akari) => g(x,y,s, rco(-54,-58,108,58,'#e2d6ba',3)
+  + rco(-38,-48,46,34, akari ? P.madoAkari : '#cfe6f0',3)
+  + ln('M-15 -48 L-15 -14', akari ? P.madoAkariD : '#a9c4d4',2.4)
+  + ln('M-38 -31 L8 -31', akari ? P.madoAkariD : '#a9c4d4',2.4)
+  + rco(18,-42,26,42,'#7a5c34',3)
+  + pto('M-70 -58 L-54 -84 L54 -84 L70 -58 z','#7c8698')
+  + ln('M-56 -72 L56 -72','#67707f',3)
+  + pt('M-70 -58 L-62 -70 q62 -9 124 0 L70 -58 z','rgba(255,255,255,.82)'));
+
+/* ---------- じゅうにしの はじまり（どうぶつ） ----------
+   🔴 12ひき＋ネコと 数が おおいので、よつあしの どうたい（からだ・4本の あし・しっぽ）は
+      juKarada に まとめ、あたまと もようだけ さしかえる。目もとは juMe で 全ぴき そろえる
+   🔴 としを とった すがたには しない（ブレーメンの 4ひきとの ちがい）。がっき・ころもは もたせない
+   🔴 サル=saruChar / イヌ=dogChar({kubiwa:false}) / トリ=ondoriChar({wakai:1}) を つかいまわす */
+/* どうぶつの 目もと（あたまの ざひょうけい）。mood: normal / niko / odoroki */
+const juMe = (x,y,mood,c) => {
+  const ink = c || '#2c2620';
+  if(mood === 'odoroki') return el(x,y - 1,3.4,4.4,'#fff') + ci(x,y,2.4,ink);
+  if(mood === 'niko') return ln('M' + (x - 4) + ' ' + (y + 1) + ' q4 -6 8 0',ink,2.6);
+  return ci(x,y,2.7,ink) + ci(x + .9,y - 1,1,'#fff');
+};
+/* ひげ（はなさきの よこから 2本）。🔴 ながいと ぼうを くわえて 見えるので みじかく うすく */
+const juHige = (x,y) => ln('M' + x + ' ' + y + ' l8 -2.5','#a89e92',1.6)
+  + ln('M' + x + ' ' + (y + 3) + ' l8 2.5','#a89e92',1.6);
+/* よつあしの どうたい。c=けなみ / cd=あしと こい ところ / hara=おなか
+   w,h=からだの はんけい / y=からだの 中心の たかさ / aw=あしの ふとさ
+   head=あたまの 絵・hx,hy=あたまの いち / kake=はしる かっこう / mofu=もこもこの け */
+function juKarada(o){
+  const c = o.c, cd = o.cd || o.c, w = o.w || 18, h = o.h || 11;
+  const y = o.y == null ? -20 : o.y, aw = o.aw || 7;
+  const top = y + h - 4, ah = -top, k = o.kake ? 1 : 0;
+  const ashi = (x,r) => r ? gr(x,top,1,r, rco(-aw / 2,0,aw,ah,cd,3)) : rco(x - aw / 2,top,aw,ah,cd,3);
+  const dou = o.mofu
+    ? elo(0,y,w,h,c) + cio(-w * .58,y + 1,h * .62,c) + cio(-w * .22,y - h * .44,h * .66,c)
+      + cio(w * .2,y - h * .38,h * .66,c) + cio(w * .56,y + 1,h * .6,c)
+    : elo(0,y,w,h,c) + el(1,y + h * .38,w * .66,h * .44,o.hara || c);
+  return (o.noKage ? '' : el(2,2,w + 5,5, k ? 'rgba(0,0,0,.09)' : 'rgba(0,0,0,.13)'))
+    + (o.shippo || '')
+    + ashi(-w * .6,k ? 40 : 0) + ashi(-w * .28,k ? 22 : 0)
+    + dou
+    + (o.moyou || '')
+    + ashi(w * .28,k ? -22 : 0) + ashi(w * .6,k ? -40 : 0)
+    + g(o.hx,o.hy,o.hs || 1,o.head);
+}
+/* ネズミ: かぶの nezumiChar より 頭身を 上げた 立ちすがた
+   mood: normal / odoroki / damaru（なにも いわない）。noKage で かげを けす（ウシの せなかに のせる とき） */
+function jnezumiChar(opt){
+  opt = opt || {};
+  const c = P.juNezu, cd = P.juNezuD, mood = opt.mood || 'normal';
+  let kao;
+  if(mood === 'odoroki'){
+    kao = el(6,-29,3.2,4,'#fff') + ci(6,-28,2.3,'#2c2620') + elo(12,-19,3.2,2.8,'#8a4040');
+  }else if(mood === 'damaru'){
+    kao = ln('M3 -28 q3.5 -4 7 0','#2c2620',2.3) + ln('M9 -20 l6 1','#8a7a68',2);
+  }else{
+    kao = ci(6,-28,2.5,'#2c2620') + ci(6.9,-29,.9,'#fff')
+      + ci(-1,-22,2.6,'rgba(255,140,140,.4)') + ln('M9 -21 q3 3 6 1','#8a7a68',1.9);
+  }
+  return (opt.noKage ? '' : el(0,2,12,4,'rgba(0,0,0,.12)'))
+    + ln('M-9 -13 q-20 5 -15 -13',cd,3)
+    + rco(-7,-5,6,5,cd,2) + rco(1,-5,6,5,cd,2)
+    + elo(0,-14,11,10,c)
+    + el(1,-11,7,6,P.juNezuHara)
+    + cio(-4,-34,5.6,c) + cio(9,-33,5.6,c)
+    + ci(-4,-34,3.2,P.juNezuMimi) + ci(9,-33,3.2,P.juNezuMimi)
+    + cio(2,-26,10,c)
+    + pt('M2 -36 q-5 9 -3 17 q4 3 7 0 q2 -9 -4 -17 z',P.juNezuHara)
+    + el(11,-21,5,4,P.juNezuHara)
+    + ci(14,-22,1.8,'#e08a8a')
+    + kao
+    + juHige(12,-18);
+}
+/* ネコの かお（0,0 が あたまの まんなか・みぎむき）。🔴 ちゃとらの わかい ネコ */
+function jnekoHead(mood){
+  const c = P.juNeko, sh = P.juNekoShima;
+  let s = pto('M-11 -7 l-4 -14 l13 7 z',c) + pto('M6 -9 l4 -14 l-12 6 z',c)
+    + pt('M-9 -9 l-2 -8 l7 4 z',P.juUsagiMimi) + pt('M6 -11 l2 -7 l-6 3 z',P.juUsagiMimi)
+    + cio(0,0,12,c)
+    + ln('M-8 -8 q4 -4 9 -2',sh,2.4) + ln('M-3 -12 q5 -3 9 -1',sh,2.2)
+    + elo(8,6,8,5.5,P.juNekoHara)
+    + ln('M-9 3 q3 4 7 3',sh,2.2)
+    + pt('M10 2 l3 2 l-3 2.4 l-3 -2.4 z','#e08a8a');
+  if(mood === 'odoroki'){
+    s += el(-2,-4,3.6,4.6,'#fff') + el(8,-5,3.6,4.6,'#fff')
+      + ci(-2,-3,2.6,'#3f7a52') + ci(8,-4,2.6,'#3f7a52');
+  }else if(mood === 'kao'){
+    s += ln('M-5 -4 q3 4 6 0','#2c2620',2.4) + ln('M5 -5 q3 4 6 0','#2c2620',2.4);
+  }else{
+    s += el(-2,-3,3.4,4,'#8fc49a') + el(8,-4,3.4,4,'#8fc49a')
+      + ln('M-2 -6 l0 6','#2c2620',1.9) + ln('M8 -7 l0 6','#2c2620',1.9)
+      + ci(-3,-5,1,'#fff') + ci(7,-6,1,'#fff');
+  }
+  /* 🔴 くちは くちもとの なかに おく（そとに 出すと ぼうを くわえて 見える）
+     🔴 kao の ときは みぎの ひげを 出さない（まえあしと かさなって ぼうに 見える） */
+  return s + ln('M5 8 q4 3 8 -1','#8a4040',2)
+    + ln('M4 4 l-8 -2','#d8d2c8',1.6)
+    + (mood === 'kao' ? '' : ln('M14 3 l7 -3','#d8d2c8',1.6));
+}
+/* ネコ: わかい ちゃとら。🔴 かぶの nekoChar・ブレーメンの bremenNekoChar とは べつ
+   mood: normal / odoroki / kao（まえあしで かおを あらう）。maru で ひなたに まるくなる */
+function jnekoChar(opt){
+  opt = opt || {};
+  const c = P.juNeko, sh = P.juNekoShima, mood = opt.mood || 'normal';
+  if(opt.maru){
+    return el(2,3,25,6,'rgba(0,0,0,.12)')
+      + ln('M-19 -8 q-9 -13 6 -15',P.ink,7) + ln('M-19 -8 q-9 -13 6 -15',c,4.5)
+      + elo(0,-13,23,13,c)
+      + el(2,-9,15,7,P.juNekoHara)
+      + ln('M-13 -20 q6 -3 12 -1',sh,2.6) + ln('M-3 -22 q6 -3 12 -1',sh,2.6)
+      + g(15,-18,.86, pto('M-11 -7 l-4 -14 l13 7 z',c) + pto('M6 -9 l4 -14 l-12 6 z',c)
+          + cio(0,0,12,c)
+          + elo(7,6,8,5.5,P.juNekoHara)
+          + ln('M-5 -4 q3 4 6 0','#2c2620',2.4) + ln('M5 -5 q3 4 6 0','#2c2620',2.4)
+          + pt('M9 2 l3 2 l-3 2.4 l-3 -2.4 z','#e08a8a')
+          + ln('M4 8 q4 3 8 -1','#8a4040',2));
+  }
+  let s = el(2,2,17,5,'rgba(0,0,0,.12)')
+    + ln('M-13 -12 q-19 -6 -14 -28',P.ink,7) + ln('M-13 -12 q-19 -6 -14 -28',c,4.5)
+    + elo(0,-17,15,16,c)
+    + el(2,-13,9,10,P.juNekoHara)
+    + ln('M-10 -26 q5 -3 10 -1',sh,2.6) + ln('M-10 -18 q5 -3 10 -1',sh,2.6)
+    + rco(-2,-6,7,6,c,2) + rco(6,-6,7,6,c,2)
+    + g(5,-37,1, jnekoHead(mood));
+  if(mood === 'kao') s += ln('M13 -25 q2 5 2 8',c,4.6) + elo(15,-30,5,4.4,c);
+  return s;
+}
+/* ウシ: くろちゃの ふとった からだ・みじかい つの */
+function ushiHead(mood){
+  const c = P.juUshi, cd = P.juUshiD;
+  /* 🔴 つのは みじかく ずんぐり（ながく すると みみに 見える）・みみは よこに はる */
+  return elo(-14,-5,7,4.6,cd) + elo(12,-8,6.5,4.2,cd)
+    + pto('M-8 -10 q-6 -8 -1 -10 q4 2 3 10 z',P.juTsuno)
+    + pto('M6 -11 q5 -8 10 -9 q1 4 -4 10 z',P.juTsuno)
+    + cio(0,0,12,c)
+    + pto('M4 -2 q15 1 16 8 q-2 9 -16 7 z',c)
+    + elo(13,8,8.5,5.6,P.juUshiHara)
+    + ci(10,7,1.7,'#8a7a68') + ci(17,7,1.7,'#8a7a68')
+    + ln('M11 13 q5 3 9 -1','#8a7a68',2.2)
+    + juMe(3,-4,mood);
+}
+/* ウシ。nezumi で せなかに ネズミを のせる（🔴 あたまでは なく せなか） */
+function ushiChar(opt){
+  opt = opt || {};
+  /* 🔴 hara は けなみと おなじ いろに して、まだらは moyou で 3つだけ おく（ぼやけないように） */
+  let s = juKarada({c:P.juUshi, cd:P.juUshiD, hara:P.juUshi,
+    w:27, h:15, y:-36, aw:8.5,
+    shippo: ln('M-25 -42 q-16 12 -14 27',P.juUshiD,3.6)
+      + pto('M-40 -16 q-6 9 -3 16 q9 1 9 -8 q0 -7 -6 -8 z',P.juUshiD),
+    moyou: el(-9,-43,10.5,6.5,P.juUshiHara) + el(9,-46,7,4.2,P.juUshiHara)
+      + el(0,-27,13,5,P.juUshiHara),
+    hx:33, hy:-56, head: ushiHead(opt.mood)});
+  if(opt.nezumi) s += g(-3,-51,.78, jnezumiChar({mood: opt.nezumiMood || 'normal', noKage:1}));
+  return s;
+}
+/* トラ: だいだいに くろの しま・しろい くちもと */
+function toraHead(mood){
+  const c = P.juTora, sh = P.juShima;
+  return cio(-11,-8,5.5,c) + cio(9,-11,5,c)
+    + ci(-11,-8,2.8,P.juUsagiMimi) + ci(9,-11,2.6,P.juUsagiMimi)
+    + cio(0,0,12.5,c)
+    + ln('M-8 -10 l3 7',sh,2.6) + ln('M-1 -12 l1 7',sh,2.6) + ln('M6 -11 l-1 7',sh,2.4)
+    + elo(10,6,8.5,6,P.juToraHara)
+    + ln('M-10 2 l-4 -2',sh,2.4) + ln('M-10 6 l-4 2',sh,2.4)
+    + pt('M12 2 l3.2 2.2 l-3.2 2.4 l-3.2 -2.4 z','#e08a8a')
+    + ln('M13 8 q4 3 8 -1','#8a4040',2.2)
+    + juMe(3,-4,mood)
+    + juHige(15,4);
+}
+function toraChar(opt){
+  opt = opt || {};
+  return juKarada({c:P.juTora, cd:P.juToraD, hara:P.juToraHara,
+    w:24, h:13, y:-28, aw:7.5, kake:opt.kake,
+    shippo: ln('M-22 -32 q-21 3 -18 -13',P.ink,7) + ln('M-22 -32 q-21 3 -18 -13',P.juTora,4.5),
+    moyou: ln('M-14 -38 l-2 9',P.juShima,3) + ln('M-6 -40 l-2 10',P.juShima,3)
+      + ln('M2 -40 l-1 10',P.juShima,3) + ln('M10 -38 l-1 9',P.juShima,3),
+    hx:28, hy:-44, head: toraHead(opt.mood)});
+}
+/* ウサギ: ながい みみ。hane で とびはねる かっこう */
+function usagiHead(mood){
+  const c = P.juUsagi;
+  return cio(0,0,10.5,c)
+    + elo(7,4,7,5,'#fff')
+    + pt('M9 1 l2.6 1.8 l-2.6 2 l-2.6 -2 z','#e08a8a')
+    + ln('M9 5 l0 3','#c9b8a8',1.8)
+    + juMe(3,-3,mood,'#5a4a3a')
+    + juHige(12,3);
+}
+function usagiChar(opt){
+  opt = opt || {};
+  const c = P.juUsagi, cd = P.juUsagiD;
+  const mimi = (x,y,r) => gr(x,y,1,r, elo(0,-16,5.5,17,c) + el(0,-16,2.8,12,P.juUsagiMimi));
+  if(opt.hane){
+    return el(4,2,17,4,'rgba(0,0,0,.1)')
+      + cio(-15,-17,5.5,c)
+      + gr(-6,-16,1,-22, elo(0,0,15,10,c) + el(-3,1,9,5,'#fff'))
+      + gr(-11,-8,1,44, rco(-3.4,0,7,10,cd,3)) + gr(-4,-7,1,28, rco(-3.4,0,7,9,cd,3))
+      + gr(8,-12,1,-32, rco(-3.2,0,6.4,10,cd,3))
+      + mimi(1,-28,-42) + mimi(8,-31,-24)
+      + g(13,-28,1, usagiHead(opt.mood));
+  }
+  return el(2,2,14,4,'rgba(0,0,0,.12)')
+    + cio(-13,-9,5.5,c)
+    + elo(0,-14,13,14,c)
+    + el(2,-11,8,8,'#fff')
+    + pto('M-6 -6 q11 -5 18 0 q0 6 -9 6 q-9 0 -9 -6 z',cd)
+    + mimi(-1,-27,-9) + mimi(9,-28,13)
+    + g(7,-31,1, usagiHead(opt.mood));
+}
+/* タツ: とうようの りゅう。くもに のって そらを ゆく。🔴 つばさは つけない */
+function tatsuHead(mood){
+  const c = P.juTatsu, cd = P.juTatsuD;
+  return pto('M-7 -9 q-6 -11 1 -14 q3 6 4 12 z',P.juTsuno)
+    + pto('M3 -11 q4 -11 11 -12 q-3 7 -6 13 z',P.juTsuno)
+    + ln('M-9 -3 q-12 3 -17 11',P.juTatsuTate,4.5)
+    + ln('M-10 3 q-13 4 -17 12',P.juTatsuTate,4)
+    + cio(0,0,11,c)
+    + pto('M4 -3 q17 0 18 7 q-2 9 -18 6 z',c)
+    + elo(16,6,7,4.6,P.juTatsuHara)
+    + ci(19,3,1.7,'#2c2620')
+    + ln('M21 8 q11 5 15 14',P.juTatsuHara,2.4) + ln('M20 10 q7 9 6 18',P.juTatsuHara,2.2)
+    + ln('M-6 -8 q6 -3 10 0',cd,2.4)
+    + juMe(3,-4,mood);
+}
+function tatsuChar(opt){
+  opt = opt || {};
+  const c = P.juTatsu, cd = P.juTatsuD;
+  const d = 'M-64 26 q-30 -14 -8 -34 q20 -18 42 -26 q22 -8 26 -26';
+  const ashi = (x,y,r) => gr(x,y,1,r, ln('M0 0 q7 8 5 15',cd,5.4)
+    + ln('M3 13 l-6 5',cd,2.4) + ln('M5 14 l0 6',cd,2.4) + ln('M7 13 l6 4',cd,2.4));
+  return (opt.kumo === false ? '' : cloud(-52,40,1.05) + cloud(22,-4,.72))
+    + ln(d,P.ink,17) + ln(d,c,13)
+    + ln('M-78 14 q-6 -12 4 -20',P.juTatsuHara,4.5)
+    + ln('M-46 -20 q14 -8 18 -18',P.juTatsuHara,4)
+    + ln('M-88 8 l-9 -2',cd,2.8) + ln('M-78 -4 l-8 -6',cd,2.8)
+    + ln('M-58 -20 l-4 -9',cd,2.8) + ln('M-34 -34 l-2 -9',cd,2.8)
+    + ln('M-16 -48 l-3 -9',cd,2.8)
+    + ashi(-62,18,16) + ashi(-22,-30,-8)
+    + pto('M-64 26 q-18 6 -24 -4 q14 -3 16 -13 q7 8 8 17 z',P.juTatsuD)
+    + g(10,-64,1, tatsuHead(opt.mood));
+}
+/* ヘビ: とぐろを まいた すがた */
+function hebiHead(mood){
+  const c = P.juHebi;
+  return elo(0,0,11,7.5,c)
+    + el(-2,2,7,4,P.juHebiHara)
+    + ln('M-7 -4 q7 -4 12 0',P.juHebiD,2.4)
+    + ln('M10 2 l9 0','#d94f5a',2) + ln('M19 2 l6 -3','#d94f5a',1.8) + ln('M19 2 l6 3','#d94f5a',1.8)
+    + juMe(3,-2,mood);
+}
+function hebiChar(opt){
+  opt = opt || {};
+  const c = P.juHebi, cd = P.juHebiD;
+  return el(2,3,26,6,'rgba(0,0,0,.12)')
+    + ln('M-20 -6 q-15 1 -17 8',c,6)
+    + elo(0,-7,25,9,c) + el(0,-5,17,5,P.juHebiHara)
+    + ln('M-16 -12 l-6 -3',cd,2.4) + ln('M-2 -14 l-2 -6',cd,2.4) + ln('M13 -12 l4 -5',cd,2.4)
+    + elo(-1,-17,18,7.5,c) + el(-1,-15,12,4,P.juHebiHara)
+    + ln('M-12 -22 l-5 -4',cd,2.2) + ln('M2 -23 l0 -6',cd,2.2)
+    + elo(-3,-26,11,6,c) + el(-3,-24,7,3,P.juHebiHara)
+    + pto('M2 -30 q10 -3 13 -11 l9 5 q-4 12 -15 14 z',c)
+    + g(20,-44,1, hebiHead(opt.mood));
+}
+/* ウマ: robaChar の からだから 派生（耳は みじかく・たてがみは ながい） */
+function umaHead(mood){
+  const c = P.juUma, t = P.juUmaTate;
+  return pto('M-9 -11 q-3 -13 3 -15 q5 6 2 15 z',c)
+    + pto('M2 -13 q3 -13 10 -13 q1 7 -4 15 z',c)
+    + cio(0,0,12,c)
+    + pto('M4 -2 q19 2 21 10 q-2 9 -21 6 z',c)
+    + elo(19,10,8,5,P.juUmaHara)
+    + ci(17,9,1.6,'#4a3a2c') + ci(23,10,1.6,'#4a3a2c')
+    + ln('M18 15 q5 3 9 -1','#8a7a68',2.2)
+    + ln('M-8 -12 q9 -4 14 2',t,5.4)
+    + ln('M-11 -5 q-9 4 -12 12',t,5)
+    + juMe(4,-4,mood);
+}
+function umaChar(opt){
+  opt = opt || {};
+  return juKarada({c:P.juUma, cd:P.juUmaD, hara:P.juUmaHara,
+    w:26, h:14, y:-34, aw:7.5, kake:opt.kake,
+    shippo: ln('M-24 -42 q-19 13 -17 29',P.juUmaTate,7.5),
+    moyou: ln('M4 -46 q9 -6 15 -8',P.juUmaTate,5) + ln('M13 -48 q8 -5 12 -8',P.juUmaTate,4.5),
+    hx:32, hy:-56, head: umaHead(opt.mood)});
+}
+/* ヒツジ: もこもこの け（juKarada の mofu）・こげちゃの かお */
+function hitsujiHead(mood){
+  const c = P.juHitsujiKao;
+  return elo(-10,-2,6,4.4,c) + elo(9,-6,5.5,4,c)
+    + pto('M-9 -8 q-10 -6 -6 -12 q8 1 8 11 z',P.juTsuno)
+    + cio(0,0,10.5,c)
+    + pto('M3 0 q12 1 13 7 q-2 8 -13 6 z',c)
+    + elo(11,7,6.5,4.4,'#efe6d6')
+    + ci(9,6,1.5,'#8a7a68') + ci(14,6,1.5,'#8a7a68')
+    + pt('M-11 -9 q11 -8 22 -1 q-11 -3 -22 1 z',P.juHitsuji)
+    + juMe(2,-3,mood);
+}
+function hitsujiChar(opt){
+  opt = opt || {};
+  return juKarada({c:P.juHitsuji, cd:P.juHitsujiKao, mofu:1,
+    w:21, h:14, y:-30, aw:6.5,
+    shippo: cio(-20,-32,5,P.juHitsuji),
+    hx:26, hy:-42, head: hitsujiHead(opt.mood)});
+}
+/* イノシシ: butaChar の たいけいから 派生（こげちゃ・きば・せなかの しま） */
+function inoHead(mood){
+  const c = P.juIno, cd = P.juInoD;
+  return pto('M-9 -10 q-4 -11 2 -13 q5 5 2 13 z',cd)
+    + pto('M3 -12 q4 -11 10 -11 q1 6 -4 13 z',cd)
+    + cio(0,0,11.5,c)
+    + ln('M-6 -12 l-1 -8',cd,2.6) + ln('M0 -13 l1 -8',cd,2.6) + ln('M6 -12 l3 -7',cd,2.6)
+    + pto('M4 -3 q17 1 18 8 q-2 8 -18 6 z',c)
+    + elo(19,6,6.5,5.5,P.juInoHara)
+    + ci(17,5,1.6,'#4a3a2c') + ci(22,6,1.6,'#4a3a2c')
+    + pto('M12 8 q-2 10 -6 11 q-3 -8 1 -12 z',P.juInoKiba)
+    + juMe(3,-4,mood);
+}
+function inoshishiChar(opt){
+  opt = opt || {};
+  return juKarada({c:P.juIno, cd:P.juInoD, hara:P.juInoHara,
+    w:24, h:14, y:-26, aw:7, kake:opt.kake,
+    shippo: ln('M-22 -30 q-10 4 -8 11',P.juInoD,3),
+    moyou: ln('M-14 -38 l-3 -8',P.juInoD,2.6) + ln('M-6 -40 l-2 -8',P.juInoD,2.6)
+      + ln('M2 -40 l-1 -8',P.juInoD,2.6) + ln('M10 -38 l1 -8',P.juInoD,2.6)
+      + ln('M-16 -32 l10 -1',P.juInoHara,2.4) + ln('M-4 -35 l11 -1',P.juInoHara,2.4),
+    hx:27, hy:-36, head: inoHead(opt.mood)});
+}
+/* かみさま: ごてんの おくの ぎゃっこうの かげ
+   🔴 かおは 出さない（ひょうかする 人を 絵に しない。ブレーメンの shujinChar と おなじ かんがえ方） */
+const kamisamaChar = () => el(0,3,22,6,'rgba(0,0,0,.18)')
+  + pt('M-30 -100 q30 -12 60 0 l12 100 q-42 12 -84 0 z','#3a332c')
+  + pt('M-42 -92 q-10 38 -4 52 q12 -2 14 -50 z','#3a332c')
+  + pt('M42 -92 q10 38 4 52 q-12 -2 -14 -50 z','#3a332c')
+  + ln('M-24 -60 q24 8 48 0','#2a241f',3)
+  + ci(0,-118,18,'#332c26')
+  + pt('M-19 -120 q0 -17 19 -17 q19 0 19 17 q-19 -6 -38 0 z','#2a241f')
+  + ln('M-15 -130 q15 -6 30 0','rgba(255,255,255,.10)',2)
+  + ln('M-28 -96 q28 -10 56 0','rgba(255,255,255,.08)',2.4);
 
 /* ---------- カットイン用の顔 (200x200) ---------- */
 const FACES = {
@@ -2223,7 +2644,68 @@ const FACES = {
       + el(78,124,12,14,'#fff') + el(122,124,12,14,'#fff')
       + ci(78,126,7,'#333') + ci(122,126,7,'#333')
       + ci(54,148,9,'rgba(255,140,140,.45)') + ci(146,148,9,'rgba(255,140,140,.45)')
-      + elo(100,162,11,9,'#8a4040')
+      + elo(100,162,11,9,'#8a4040'),
+
+  /* ネズミ（じゅうにし）: あたたかい ねずみいろ・みみは 上・はなすじに しろい すじ
+     🔴 かぶの nezumi（つめたい はいいろ・みみは よこ）とは べつ */
+  jnezumi: f => cio(54,50,31,P.juNezu) + cio(146,50,31,P.juNezu)
+      + ci(54,50,17,P.juNezuMimi) + ci(146,50,17,P.juNezuMimi)
+      + cio(100,118,62,P.juNezu)
+      + pt('M100 58 q-17 32 -11 58 q11 8 22 0 q6 -26 -11 -58 z',P.juNezuHara)
+      + elo(100,152,34,23,P.juNezuHara)
+      + ci(78,110,11,'#2c2620') + ci(122,110,11,'#2c2620')
+      + ci(82,105,4,'#fff') + ci(126,105,4,'#fff')
+      + ci(48,138,10,'rgba(255,140,140,.42)') + ci(152,138,10,'rgba(255,140,140,.42)')
+      + ci(100,146,7,'#e08a8a')
+      + ln('M92 155 q8 8 16 0','#8a8074',3)
+      + ln('M66 148 l-38 -11','#8a8074',3) + ln('M66 158 l-38 7','#8a8074',3)
+      + ln('M134 148 l38 -11','#8a8074',3) + ln('M134 158 l38 7','#8a8074',3),
+
+  /* ネコ（じゅうにし）: ちゃとらの わかい ネコ・みどりの 目
+     🔴 ブレーメンの neko（はいぐろ・きいろい 目・しろい まつげ）とは べつ */
+  jneko: f => pto('M56 72 L32 18 L92 50 z',P.juNeko) + pto('M144 72 L168 18 L108 50 z',P.juNeko)
+      + pt('M60 68 L44 32 L86 52 z',P.juUsagiMimi) + pt('M140 68 L156 32 L114 52 z',P.juUsagiMimi)
+      + cio(100,112,62,P.juNeko)
+      + ln('M78 66 q12 -8 22 -3',P.juNekoShima,4.5) + ln('M122 66 q-12 -8 -22 -3',P.juNekoShima,4.5)
+      + ln('M100 58 l0 12',P.juNekoShima,4.5)
+      + ln('M54 118 l20 5',P.juNekoShima,4.5) + ln('M146 118 l-20 5',P.juNekoShima,4.5)
+      + elo(100,148,32,24,P.juNekoHara)
+      + el(76,108,17,14,'#8fc49a') + el(124,108,17,14,'#8fc49a')
+      + ln('M76 98 l0 20','#2c2620',5) + ln('M124 98 l0 20','#2c2620',5)
+      + ci(71,102,3.4,'#fff') + ci(119,102,3.4,'#fff')
+      + ci(50,132,10,'rgba(255,140,140,.35)') + ci(150,132,10,'rgba(255,140,140,.35)')
+      + pt('M94 138 l6 4 l-6 5 l-6 -5 z','#e08a8a')
+      + ln('M96 152 q-8 8 -16 2','#2c2620',3) + ln('M104 152 q8 8 16 2','#2c2620',3)
+      + ln('M74 142 l-26 -6','#d8d2c8',3) + ln('M74 151 l-26 5','#d8d2c8',3)
+      + ln('M126 142 l26 -6','#d8d2c8',3) + ln('M126 151 l26 5','#d8d2c8',3),
+
+  /* ウシ: みじかい つのと 大きな はなづら */
+  jushi: f => pto('M54 60 q-30 -16 -24 -38 q26 4 34 32 z',P.juTsuno)
+      + pto('M146 60 q30 -16 24 -38 q-26 4 -34 32 z',P.juTsuno)
+      + elo(38,98,20,13,P.juUshiD) + elo(162,98,20,13,P.juUshiD)
+      + cio(100,112,60,P.juUshi)
+      + elo(100,152,41,30,P.juUshiHara)
+      + ci(88,148,4.8,'#8a7a68') + ci(112,148,4.8,'#8a7a68')
+      + ln('M84 172 q16 9 32 0','#8a7a68',4)
+      + ci(78,106,10,'#2c2620') + ci(122,106,10,'#2c2620')
+      + ci(82,101,3.6,'#fff') + ci(126,101,3.6,'#fff')
+      + ln('M56 92 l26 -4','#332e29',5) + ln('M144 92 l-26 -4','#332e29',5)
+      + ci(50,130,10,'rgba(255,140,140,.3)') + ci(150,130,10,'rgba(255,140,140,.3)'),
+
+  /* トリ（じゅうにし・あいだに はいる やく）: わかい すがた
+     🔴 ブレーメンの ondori（しろい まつげ）とは べつ。えりの はねを つけて わけて いる */
+  jutori: f => pto('M74 58 Q78 28 88 44 Q94 20 104 40 Q114 20 122 44 Q130 36 132 58 Q102 72 74 58 z',P.ondoriTosaka)
+      + cio(100,116,58,P.ondoriHa)
+      + pt('M50 130 a54 54 0 0 1 22 -46 q-18 24 -14 48 z',P.ondoriHaD)
+      + pt('M52 158 q48 26 96 0 q-10 30 -48 30 q-38 0 -48 -30 z','#f2e2c2')
+      + ln('M60 168 q40 18 80 0','#ded0ae',3)
+      + pto('M88 156 q9 22 0 30 q-9 -8 -7 -30 z',P.ondoriTosaka)
+      + pto('M112 156 q-9 22 0 30 q9 -8 7 -30 z',P.ondoriTosaka)
+      + pto('M82 132 L118 132 L100 166 z',P.ondoriKuchi)
+      + ln('M84 142 L116 142',P.ondoriHaD,3)
+      + ci(76,106,11,'#2c2620') + ci(124,106,11,'#2c2620')
+      + ci(80,101,4,'#fff') + ci(128,101,4,'#fff')
+      + ci(52,130,10,'rgba(255,140,140,.3)') + ci(148,130,10,'rgba(255,140,140,.3)')
 };
 
 /* ---------- 場面 ---------- */
@@ -3884,13 +4366,13 @@ tsuki_miyako: f => wrap(grad('g_tsukimiya','#57527e','#b3a9cf')
 br_koya: f => wrap(grad('g_brkoya','#a9bccd','#e4ebe8')
   + cloud(330,52,.7) + cloud(146,80,.5)
   + rc(0,212,480,88,'#8fa06b') + el(240,236,380,44,'#7f9060')
-  + tree(454,264,.85)
+  + tree(462,266,.8)
   + konayaIe(146,240,1.1)
   + pt('M0 256 Q64 250 126 268 L168 300 L0 300 z',P.sea) + waveRow(276,.45)
   + suisha(56,248,.9)
   + konaFukuro(230,286,1.05) + konaFukuro(262,292,.85)
   + g(150,240,.6,shujinChar())
-  + g(360,294,1,robaChar({mood:'shonbori'}))),
+  + g(340,294,1,robaChar({mood:'shonbori'}))),
 
 br_roba: f => wrap(grad('g_brroba',P.skyTop,P.skyBtm) + sun(414,52) + cloud(120,58,.9) + cloud(322,88,.55)
   + mtns()
@@ -3952,10 +4434,10 @@ br_akari: f => wrap(grad('g_brakari',P.yoruTop,P.yoruBtm)
   + madoHikari(330,198,1.1) + moriIe(330,214,.32,1)
   + firYoru(38,262,1.6) + firYoru(108,244,1.15) + firYoru(180,228,.8)
   + firYoru(452,266,1.65) + firYoru(392,246,1.1) + firYoru(268,224,.62)
-  + g(76,296,.92,robaChar({mood:'odoroki'}))
-  + g(178,298,1.1,bremenInuChar({mood:'odoroki'}))
-  + g(238,298,1.02,bremenNekoChar({mood:'futsu'}))
-  + g(292,298,.98,ondoriChar({mood:'futsu'}))),
+  + g(66,296,.92,robaChar({mood:'odoroki'}))
+  + g(172,298,1.1,bremenInuChar({mood:'odoroki'}))
+  + g(226,298,1,bremenNekoChar({mood:'futsu'}))
+  + g(320,298,.98,ondoriChar({mood:'futsu'}))),
 
 br_ie_soto: f => wrap(grad('g_briesoto',P.yoruTop,P.yoruBtm)
   + tsuki(58,58,.85)
@@ -3966,10 +4448,10 @@ br_ie_soto: f => wrap(grad('g_briesoto',P.yoruTop,P.yoruBtm)
   + moriIe(306,246,1.02,1)
   + pt('M250 202 L282 202 L300 258 L232 258 z','rgba(255,214,130,.09)')
   + pt('M328 202 L360 202 L380 258 L312 258 z','rgba(255,214,130,.09)')
-  + g(48,294,.82,robaChar({mood:'futsu'}))
-  + g(128,296,.95,bremenInuChar({mood:'futsu'}))
-  + g(178,296,.88,bremenNekoChar({mood:'futsu'}))
-  + g(222,296,.85,ondoriChar({mood:'futsu'}))),
+  + g(44,294,.82,robaChar({mood:'futsu'}))
+  + g(126,296,.95,bremenInuChar({mood:'futsu'}))
+  + g(172,296,.88,bremenNekoChar({mood:'futsu'}))
+  + g(232,296,.85,ondoriChar({mood:'futsu'}))),
 
 /* 🔴 つみかさなりは よこから・まどに まえあしを かけた うごきで かく（ブレーメンの どうぞうの ぞうけいは 写さない） */
 br_mado: f => wrap(grad('g_brmado',P.yoruTop,P.yoruBtm)
@@ -4061,8 +4543,8 @@ br_ie_asa: f => wrap(grad('g_brieasa','#c6e7f4','#f4fbe6') + sun(62,52) + cloud(
   + yuge(292,140,.9,.5) + yuge(302,108,.6,.3)
   + g(64,292,.92,robaChar({mood:'niko'}))
   + g(156,296,1.1,bremenInuChar({mood:'niko'}))
-  + g(378,296,1.05,bremenNekoChar({mood:'niko'}))
-  + g(428,294,1,ondoriChar({naku:1}))
+  + g(364,296,1.05,bremenNekoChar({mood:'niko'}))
+  + g(438,294,1,ondoriChar({naku:1}))
   + hana(112,296,'#fff',.85) + hana(206,298,'#e8607a',.85) + chou(190,168,.75) + spark(140,150,.7)),
 
 /* 🔴 まちには もう おんがくたいが いた。がっきを もつのは まちの ひとたちだけ（4ひきは 鳴きごえ） */
@@ -4092,7 +4574,7 @@ dorobou_mori: f => wrap(grad('g_bdmori',P.yoruTop,P.yoruBtm)
   + firYoru(462,266,1.7) + firYoru(300,226,.7)
   + g(216,276,.78,dorobouChar(P.doroB,{mood:'futsu'}))
   + g(142,296,1.05,dorobouChar(P.doroA,{mood:'kowagari'}))
-  + g(276,300,1.12,dorobouChar(P.doroC,{mood:'kowagari'}))),
+  + g(276,300,1.12,dorobouChar(P.doroC,{mood:'kowagari',te:'yubi'}))),
 
 /* ----- オンドリの はなし ----- */
 ondori_yane: f => wrap(grad('g_boyane',P.duskTop,P.duskBtm)
@@ -4105,9 +4587,225 @@ ondori_yane: f => wrap(grad('g_boyane',P.duskTop,P.duskBtm)
   + ln('M164 216 L316 216','#8e4634',4) + ln('M190 201 L290 201','#8e4634',4)
   + ln('M216 186 L264 186','#8e4634',4)
   + pto('M214 176 L266 176 L266 170 L214 170 z','#7a3a2c')
+  + rco(352,202,22,48,'#8e4634',3) + rco(346,194,34,10,'#7a3a2c',3)
   + g(240,170,1.4,ondoriChar({naku:1}))
   + onpu(346,116,.9,'rgba(74,58,44,.5)') + onpu(392,86,.75,'rgba(74,58,44,.4)')
-  + spark(146,120,.75))
+  + spark(146,120,.75)),
+
+/* ----- じゅうにしの はじまり（本編） ----- */
+/* 🔴 かみさまの かおは 出さない（ごてんの おくの ぎゃっこう）
+   🔴 とうちゃくの ばめんに じゅんいの すうじは かかない
+   🔴 どうぶつは としを とった すがたに しない。がっき・ころもは もたせない */
+ju_ofure: f => wrap(grad('g_juofure','#cfe0ee','#f6fafc')
+  + cloud(102,54,.7) + cloud(360,84,.5)
+  + mtns()
+  + juYukiNo(208)
+  + juMatsuYuki(40,254,1) + juMatsuYuki(464,262,1.05)
+  /* 🔴 どうぶつは たてふだの ほうを むく（みぎむきの キャラを ふだの ひだりに ならべる） */
+  + juFuda(400,264,.95)
+  + g(62,296,1.1,saruChar())
+  + g(146,294,.88,ushiChar())
+  + g(246,294,.9,toraChar())
+  + g(312,296,.95,usagiChar())
+  + juYukiFuru(.6)),
+
+ju_nezuneko: f => wrap(grad('g_junezune',P.duskTop,P.duskBtm)
+  + ci(410,66,40,'rgba(255,236,180,.4)') + ci(410,66,24,'#ffd76e')
+  + cloud(120,58,.6) + cloud(300,96,.42)
+  + juYukiNo(212)
+  + juMatsuYuki(44,258,1)
+  + juKoya(392,214,.86,1)
+  + g(184,294,1.25,jnezumiChar({mood:'damaru'}))
+  + gx(292,294,1.05,jnekoChar({mood:'normal'}))
+  + juYukiFuru(.5)),
+
+ju_ushi_yoru: f => wrap(grad('g_juushiyo',P.juYoruTop,P.juYoruBtm)
+  + tsuki(406,58,1)
+  + star(72,52,2.3) + star(150,94,1.9) + star(226,46,2.1) + star(58,132,1.8) + star(300,110,1.7)
+  + pt('M0 202 L112 182 L250 196 L372 178 L480 194 L480 218 L0 218 z','rgba(26,42,78,.7)')
+  + juYukiNo(210,1)
+  + juMatsuYuki(38,262,1.1) + juMatsuYuki(456,268,1.2)
+  + juKoya(122,254,.92,1)
+  + ln('M0 276 q240 -26 480 -4','rgba(255,255,255,.3)',3.4)
+  + g(302,294,1,ushiChar())
+  + juYukiFuru(.55)),
+
+ju_senaka: f => wrap(grad('g_jusenaka',P.juYoruTop,P.juYoruBtm)
+  + tsuki(80,60,.9)
+  + star(190,48,2.2) + star(270,96,1.9) + star(360,44,1.8) + star(440,110,1.7) + star(140,128,1.6)
+  + pt('M0 206 L120 186 L260 200 L380 182 L480 198 L480 222 L0 222 z','rgba(26,42,78,.7)')
+  + juYukiNo(214,1)
+  + juMatsuYuki(44,266,1.05) + juMatsuYuki(448,272,1.15)
+  + ln('M0 280 q240 -24 480 -2','rgba(255,255,255,.28)',3.4)
+  + g(230,296,1.25,ushiChar({nezumi:1}))
+  + juYukiFuru(.5)),
+
+ju_mon: f => wrap(grad('g_jumon',P.juAsaTop,P.juAsaBtm)
+  + ci(76,60,40,'rgba(255,236,180,.45)') + ci(76,60,25,'#ffd76e')
+  + cloud(356,68,.62) + cloud(192,44,.42)
+  + juYukiNo(216)
+  + juHei(0,172,216) + juHei(308,480,216)
+  + juMon(240,216,1.12,{aki:1,
+      oku: ci(0,-46,34,'rgba(255,244,206,.13)') + ci(0,-46,22,'rgba(255,244,206,.17)')
+        + g(0,-6,.5,kamisamaChar())})
+  + juKadomatsu(158,216,.98) + juKadomatsu(322,216,.98)
+  + spark(112,142,.7) + spark(408,126,.6)),
+
+ju_tobiori: f => wrap(grad('g_jutobi',P.juAsaTop,P.juAsaBtm)
+  + ci(72,58,38,'rgba(255,236,180,.45)') + ci(72,58,24,'#ffd76e')
+  + cloud(372,72,.58)
+  + juYukiNo(220)
+  + juHei(0,214,220) + juHei(388,480,220)
+  + juMon(300,220,1.02,{aki:1,
+      oku: ci(0,-46,30,'rgba(255,244,206,.13)') + g(0,-6,.48,kamisamaChar())})
+  + juKadomatsu(374,220,.86)
+  + g(106,300,1.25,ushiChar())
+  + ln('M148 234 q38 -26 68 -8','rgba(74,58,44,.3)',3)
+  + juUgoki(186,230,.85,-28)
+  + gr(220,230,.95,-26,jnezumiChar({mood:'normal',noKage:1}))),
+
+ju_kake: f => wrap(grad('g_jukake','#ffe2b8','#fdf7e4')
+  + ci(404,56,36,'rgba(255,236,180,.42)') + ci(404,56,22,'#ffd76e')
+  + cloud(112,62,.62) + cloud(300,40,.44)
+  + mtns()
+  + juYukiNo(214)
+  + juMatsuYuki(38,258,.95) + juMatsuYuki(456,266,1.05)
+  + ln('M0 272 q240 -24 480 -2','rgba(255,255,255,.4)',3.4)
+  + juUgoki(130,262,1.2,0) + juUgoki(292,268,1.05,0)
+  + g(166,294,1.2,toraChar({kake:1}))
+  + g(330,296,1.25,usagiChar({hane:1}))),
+
+ju_tatsu_hebi: f => wrap(grad('g_jutatsu','#c4e2f2','#f8fae8')
+  + ci(64,54,36,'rgba(255,236,180,.4)') + ci(64,54,22,'#ffd76e')
+  + cloud(186,98,.7) + cloud(432,58,.55)
+  + mtns()
+  + juYukiNo(218)
+  + juMatsuYuki(42,264,1)
+  + g(320,150,1,tatsuChar())
+  + g(148,296,1.2,hebiChar())
+  + spark(252,106,.7) + spark(396,204,.6)),
+
+ju_uma_hitsuji: f => wrap(grad('g_juumahi','#d2e6f2','#f8f8e6')
+  + ci(410,58,36,'rgba(255,236,180,.42)') + ci(410,58,22,'#ffd76e')
+  + cloud(128,58,.68) + cloud(320,92,.48)
+  + mtns()
+  + juYukiNo(212)
+  + juMatsuYuki(40,256,1) + juMatsuYuki(452,264,1.1)
+  + ln('M0 270 q240 -24 480 -2','rgba(255,255,255,.4)',3.4)
+  + g(152,294,1.15,umaChar())
+  + g(334,296,1.2,hitsujiChar())),
+
+/* 🔴 いさかいの ばめんだが こわい かおには しない（トリが あいだに 立つ ところを 見せる） */
+ju_saru_inu_tori: f => wrap(grad('g_jusaru','#cfe4ee','#f8f8e8')
+  + cloud(96,60,.6) + cloud(392,84,.46)
+  + mtns()
+  + juYukiNo(214)
+  + yashiki(398,214,.52)
+  + juMatsuYuki(38,258,.95) + juMatsuYuki(456,266,1.05)
+  + g(112,296,1.25,saruChar())
+  + gx(378,296,1.25,dogChar({kubiwa:false}))
+  + g(240,294,1.15,ondoriChar({wakai:1,naku:1}))
+  + ln('M166 234 l16 -10','rgba(74,58,44,.26)',3) + ln('M170 246 l18 -4','rgba(74,58,44,.2)',3)
+  + ln('M320 234 l-16 -10','rgba(74,58,44,.26)',3) + ln('M316 246 l-18 -4','rgba(74,58,44,.2)',3)),
+
+ju_inoshishi: f => wrap(grad('g_juino',P.juAsaTop,P.juAsaBtm)
+  + ci(66,56,36,'rgba(255,236,180,.42)') + ci(66,56,22,'#ffd76e')
+  + cloud(344,70,.55)
+  + juYukiNo(218)
+  + juHei(0,140,218) + juHei(250,480,218)
+  + juMon(190,218,.95,{aki:1,
+      oku: ci(0,-46,28,'rgba(255,244,206,.13)') + g(0,-6,.46,kamisamaChar())})
+  + juKadomatsu(120,218,.82) + juKadomatsu(260,218,.82)
+  + juUgoki(326,260,1.25,0) + juUgoki(312,278,1.05,0)
+  + g(390,298,1.15,inoshishiChar({kake:1}))),
+
+/* 🔴 じゅんいの すうじは かかない。ならびも とうちゃくじゅんに しない（2れつに 入りまじる） */
+ju_seizoroi: f => wrap(grad('g_juseizo',P.juAsaTop,P.juAsaBtm)
+  + ci(400,54,38,'rgba(255,236,180,.42)') + ci(400,54,24,'#ffd76e')
+  + cloud(110,58,.6) + cloud(300,40,.42)
+  + juYukiNo(196)
+  + juHei(0,172,196) + juHei(310,480,196)
+  + juMon(240,196,.82,{})
+  + juKadomatsu(178,196,.7) + juKadomatsu(302,196,.7)
+  + g(120,116,.55,tatsuChar())
+  + g(56,250,.62,hitsujiChar())
+  + g(146,250,.56,ushiChar())
+  + g(238,248,.62,ondoriChar({wakai:1}))
+  + g(330,250,.62,hebiChar())
+  + g(422,248,.68,saruChar())
+  + g(48,298,.72,usagiChar())
+  + g(126,298,.78,dogChar({kubiwa:false}))
+  + g(196,298,.95,jnezumiChar())
+  + g(268,298,.66,umaChar())
+  + g(348,298,.7,inoshishiChar())
+  + g(428,298,.68,toraChar())),
+
+ju_neko_asa: f => wrap(grad('g_junekoa','#e2ecf4','#fdf8ea')
+  + ci(400,58,34,'rgba(255,236,180,.35)') + ci(400,58,21,'#ffd76e')
+  + cloud(120,54,.6) + cloud(320,86,.44)
+  + juYukiNo(218)
+  + juHei(0,166,218) + juHei(314,480,218)
+  + juMon(240,218,1.05,{})
+  + juKadomatsu(158,218,.9) + juKadomatsu(322,218,.9)
+  + g(120,298,1.15,jnekoChar({mood:'odoroki'}))),
+
+ju_neko_kao: f => wrap(grad('g_junekok','#e6eef6','#fdf9ec')
+  + ci(88,58,36,'rgba(255,236,180,.4)') + ci(88,58,22,'#ffd76e')
+  + cloud(330,64,.55)
+  + juYukiNo(206)
+  + juHei(304,480,206)
+  + juMon(396,206,.7,{})
+  + juMatsuYuki(48,244,.9)
+  + g(206,292,1.55,jnekoChar({mood:'kao'}))),
+
+/* 🔴 「べつの 土地の はなし」を ならべる ばめん。どちらが 上とは かかない */
+ju_umi: f => wrap(grad('g_juumi',P.skyTop,P.skyBtm) + sun(70,52) + cloud(300,48,.8) + cloud(410,98,.5)
+  + pt('M0 152 L480 160 L480 300 L0 300 z',P.sea)
+  + waveRow(192,.6) + waveRow(232,.45)
+  + kobune(378,170,.5)
+  + pt('M0 300 L0 248 Q240 222 480 254 L480 300 z',P.sand)
+  + matsu(52,256,.95)
+  + g(214,292,1.12,jnekoChar({mood:'normal'}))
+  + g(320,294,1.05,usagiChar())
+  + spark(152,130,.6)),
+
+ju_maitoshi: f => wrap(grad('g_jumaito',P.juAsaTop,P.juAsaBtm)
+  + ci(398,56,38,'rgba(255,236,180,.45)') + ci(398,56,24,'#ffd76e')
+  + cloud(112,60,.6) + cloud(300,40,.42)
+  + juYukiNo(216)
+  + juHei(0,172,216) + juHei(308,480,216)
+  + juMon(240,216,1.1,{aki:1,
+      oku: ci(0,-46,32,'rgba(255,244,206,.13)') + ci(0,-46,20,'rgba(255,244,206,.17)')
+        + g(0,-6,.49,kamisamaChar())})
+  + juKadomatsu(158,216,.96) + juKadomatsu(322,216,.96)
+  + g(110,298,1.12,jnekoChar({mood:'normal'}))
+  + spark(84,148,.65) + spark(420,130,.55)),
+
+/* ----- ネコの はなし ----- */
+/* 🔴 ネコが いま なにを おもって いるかは 絵にも かかない。ひなたに いる ところだけ */
+jneko_hinata: f => wrap(grad('g_jnhina','#cfe8f2','#f8f6e0')
+  + sun(410,56) + cloud(122,66,.6) + cloud(300,102,.42)
+  + rc(0,216,480,84,P.grass) + el(240,240,380,44,P.grass2)
+  + engawa(96,244,300,0)
+  + el(272,250,96,28,'rgba(255,232,160,.34)') + el(272,248,64,18,'rgba(255,240,186,.34)')
+  + g(268,244,1.25,jnekoChar({maru:1}))
+  + hana(52,292,'#fff',.8) + hana(438,296,'#e8d0e8',.75)
+  + chou(72,196,.7)),
+
+/* ----- ネズミの はなし ----- */
+jnezumi_ana: f => wrap(grad('g_jzana',P.juYoruTop,P.juYoruBtm)
+  + tsuki(74,54,.85)
+  + star(180,44,2.2) + star(268,86,1.9) + star(356,42,1.8) + star(430,104,1.6)
+  + juYukiNo(148,1)
+  + rc(0,178,480,122,P.soil) + ln('M0 178 L480 178',P.soilD,4)
+  + ci(96,214,7,P.soilD) + ci(392,232,8,P.soilD) + ci(180,270,6,P.soilD) + ci(292,196,5,P.soilD)
+  + ln('M120 182 q14 42 74 56 q56 13 84 10',P.soilN,22)
+  + elo(316,246,64,44,P.soilN)
+  + el(316,250,54,34,'#4a3524')
+  + ln('M272 276 l34 -6',P.wara,3.4) + ln('M280 282 l40 -4',P.waraD,3)
+  + ln('M322 280 l34 -8',P.wara,3.2)
+  + g(320,274,1.15,jnezumiChar({mood:'normal',noKage:1}))
+  + juYukiFuru(.4))
 
 };
 

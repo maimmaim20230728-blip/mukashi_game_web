@@ -435,6 +435,68 @@ body[data-fs="l"] .znote{font-size:13px}
 }
 @keyframes hkText{0%{opacity:0}100%{opacity:1}}
 
+/* かさね専用型(まどべの つみかさなり)
+   よるの こんの そらに、まどの あかりだけが うかぶ。その まえに ロバ→イヌ→ネコ→オンドリの
+   シルエットが したから じゅんばんに つみあがり、そのたびに なきごえが とびだす。
+   さいごに 4ひきが そろって ちいさく ゆれて、メインの もじが 出る。
+   🔴ブレーメン市の どうぞうの 造形は うつさない(単色の かげえ + へいめんな まど だけ) */
+#cutin.kasane .ci-inner{background:#141a2e;overflow:hidden}
+/* まどと つみかさなりを 1つの はこに いれて、もじと いっしょに たてに まんなかへ そろえる。
+   はこの たては はばの 1.25ばい。つみかさなりの あしもとが はこの そこに くる */
+.ks-scene{position:relative;z-index:1;width:min(84vw,52vh,440px);aspect-ratio:1 / 1.25}
+/* まどの あかり。よこ さん・たて さんは 背景がぞうで かさねる(DOMを ふやさない)。
+   したの ふちが ちょうど ロバの せなかの たかさに くる ように 68% に する */
+.ks-mado{
+  position:absolute;left:2%;top:0;width:96%;height:68%;z-index:1;
+  border:7px solid #141a2e;border-radius:5px;
+  background:
+    linear-gradient(#141a2e,#141a2e) 50% 0/9px 100% no-repeat,
+    linear-gradient(#141a2e,#141a2e) 0 44%/100% 9px no-repeat,
+    linear-gradient(to bottom,#ffe0a0 0%,#f7bb62 56%,#e39a46 100%);
+  box-shadow:0 0 70px 26px rgba(255,198,112,.30);
+}
+/* つみかさなり。SVG 1まいに 4ひきを かき、g ごとに おくらせて 出す(viewBox 240x400) */
+.ks-stack{
+  /* かおが ひだり向きで からだが みぎ寄りなので、まどの まんなかより すこし ひだりに おく */
+  position:absolute;left:48%;bottom:0;z-index:2;
+  width:68%;transform:translateX(-50%);transform-origin:50% 100%;
+  animation:ksSway .45s 1.45s ease-in-out 2;
+}
+.ks-stack svg{width:100%;height:auto;display:block}
+/* ゆれは ちいさく。translateX(-50%)を けさない ように キーフレームにも 書く */
+@keyframes ksSway{
+  0%,100%{transform:translateX(-50%) rotate(0)}
+  30%{transform:translateX(-50%) rotate(-2deg)}
+  70%{transform:translateX(-50%) rotate(2deg)}
+}
+/* --d=その どうぶつが 出る おくらせ(0.3びょう きざみ)。あしもとから ぽんと 出す */
+.ks-p{
+  opacity:0;fill:#0d1220;transform-box:fill-box;transform-origin:50% 100%;
+  animation:ksRise .34s var(--d) ease-out forwards;
+}
+@keyframes ksRise{
+  0%{opacity:0;transform:translateY(18px) scale(.86)}
+  100%{opacity:1;transform:none}
+}
+/* なきごえ。ふきだしは しろ地に こい ちゃ(こんの そらでも まどの あかりでも よめる) */
+.ks-koe{
+  position:absolute;z-index:4;white-space:nowrap;opacity:0;
+  font-size:min(21px,4vw);font-weight:900;color:#2a2118;background:#fffdf5;
+  padding:5px 12px;border-radius:12px;border:3px solid #2a2118;
+  animation:ksKoe .4s var(--d) cubic-bezier(.2,1.6,.4,1) forwards;
+}
+.ks-koe.kL{right:66%}
+.ks-koe.kR{left:66%}
+@keyframes ksKoe{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
+#cutin.kasane .ci-text{
+  position:relative;z-index:5;max-width:92%;
+  /* 4ひきが そろってから 出す。はばに あわせて 字を ちぢめる(ふうふう型・おかし型と おなじ) */
+  font-size:min(46px,7.5vw);font-weight:900;color:#fff;letter-spacing:.06em;text-align:center;line-height:1.4;
+  white-space:pre-line;
+  text-shadow:3px 3px 0 #7a4a1f,-2px -2px 0 #7a4a1f,2px -2px 0 #7a4a1f,-2px 2px 0 #7a4a1f,0 6px 16px rgba(0,0,0,.35);
+  animation:pop .45s 1.45s cubic-bezier(.2,1.6,.4,1) backwards;
+}
+
 /* おしまいの印影(結末の絵の上に押す・背景透過) */
 .seal{
   position:absolute;right:5%;top:7%;width:44%;max-width:220px;
@@ -466,7 +528,7 @@ body[data-fs="l"] .znote{font-size:13px}
   #cutin.chokkin .ci-text{font-size:32px}
   #cutin.suppon .ci-text{font-size:34px}
   #cutin.kemuri .ci-text{font-size:26px}
-  /* fuu と okashi と hikari は min(46px,7.5vw)で じどうに ちぢむので ここでは いじらない */
+  /* fuu と okashi と hikari と kasane は min(46px,7.5vw)で じどうに ちぢむので ここでは いじらない */
   h1{font-size:26px}
 }
 </style>
@@ -533,6 +595,7 @@ body[data-fs="l"] .znote{font-size:13px}
 <script src="story_kobuta.js"></script>
 <script src="story_hansel.js"></script>
 <script src="story_kaguya.js"></script>
+<script src="story_bremen.js"></script>
 <script src="story_en.js"></script>
 <script src="story_akazukin_en.js"></script>
 <script src="story_kabu_en.js"></script>
@@ -540,6 +603,7 @@ body[data-fs="l"] .znote{font-size:13px}
 <script src="story_kobuta_en.js"></script>
 <script src="story_hansel_en.js"></script>
 <script src="story_kaguya_en.js"></script>
+<script src="story_bremen_en.js"></script>
 <script src="audio.js"></script>
 <script>
 "use strict";
@@ -570,17 +634,20 @@ const TALE_OF = {momo:'momo', oni:'momo', kiji:'momo', akz:'akz', wolf:'akz', gm
                  ura:'ura', hime:'ura', kame:'ura',
                  buta:'buta', pwolf:'buta', prenga:'buta',
                  hg:'hg', majo:'hg', tori:'hg',
-                 kg:'kg', okina:'kg', tsuki:'kg'};
+                 kg:'kg', okina:'kg', tsuki:'kg',
+                 br:'br', dorobou:'br', ondori:'br'};
 /* ura の /^u_/ は 本編の けつまつだけに あたる(視点ちがいは uh_ / uv_ で はじまる)
    buta の /^pb_/ も おなじ(視点ちがいは pw_ / ps_ で はじまる)
    hg の /^hg_/ も おなじ(視点ちがいは hw_ / hb_ で はじまる ので あたらない)
    kg の /^kg_/ も おなじ(視点ちがいは kj_ / ku_ で はじまる ので あたらない)
+   br の /^br_/ も おなじ(視点ちがいは bd_ / bo_ で はじまる ので あたらない)
+   ※ももたろうの /^(a_|b_|c_|d_)/ は b の つぎに _ を もとめる ので、br_ には あたらない
    ※ここは「本編を クリアしたか」の 判定。かぶ視点の /^kt_/(ねずみの解放)とは べつの しくみ */
 const TALE_END = {momo:/^(a_|b_|c_|d_)/, akz:/^za_/, kabu:/^kb_/, ura:/^u_/, buta:/^pb_/, hg:/^hg_/,
-                  kg:/^kg_/};
+                  kg:/^kg_/, br:/^br_/};
 /* 本編を クリアした ときに 出す「視点ちがいが あそべます」の 文言 */
 const TALE_UNLOCK_MSG = {momo:'unlockOni', akz:'unlockWolf', kabu:'unlockTurnip', ura:'unlockKame',
-                         buta:'unlockPwolf', hg:'unlockMajo', kg:'unlockOkina'};
+                         buta:'unlockPwolf', hg:'unlockMajo', kg:'unlockOkina', br:'unlockDorobou'};
 const taleOf = story => TALE_OF[story] || story;
 function taleCleared(tale){
   const re = TALE_END[tale];
@@ -593,7 +660,7 @@ ja:{
   title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
   subtitle:'えらぶたびに、おはなしが かわる',
   start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
-  footVer:'v1.2.0',
+  footVer:'v1.3.0',
   footOrig:'ぶんしょうと えは すべて オリジナルです',
   footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
   footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
@@ -651,6 +718,13 @@ ja:{
   okinaLock:'かぐやひめを 1かい さいごまで よむと あそべます',
   tsukiName:'つきの つかいの はなし', tsukiTag:'なみだを しらない くにから きた　けつまつ 2しゅるい',
   tsukiLock:'けつまつ『はごろもの まえに』か『ふしの くすり』を みつけると あそべます',
+  brName:'ブレーメンの おんがくたい',
+  brTagFirst:'はじめての 1かいめは、もとの おはなしを とおしで',
+  brTag:'グリムの おはなし・4ひきの がっしょう　けつまつ 4しゅるい',
+  dorobouName:'どろぼうの はなし', dorobouTag:'まっくらな いえに もどった どろぼうの はなし　けつまつ 2しゅるい',
+  dorobouLock:'ブレーメンの おんがくたいを 1かい さいごまで よむと あそべます',
+  ondoriName:'オンドリの はなし', ondoriTag:'スープに なる はずだった こえ　けつまつ 2しゅるい',
+  ondoriLock:'けつまつ『ブレーメンの まちで』か『もりの あさ』を みつけると あそべます',
   prep:'じゅんびちゅう',
   titleBack:'タイトルへ もどる', selBack:'おはなし えらびへ もどる', next:'つぎへ ▼', back:'もどる',
   zTitle:'けつまつ ずかん',
@@ -675,6 +749,8 @@ ja:{
   unlockTori:'★「しろい とりの はなし」が あそべるように なりました！',
   unlockOkina:'★「おきなと おうなの はなし」も あそべるように なりました！',
   unlockTsuki:'★「つきの つかいの はなし」が あそべるように なりました！',
+  unlockDorobou:'★「どろぼうの はなし」も あそべるように なりました！',
+  unlockOndori:'★「オンドリの はなし」が あそべるように なりました！',
   btnZukan:'けつまつ ずかんを みる', btnAgain:'おなじ おはなしを もういちど',
   btnSelect:'おはなし えらびへ', btnZBack:'ずかんへ もどる',
   setTitle:'せってい', lblFs:'もじの おおきさ', lblBgm:'おんがく', lblSe:'こうかおん', lblLang:'ことば / Language',
@@ -685,7 +761,7 @@ en:{
   title:'Be the Hero of Tales!',
   subtitle:'The story changes with every choice',
   start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
-  footVer:'v1.2.0',
+  footVer:'v1.3.0',
   footOrig:'All text and art are original.',
   footFirst:'Your first read follows the original tale.',
   footCreate:'Branching stories and endings are original creations for this app.',
@@ -743,6 +819,13 @@ en:{
   okinaLock:'Finish Princess Kaguya once to unlock',
   tsukiName:"The Moon Envoy's Tale", tsukiTag:'From a land that knows no tears — 2 endings',
   tsukiLock:'Find the ending "Before the Feathered Robe" or "The Elixir of Life" to unlock',
+  brName:'The Bremen Town Musicians',
+  brTagFirst:'Your first read follows the original tale',
+  brTag:'A Grimm tale of four voices in chorus — 4 endings',
+  dorobouName:"The Robbers' Tale", dorobouTag:'The robber who went back to the dark house — 2 endings',
+  dorobouLock:'Finish The Bremen Town Musicians once to unlock',
+  ondoriName:"The Rooster's Tale", ondoriTag:'The voice that was to become soup — 2 endings',
+  ondoriLock:'Find the ending "In the Town of Bremen" or "Morning in the Forest" to unlock',
   prep:'Coming soon',
   titleBack:'Back to Title', selBack:'Back to Tale Select', next:'Next ▼', back:'Back',
   zTitle:'Ending Collection',
@@ -767,6 +850,8 @@ en:{
   unlockTori:'★ "The White Bird\'s Tale" is now unlocked!',
   unlockOkina:'★ "The Bamboo Cutter\'s Tale" is now unlocked!',
   unlockTsuki:'★ "The Moon Envoy\'s Tale" is now unlocked!',
+  unlockDorobou:'★ "The Robbers\' Tale" is now unlocked!',
+  unlockOndori:'★ "The Rooster\'s Tale" is now unlocked!',
   btnZukan:'See the Ending Collection', btnAgain:'Read this tale again',
   btnSelect:'Back to Tale Select', btnZBack:'Back to the Collection',
   setTitle:'Settings', lblFs:'Text size', lblBgm:'Music', lblSe:'Sound effects', lblLang:'ことば / Language',
@@ -833,12 +918,21 @@ const TRACK_BY_ART = {
   kg_tsukimi:'night', kg_uchiake:'night',
   kg_mamori:'tense',
   kg_juugoya:'kg_tsuki', kg_shouten:'kg_tsuki', tsuki_miyako:'kg_tsuki',
-  kg_tegami:'oni', kg_ato:'oni', kg_fuji:'oni'
+  kg_tegami:'oni', kg_ato:'oni', kg_fuji:'oni',
+  /* ---- ブレーメンの おんがくたい(ヨーロッパのセット + なかまが ふえるたびに 楽器が ふえる 4だん)
+         🔴18キー ぜんぶ 書く。1つでも ぬけると、その 場面で 前の 話の きょくが ながれつづける ---- */
+  br_koya:'eu_fuyu',
+  br_roba:'br_g1', br_inu:'br_g2', br_neko:'br_g3', br_ondori:'br_g4',
+  br_mori:'eu_mori', br_akari:'eu_mori',
+  br_ie_soto:'br_g4', br_mado:'br_g4', br_tobikomi:'br_g4',
+  br_gochisou:'eu_sukui', br_ie_asa:'eu_sukui', br_bremen:'eu_sukui',
+  br_yoru:'eu_wolf', br_niwa:'eu_wolf', br_houkoku:'eu_wolf', dorobou_mori:'eu_wolf',
+  ondori_yane:'br_g4'
 };
 const SE_BY_CUTIN = {
   waza:'don', kao:'dodon', vs:'zugan', flash:'shakin', join:'fanfare', paka:'pon', dark:'gong',
   pakuri:'gabu', chokkin:'shakin', suppon:'suppon', kemuri:'kemuri', fuu:'fuu', okashi:'pafu',
-  hikari:'hikari'
+  hikari:'hikari', kasane:'kasane'
 };
 
 /* ================= カットイン ================= */
@@ -864,12 +958,16 @@ const faceSvg = (key, f) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org
 const CUTIN_BG = { momo:'#f2b04f', oyabun:'#8a4a5a', aka:'#c96a52', kiji:'#5a9a6f',
                    jii:'#c9a05b', kabu:'#9a7fb5', nezumi:'#8fa6b8',
                    majo:'#5a4a72', hansel:'#7a8a63', gretel:'#7a8a63', tori:'#6fb4d8',
-                   kaguya:'#6b5b95', okina:'#8a7a5a', ouna:'#a08a6a', shisha:'#3f4a7a' };
+                   kaguya:'#6b5b95', okina:'#8a7a5a', ouna:'#a08a6a', shisha:'#3f4a7a',
+                   roba:'#8a7a66', inu:'#6b7a5a', neko:'#4a4f6a', ondori:'#b85a3a', dorobou:'#3a3f4a' };
 const WAZA_TH = {
   orange:['#f7b733','#f79a33'], blue:['#6ec6e8','#3f9fd4'], green:['#9fd48a','#5aa66b'],
   gold:['#ffd76e','#f2b04f'], red:['#e06868','#c04848'], brown:['#d9a05b','#b9803f']
 };
-const CHAR_SCALE = { dog:2.6, saru:2.6, kiji:2.2, momo:1.4 };
+/* join型・waza型で つかう キャラ絵の ばいりつ(CHARS の キーごと)。
+   inu=ブレーメンの イヌ。よこに ながい 老いた りょうけん なので、dog(2.6)の ままだと
+   まるい わくから くちさきが はみ出す。よこはばが dog と おなじくらいに なる 2.1 に する */
+const CHAR_SCALE = { dog:2.6, saru:2.6, kiji:2.2, momo:1.4, inu:2.1 };
 
 function charIconSvg(key){
   if(CHARS[key]){
@@ -1044,6 +1142,65 @@ function hikariGrains(){
     + `animation-delay:${r[4]}s;--dy:${r[5]}vh"></span>`).join('');
 }
 
+/* かさね型の つみかさなり。ロバ→イヌ→ネコ→オンドリを 1まいの viewBox(240x400)に かき、
+   g ごとに おくらせて 出す。まどの あかりに うかぶ かげえ なので、単色の かんたんな かたちだけ
+   (art.js の キャラ関数は つかわない)。
+   🔴ブレーメン市の どうぞうの 造形(ミニマルな 目・ネコの まるい せなか・ブロンズの しつかん・
+     市庁舎の 背景)は うつさない。ここは へいめんな まっくろい シルエットに とどめる */
+function kasaneStack(){
+  /* ロバ(いちばん した・かおは ひだり向き。ながい みみ 2ほんが いちばんの めじるし)
+     せなかの たかさ=y258。あしは じめんの y398 まで */
+  const roba = `<path d="M46 220 q-13 -26 -2 -32 q14 3 15 26 z"/>`
+    + `<path d="M64 214 q1 -28 13 -30 q10 7 -1 30 z"/>`
+    + `<ellipse cx="56" cy="232" rx="30" ry="15" transform="rotate(-22 56 232)"/>`
+    + `<polygon points="76,300 50,242 82,228 116,296"/>`
+    + `<ellipse cx="128" cy="292" rx="68" ry="34"/>`
+    + `<path d="M190 262 q24 -6 26 18 q2 22 -9 34 q-6 -22 -18 -30 z"/>`
+    + `<rect x="84" y="300" width="18" height="98" rx="9"/><rect x="112" y="300" width="18" height="98" rx="9"/>`
+    + `<rect x="148" y="300" width="18" height="98" rx="9"/><rect x="176" y="300" width="18" height="98" rx="9"/>`;
+  /* イヌ(ロバの せなかの 上。としを とった りょうけん=たれみみが めじるし)
+     せなかの たかさ=y171。あしは ロバの せなかに めりこませる(y276)*/
+  const inu = `<ellipse cx="88" cy="160" rx="26" ry="15"/><ellipse cx="66" cy="166" rx="17" ry="9"/>`
+    + `<path d="M100 148 q18 6 15 30 q-16 5 -21 -13 z"/>`
+    + `<polygon points="104,206 84,166 106,154 128,200"/>`
+    + `<ellipse cx="136" cy="196" rx="52" ry="25"/>`
+    + `<path d="M184 184 q22 -14 26 2 q-10 14 -24 18 z"/>`
+    + `<rect x="98" y="210" width="14" height="66" rx="7"/><rect x="118" y="210" width="14" height="66" rx="7"/>`
+    + `<rect x="148" y="210" width="14" height="66" rx="7"/><rect x="166" y="210" width="14" height="66" rx="7"/>`;
+  /* ネコ(イヌの せなかの 上。とがった みみ 2つと 立てた しっぽが めじるし)
+     せなかの たかさ=y98。あしは イヌの せなかに めりこませる(y186) */
+  const neko = `<path d="M88 90 L82 68 L102 84 Z"/><path d="M106 86 L122 68 L116 94 Z"/>`
+    + `<circle cx="100" cy="100" r="18"/>`
+    + `<polygon points="108,112 118,96 140,106 130,126"/>`
+    + `<ellipse cx="142" cy="118" rx="42" ry="20"/>`
+    + `<path d="M180 112 q22 -18 16 -42 q-2 -8 -9 -5 q6 20 -13 38 z"/>`
+    + `<rect x="112" y="132" width="11" height="54" rx="5"/><rect x="128" y="132" width="11" height="54" rx="5"/>`
+    + `<rect x="148" y="132" width="11" height="54" rx="5"/><rect x="164" y="132" width="11" height="54" rx="5"/>`;
+  /* オンドリ(てっぺん。とさか・くちばし・おの はねが めじるし)
+     あしは ネコの せなかに めりこませる(y108) */
+  const ondori = `<path d="M122 24 q1 -13 9 -8 q4 -11 12 -1 q8 -3 6 9 z"/>`
+    + `<circle cx="130" cy="32" r="14"/><path d="M120 27 L102 31 L120 37 Z"/>`
+    + `<path d="M122 40 q-5 12 3 14 q7 -5 5 -14 z"/>`
+    + `<polygon points="124,42 144,36 160,62 132,60"/>`
+    + `<ellipse cx="152" cy="58" rx="29" ry="23"/>`
+    + `<path d="M172 50 q26 -32 34 -10 q-8 0 -13 7 q11 6 4 18 q-10 -10 -18 -4 z"/>`
+    + `<rect x="140" y="74" width="7" height="34" rx="3"/><rect x="156" y="74" width="7" height="34" rx="3"/>`;
+  return `<svg viewBox="0 0 240 400" xmlns="http://www.w3.org/2000/svg">`
+    + `<g class="ks-p" style="--d:.15s">${roba}</g>`
+    + `<g class="ks-p" style="--d:.45s">${inu}</g>`
+    + `<g class="ks-p" style="--d:.75s">${neko}</g>`
+    + `<g class="ks-p" style="--d:1.05s">${ondori}</g>`
+    + `</svg>`;
+}
+/* なきごえ。したから じゅんに、ひだり・みぎ こうごに とびださせる
+   (たかさ%は つみかさなりの なかの その どうぶつの あたまの いち。
+    ロバだけは かおが ひだりに 出ているので、ふきだしは かおの したに さげる) */
+function kasaneKoe(){
+  const rows = [['ヒーホー！', 27, 'kL', 0.15], ['ワン！', 56, 'kR', 0.45],
+                ['ニャー！', 71, 'kL', 0.75], ['コケコッコー！', 87, 'kR', 1.05]];
+  return rows.map(r => `<span class="ks-koe ${r[2]}" style="bottom:${r[1]}%;--d:${r[3]}s">${r[0]}</span>`).join('');
+}
+
 function showCutin(c, then){
   const box = $('cutin');
   clearTimeout(cutinTimer);
@@ -1151,6 +1308,14 @@ function showCutin(c, then){
       + hikariGrains()
       + `<div class="ci-text">${c.text}</div></div>`;
     dur = 2000;
+  }else if(c.type === 'kasane'){
+    /* まどべの つみかさなり。したから 0.3びょう きざみで 4ひきが つみあがり、
+       そのたびに なきごえが とびだす → さいごに そろって ゆれて メインの もじ */
+    inner = `<div class="ci-inner">`
+      + `<div class="ci-text">${c.text}</div>`
+      + `<div class="ks-scene"><div class="ks-mado"></div>`
+      + `<div class="ks-stack">${kasaneStack()}${kasaneKoe()}</div></div></div>`;
+    dur = 2400;
   }
   box.innerHTML = inner;
   cutinNext = then;
@@ -1354,6 +1519,7 @@ function finishEnding(s, text){
   const hadPrenga = !!unlocks.prenga;
   const hadTori = !!unlocks.tori;
   const hadTsuki = !!unlocks.tsuki;
+  const hadOndori = !!unlocks.ondori;
   const isNew = !zukan.includes(eid);
   clearCur();                                   /* けつまつに ついたら よみかけは おわり */
   if(isNew){ zukan.push(eid); saveJson(SAVE_KEY, zukan); Sound.se('kira'); }
@@ -1383,6 +1549,10 @@ function finishEnding(s, text){
   if((eid === 'kg_koromo' || eid === 'kg_kusuri') && !unlocks.tsuki){
     unlocks.tsuki = true; saveJson(UNLOCK_KEY, unlocks);
   }
+  /* ブレーメンの おんがくたいの「ブレーメンの まちで」か「もりの あさ」で オンドリの はなしが ひらく */
+  if((eid === 'br_bremen' || eid === 'br_mori') && !unlocks.ondori){
+    unlocks.ondori = true; saveJson(UNLOCK_KEY, unlocks);
+  }
 
   let msg = text + '\n\n';
   msg += isNew ? t('newEnd')(zkName(eid)) : t('dupEnd')(zkName(eid));
@@ -1410,6 +1580,9 @@ function finishEnding(s, text){
   }
   if(!hadTsuki && unlocks.tsuki){
     msg += '\n' + t('unlockTsuki');
+  }
+  if(!hadOndori && unlocks.ondori){
+    msg += '\n' + t('unlockOndori');
   }
   $('tbox').textContent = msg;
 
@@ -1534,7 +1707,12 @@ const SELECT_CARDS = [
   /* かぐやひめ: 本編は たけ(🎋)。おきなと おうな視点は 👴、つきの つかい視点は 🌕 */
   {story:'kg',    ico:'🎋', nm:'kgName',    tag:'kgTag',    tagFirst:'kgTagFirst', tale:'kg'},
   {story:'okina', ico:'👴', nm:'okinaName', tag:'okinaTag', lock:'okinaLock', open:()=>taleCleared('kg')},
-  {story:'tsuki', ico:'🌕', nm:'tsukiName', tag:'tsukiTag', lock:'tsukiLock', open:()=>!!unlocks.tsuki}
+  {story:'tsuki', ico:'🌕', nm:'tsukiName', tag:'tsukiTag', lock:'tsukiLock', open:()=>!!unlocks.tsuki},
+  /* ブレーメンの おんがくたい: 本編は ラッパ(🎺)。どろぼう視点は 🔦(よるに もどる たいまつ)、
+     オンドリ視点は 🐓(🐦は キジ、🕊️は しろい とりで つかいずみ) */
+  {story:'br',      ico:'🎺', nm:'brName',      tag:'brTag',      tagFirst:'brTagFirst', tale:'br'},
+  {story:'dorobou', ico:'🔦', nm:'dorobouName', tag:'dorobouTag', lock:'dorobouLock', open:()=>taleCleared('br')},
+  {story:'ondori',  ico:'🐓', nm:'ondoriName',  tag:'ondoriTag',  lock:'ondoriLock',  open:()=>!!unlocks.ondori}
 ];
 
 function renderSelect(){

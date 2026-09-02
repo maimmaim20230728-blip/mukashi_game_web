@@ -197,7 +197,28 @@ var Sound = (function () {
       koto: [[0,E4,.7],[.2,B4,.6],[.4,E5,.6],[.6,B4,.5],[.8,E4,.5]],
       kotoAlt: [[0,D4,.7],[.2,A4,.6],[.4,D5,.6],[.6,A4,.5],[.8,D4,.5]],
       fue: [[.1,B4,.7]], fueAlt: [[.3,E5,.6]],
-      suzu: [0,.5], taiko: [], tsuzumi: [], drone: E2 }
+      suzu: [0,.5], taiko: [], tsuzumi: [], drone: E2 },
+
+    /* ---- 欧風追加(ブレーメンの おんがくたい)。段階合奏=同じ土台に楽器を1つずつ足した4段 ---- */
+    /* 1段: ロバだけ(低音の琴 + drone) */
+    br_g1: { bar: 2.8, vol: 0.046,
+      koto: [[0,D3,1.3],[.5,A2,1.1],[.75,D3,.9]],
+      fue: [], fueAlt: [], suzu: [], taiko: [], tsuzumi: [], drone: D2 },
+    /* 2段: + イヌ(太鼓と鼓) */
+    br_g2: { bar: 2.8, vol: 0.046,
+      koto: [[0,D3,1.3],[.5,A2,1.1],[.75,D3,.9]],
+      fue: [], fueAlt: [], suzu: [], taiko: [0,.5], tsuzumi: [.25,.75], drone: D2 },
+    /* 3段: + ネコ(笛の旋律) */
+    br_g3: { bar: 2.8, vol: 0.046,
+      koto: [[0,D3,1.3],[.5,A2,1.1],[.75,D3,.9]],
+      fue: [[0,D5,.2],[.25,F5,.2],[.5,A5,.35]], fueAlt: [[0,E5,.2],[.25,D5,.2],[.5,F5,.4]],
+      suzu: [], taiko: [0,.5], tsuzumi: [.25,.75], drone: D2 },
+    /* 4段: + オンドリ(鈴と高音の琴) = 4ひきの がっしょう */
+    br_g4: { bar: 2.8, vol: 0.046,
+      koto: [[0,D3,1.3],[.25,A4,.8],[.5,A2,1.1],[.625,D5,.8],[.75,D3,.9],[.875,F5,.7]],
+      kotoAlt: [[0,D3,1.3],[.25,F4,.8],[.5,A2,1.1],[.625,A4,.8],[.75,D3,.9],[.875,D5,.7]],
+      fue: [[0,D5,.2],[.25,F5,.2],[.5,A5,.35]], fueAlt: [[0,E5,.2],[.25,D5,.2],[.5,F5,.4]],
+      suzu: [.25,.75], taiko: [0,.5], tsuzumi: [.25,.75], drone: D2 }
   };
 
   function ensure() {
@@ -549,6 +570,33 @@ var Sound = (function () {
       tone(900, 0.06, { to: 500, vol: 0.1 });
       tone(1400, 0.16, { to: 1100, vol: 0.08, at: 0.14 });
       tone(1050, 0.18, { to: 800, vol: 0.06, at: 0.26 });
+    },
+    hiho: function () { /* ロバ: ヒー ホー */
+      tone(620, 0.22, { to: 900, type: 'sawtooth', vol: 0.06 });
+      tone(880, 0.32, { to: 480, type: 'sawtooth', vol: 0.06, at: 0.24 });
+      noiseHit(0.1, 1200, 0.03);
+    },
+    wan: function () { /* イヌ: ワン ワン */
+      [0, 0.2].forEach(function (at) {
+        tone(320, 0.12, { to: 180, type: 'sawtooth', vol: 0.09, at: at });
+        noiseHit(0.07, 900, 0.1, at);
+      });
+    },
+    nyaa: function () { /* ネコ: ニャー */
+      tone(880, 0.28, { to: 1250, vol: 0.08 });
+      tone(1250, 0.34, { to: 780, vol: 0.07, at: 0.28 });
+    },
+    kokekokko: function () { /* オンドリ: コケコッコー */
+      [0, 0.13, 0.26].forEach(function (at, i) { tone(1150 + i * 120, 0.1, { to: 1450, vol: 0.09, at: at }); });
+      tone(1600, 0.5, { to: 1050, vol: 0.09, at: 0.4 });
+    },
+    kasane: function () { /* 4ひきが じゅんに かさなって、さいごに いっせいに(映像の 150/450/750/1050/1450ms と同期) */
+      var s = SE;
+      setTimeout(s.hiho, 150);
+      setTimeout(s.wan, 450);
+      setTimeout(s.nyaa, 750);
+      setTimeout(s.kokekokko, 1050);
+      setTimeout(function () { s.hiho(); s.wan(); s.nyaa(); s.kokekokko(); s.fanfare(); }, 1450);
     }
   };
 

@@ -7,7 +7,7 @@
  *      名前を 据え置くと、古いキャッシュが 残って 更新が 誰にも 届かない。
  * ※更新直後の 初回起動は 旧画面が 出る(cache-first)。開き直すと 新しくなる。
  */
-var CACHE = "mukashi-v110";
+var CACHE = "mukashi-v120";
 var ASSETS = [
   "./",
   "./index.html",
@@ -17,12 +17,14 @@ var ASSETS = [
   "./story_urashima.js",
   "./story_kobuta.js",
   "./story_hansel.js",
+  "./story_kaguya.js",
   "./story_en.js",
   "./story_akazukin_en.js",
   "./story_kabu_en.js",
   "./story_urashima_en.js",
   "./story_kobuta_en.js",
   "./story_hansel_en.js",
+  "./story_kaguya_en.js",
   "./art.js",
   "./audio.js",
   "./manifest.json",

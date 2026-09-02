@@ -24,7 +24,9 @@ var Sound = (function () {
   var D2=73.42, Eb2=77.78, E2=82.41, F2=87.31, G2=98.00, A2=110.00,
       C3=130.81, D3=146.83, E3=164.81, F3=174.61, G3=196.00, A3=220.00, B3=246.94, C4=261.63,
       D4=293.66, E4=329.63, F4=349.23, G4=392.00, A4=440.00, B4=493.88, C5=523.25,
-      D5=587.33, E5=659.25, F5=698.46, G5=783.99, A5=880.00;
+      D5=587.33, E5=659.25, F5=698.46, G5=783.99, A5=880.00,
+      /* 中東風(ヒジャーズ音階)用の半音 */
+      Bb3=233.08, Eb4=311.13, Fs4=369.99, Bb4=466.16, Cs5=554.37;
 
   /* ---------------- BGMトラック定義(和風) ----------------
      bar: 1小節の秒数 / 位置は小節内の割合(0〜1)
@@ -246,7 +248,36 @@ var Sound = (function () {
       koto: [[0,E3,1.6],[.5,A3,1.4]],
       kotoAlt: [[0,E3,1.6],[.5,B3,1.4]],
       fue: [[.05,E4,1.6],[.4,F4,.9],[.6,A4,1.8]], fueAlt: [[.05,B4,1.4],[.35,A4,.8],[.55,E4,2.0]],
-      suzu: [.3,.85], taiko: [], tsuzumi: [], drone: E2 }
+      suzu: [.3,.85], taiko: [], tsuzumi: [], drone: E2 },
+
+    /* ---- 中東風追加(アリババ) ---- */
+    /* いちば: Dヒジャーズ(D Eb F# G A Bb C)・琴をウード風に8分刻み・太鼓=ドゥム・鼓=テク(マクスーム) */
+    ab_ichiba: { bar: 2.4, vol: 0.046,
+      koto: [[0,D4],[.125,Eb4],[.25,Fs4],[.375,G4],[.5,A4],[.625,Bb4],[.75,A4],[.875,G4]],
+      kotoAlt: [[0,Fs4],[.125,G4],[.25,A4],[.375,Bb4],[.5,A4],[.625,G4],[.75,Fs4],[.875,Eb4]],
+      fue: [[.5,D5,.25]], fueAlt: [[.25,A4,.2],[.75,Fs4,.2]],
+      suzu: [.25,.75], taiko: [0,.5], tsuzumi: [.125,.375,.75], drone: null },
+    /* どうくつ: 低いドローン・まばらな低音の琴・笛の半音下降(Eb→D)・遠くの鈴 */
+    ab_dokutsu: { bar: 7.0, vol: 0.04,
+      koto: [[0,D3,1.4],[.5,A2,1.1]],
+      kotoAlt: [[0,D3,1.4],[.5,Bb3,1.0]],
+      fue: [[.1,Eb4,1.4],[.35,D4,1.8]], fueAlt: [[.15,Fs4,1.2],[.45,Eb4,1.0],[.65,D4,1.6]],
+      suzu: [.9], taiko: [], tsuzumi: [], drone: D2 },
+
+    /* ---- 追加(きたかぜと たいよう) ---- */
+    /* きたかぜ: 低いドローン・笛の半音下降(さむさ)・まばらな低音の琴・かぜ(ノイズ楽器) */
+    kz_kaze: { bar: 6.0, vol: 0.042,
+      koto: [[0,D3,1.4],[.55,A2,1.2]],
+      kotoAlt: [[0,D3,1.4],[.5,G3,1.1]],
+      fue: [[.05,A3,1.5],[.45,E4,.9],[.7,D4,1.4]], fueAlt: [[.1,E4,1.4],[.6,A3,1.6]],
+      suzu: [], taiko: [], tsuzumi: [], drone: D2,
+      kaze: [[.2,.5,1],[.6,.35,.7]] },
+    /* ひなた: C長調・琴の8分のアルペジオ・笛の明るい旋律・鈴(🔴buta_march と旋律を変えてある) */
+    kz_hinata: { bar: 3.6, vol: 0.044,
+      koto: [[0,C4],[.125,E4],[.25,G4],[.375,C5],[.5,A4],[.625,G4],[.75,E4],[.875,G4]],
+      kotoAlt: [[0,F3],[.125,A3],[.25,C4],[.375,F4],[.5,G4],[.625,B3],[.75,D4],[.875,G4]],
+      fue: [[0,G4,.3],[.5,E5,.45]], fueAlt: [[.25,C5,.3],[.75,D5,.4]],
+      suzu: [0,.5], taiko: [], tsuzumi: [], drone: null }
   };
 
   function ensure() {
@@ -352,6 +383,21 @@ var Sound = (function () {
     });
   }
 
+  /* かぜ: ノイズを lowpass で うねらせる(BGM用・ふくらんで しぼむ) */
+  function kaze(t, dur, vol) {
+    var s = ctx.createBufferSource(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
+    s.buffer = getNoise(); s.loop = true;
+    lp.type = 'lowpass'; lp.Q.value = 0.8;
+    lp.frequency.setValueAtTime(300, t);
+    lp.frequency.linearRampToValueAtTime(1600, t + dur * 0.45);
+    lp.frequency.linearRampToValueAtTime(400, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + dur * 0.4);
+    g.gain.linearRampToValueAtTime(0.0001, t + dur);
+    s.connect(lp); lp.connect(g); g.connect(bgmBus);
+    s.start(t); s.stop(t + dur + 0.05);
+  }
+
   /* ---------------- BGMスケジューラ ---------------- */
   function scheduleBar(t) {
     var p = TRACKS[curTrack] || TRACKS.home;
@@ -364,6 +410,8 @@ var Sound = (function () {
     (p.taiko || []).forEach(function (b) { taiko(t + b * p.bar, p.vol * 3.4); });
     (p.tsuzumi || []).forEach(function (b) { tsuzumi(t + b * p.bar, p.vol * 2.2); });
     (p.suzu || []).forEach(function (b) { suzu(t + b * p.bar, p.vol * 0.9); });
+    /* かぜ(ノイズ楽器・きたかぜと たいよう用): [小節内位置, 長さ(小節比), 音量倍率] */
+    (p.kaze || []).forEach(function (n) { kaze(t + n[0] * p.bar, n[1] * p.bar, p.vol * 2.6 * (n[2] || 1)); });
     if (p.drone) {
       var o = ctx.createOscillator(), g = ctx.createGain();
       o.type = 'sine'; o.frequency.value = p.drone;
@@ -649,6 +697,31 @@ var Sound = (function () {
       [0, 0.28, 0.56].forEach(function (b, i) {
         noiseHit(0.12, 900 - i * 150, 0.07 - i * 0.015, b);
       });
+    },
+    goma: function () { /* いわの とびら: ひくい じひびき → ひらいて きらめき */
+      tone(60, 0.9, { to: 40, vol: 0.2 });
+      noiseHit(0.7, 260, 0.14, 0.05);
+      [1800, 2700, 3600].forEach(function (f, i) { tone(f, 0.6, { vol: 0.045, at: 0.9 + i * 0.12 }); });
+    },
+    tsubo: function () { /* つぼの なかの こもった おと */
+      tone(180, 0.18, { to: 120, vol: 0.12 });
+      noiseHit(0.08, 420, 0.06, 0.05);
+      tone(180, 0.14, { to: 120, vol: 0.08, at: 0.32 });
+    },
+    poka: function () { /* ぽかぽか(ひざし): sine の ゆっくりした のぼり + 鈴 */
+      tone(660, 0.9, { to: 990, vol: 0.06 });
+      tone(990, 0.7, { to: 1320, vol: 0.04, at: 0.5 });
+      [2800, 4200].forEach(function (f, i) { tone(f, 0.5, { vol: i ? 0.02 : 0.035, at: 0.9 }); });
+    },
+    kaze3: function () { /* ながい 3れんの かぜ(きたかぜ 3だんかい目) */
+      [[0, 0.5], [0.6, 1.2], [1.9, 1.6]].forEach(function (w, i) {
+        noiseHit(w[1], 900 + i * 300, 0.16 + i * 0.04, w[0]);
+      });
+    },
+    zabun: function () { /* みずしぶき */
+      noiseHit(0.35, 1400, 0.22);
+      tone(220, 0.25, { to: 90, vol: 0.12 });
+      [0.25, 0.42, 0.6].forEach(function (b, i) { noiseHit(0.12, 2200 - i * 400, 0.08 - i * 0.02, b); });
     }
   };
 

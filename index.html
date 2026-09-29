@@ -153,6 +153,55 @@ body[data-fs="l"] .znote{font-size:13px}
 body[data-fs="s"] .ask-msg,body[data-fs="s"] .ask-row button{font-size:15px}
 body[data-fs="l"] .ask-msg,body[data-fs="l"] .ask-row button{font-size:20px}
 
+/* ---- はじめての あそびかた(はじめての 起動の 案内・2026-09-30) ----
+   がめん いっぱいに かさねる。カットイン(50)より うえ・ことばの よみこみ(60)と たしかめの まど(70)より した。
+   「まえへ/つぎへ」は したに とめた 地の いろの おび(ながい ページでも 本文が すけない)。本文の したの よはくは おびより たかく。
+   でる ときは うすさだけ かえる(transform を つかうと、その あいだ したの おびが 案内と いっしょに ながれる) */
+.guide-ov{
+  position:fixed;inset:0;z-index:55;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  background:var(--bg);color:var(--ink);animation:guideIn .2s ease;
+  padding:calc(18px + env(safe-area-inset-top)) 16px calc(128px + env(safe-area-inset-bottom));
+}
+@keyframes guideIn{0%{opacity:0}100%{opacity:1}}
+.guide-box{max-width:560px;margin:0 auto}
+.guide-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.guide-title{font-size:15px;font-weight:700;color:#8a7a62;letter-spacing:.06em}
+.guide-step{font-size:15px;font-weight:700;color:#8a7a62;white-space:nowrap;unicode-bidi:isolate}
+.guide-lang{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-top:14px;
+  background:var(--panel);border:3px solid var(--frame);border-radius:14px;padding:10px 14px;
+}
+.guide-lang-lbl{font-size:15px;font-weight:700}
+.guide-lang select{
+  min-height:44px;max-width:100%;font-size:16px;font-family:inherit;padding:4px 8px;
+  border:2px solid var(--frame);border-radius:10px;background:#fff;color:var(--ink);
+}
+.guide-h{font-size:22px;line-height:1.5;margin:16px 0 12px;overflow-wrap:anywhere}
+.guide-p{
+  background:var(--panel);border:3px solid var(--frame);border-radius:14px;padding:14px 16px;
+  font-size:17px;line-height:1.95;white-space:pre-line;overflow-wrap:anywhere;
+}
+.guide-dots{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:20px}
+.guide-dot{width:10px;height:10px;border-radius:50%;background:#e2d5bb}
+.guide-dot.on{background:var(--accent)}
+.guide-row{
+  position:fixed;z-index:56;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;
+  padding:10px 16px calc(14px + env(safe-area-inset-bottom));background:var(--bg);border-top:3px solid var(--frame);
+}
+.guide-row button{
+  flex:1 1 0;min-width:0;max-width:260px;min-height:56px;font-size:18px;padding:12px 10px;
+  border-radius:14px;cursor:pointer;font-family:inherit;font-weight:700;
+}
+.guide-row .guide-prev{border:3px solid var(--frame);background:var(--panel);color:var(--ink)}
+.guide-row .guide-next{border:3px solid var(--accent-dark);background:var(--accent);color:#fff}
+/* わかちがきの 日本語と 韓国語は、ことばの あいだの あきで おる(ことばの とちゅうで きらない)。中国語は ふつうの おりかた */
+html[lang="ja"] .guide-h,html[lang="ja"] .guide-p,html[lang="ko"] .guide-h,html[lang="ko"] .guide-p{word-break:keep-all}
+body[data-fs="s"] .guide-p{font-size:15px;line-height:1.85}
+body[data-fs="l"] .guide-h{font-size:24px}
+body[data-fs="l"] .guide-p{font-size:20px;line-height:2.05}
+body[data-fs="l"] .guide-row button{font-size:20px}
+@media (prefers-reduced-motion: reduce){ .guide-ov{animation:none} }
+
 /* ---- ずかん ---- */
 .zgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .zcell{background:var(--panel);border:3px solid var(--frame);border-radius:12px;padding:12px}
@@ -860,6 +909,8 @@ body[data-fs="l"] .ask-msg,body[data-fs="l"] .ask-row button{font-size:20px}
     <div class="setrow"><div class="sl" id="lblFs"></div><div class="seg" id="segFs"></div></div>
     <div class="setrow"><div class="sl" id="lblBgm"></div><div class="seg" id="segBgm"></div></div>
     <div class="setrow"><div class="sl" id="lblSe"></div><div class="seg" id="segSe"></div></div>
+    <!-- はじめての あそびかたを もういちど みる(2026-09-30) -->
+    <div class="setrow"><div class="sl" id="lblGuide"></div><div class="seg"><button id="btnGuide" type="button"></button></div></div>
     <div class="backrow"><button id="btnSetBack"></button></div>
   </div>
 
@@ -987,7 +1038,7 @@ ja:{
   title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
   subtitle:'えらぶたびに、おはなしが かわる',
   start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'ぶんしょうと えは すべて オリジナルです',
   footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
   footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
@@ -1123,13 +1174,34 @@ ja:{
   fsOpts:['ちいさい','ふつう','おおきい'], volOpts:['なし','ちいさい','ふつう','おおきい'],
   /* Play版の もどるボタンで 出す たしかめの まど(2026-09-30) */
   yes:'はい', no:'いいえ', quitConfirm:'おはなし えらびへ もどる？（「つづきから よむ」は きえます）',
-  seal:['お','し','ま','い']
+  seal:['お','し','ま','い'],
+  /* はじめての あそびかた(2026-09-30)。guideHeads と guideBodies は おなじ かず(12ことば とも)。
+     {start} などは いまの ことばの ボタンの 文字(t(key))に おきかわる。{btnLang} は タイトルの「🌐 ことば / Language」 */
+  guideTitle:'あそびかた', guideStep:'{n} / {m}', guidePrev:'まえへ', guideNext:'つぎへ', guideStart:'あそぶ', guideAgain:'もういちど みる',
+  guideHeads:[
+    'えらぶと、おはなしが かわる',
+    'はじめかた',
+    'よみすすめかた',
+    'とちゅうで やめる とき',
+    '{zukan}',
+    'きろくは この たんまつの なかだけ',
+    'せってい と ことば'
+  ],
+  guideBodies:[
+    'せかいの むかしばなしを よむ ゲームです。「{momoName}」「{akzName}」など、12の おはなしが あります。\nおはなしの とちゅうで じぶんで えらぶと、けつまつが かわります。\nどれを えらんでも、まけは ありません。',
+    'タイトルの「{start}」を おして、よみたい おはなしを えらびます。\nはじめての 1かいめは、もとの おはなしの とおりに すすみます。\n2かいめからは、とちゅうで えらぶ ところが でてきます。',
+    'がめんを タップするか「{next}」を おすと、つぎへ すすみます。\nえらぶ ところでは、すきな ボタンを 1つ おします。\nとちゅうで でる おおきな えは、タップすると とばせます。',
+    'とちゅうで アプリを とじても、よんでいた ところを おぼえています。つぎは タイトルの「{cont}」で つづきが よめます。\nしたの「{selBack}」を おすと、おはなし えらびに もどります。そのときは つづきが きえます。',
+    'みつけた けつまつは「{zukan}」に のこります。「{zFound}」と でている ところを おすと、その けつまつを よみかえせます。\nまだ みつけていない けつまつには、ヒントが でます。\nよみすすめると、べつの ひとから みた おはなしも ひらきます。ひらきかたは おはなし えらびに でています。',
+    'きろくは この たんまつの なかだけに のこり、どこにも おくられません。\nタイトルの いちばん したの「{reset}」を 2かい つづけて おすと、きろくを ぜんぶ けせます。\nスマホを かえるときに、きろくを うつす しくみは ありません。',
+    '「{settings}」（おはなしの とちゅうは したの ⚙️）で「{lblFs}」「{lblBgm}」「{lblSe}」を かえられます。\nことばは タイトルの「{btnLang}」か、おはなしの したの 🌐 で かえられます。\nこの あそびかたは「{settings}」の「{guideTitle}」の「{guideAgain}」で、いつでも みられます。'
+  ]
 },
 en:{
   title:'Be the Hero of Tales!',
   subtitle:'The story changes with every choice',
   start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'All text and art are original.',
   footFirst:'Your first read follows the original tale.',
   footCreate:'Branching stories and endings are original creations for this app.',
@@ -1264,7 +1336,26 @@ en:{
   setTitle:'Settings', lblFs:'Text size', lblBgm:'Music', lblSe:'Sound effects', lblLang:'ことば / Language',
   fsOpts:['Small','Normal','Large'], volOpts:['Off','Soft','Normal','Loud'],
   yes:'Yes', no:'No', quitConfirm:'Go back to Tale Select? ("Continue" will disappear)',
-  seal:['The','End']
+  seal:['The','End'],
+  guideTitle:'How to play', guideStep:'{n} / {m}', guidePrev:'Previous', guideNext:'Next', guideStart:'Play', guideAgain:'Show again',
+  guideHeads:[
+    'Your choices change the story',
+    'Getting started',
+    'Reading and choosing',
+    'Stopping partway',
+    '{zukan}',
+    'Your records stay on this device',
+    'Settings and language'
+  ],
+  guideBodies:[
+    'A game where you read folk tales from around the world. There are 12 tales, such as "{momoName}" and "{akzName}".\nWhen you make choices during a tale, the ending changes.\nWhatever you choose, you never lose.',
+    'Tap "{start}" on the title screen and choose a tale to read.\nYour first read of each tale follows the original story.\nFrom the second read on, there are places where you choose.',
+    'Tap the screen or "{next}" to go on.\nWhere there is a choice, tap the button you like.\nThe big pictures that appear along the way can be skipped with a tap.',
+    'If you close the app partway, it remembers where you were. Next time, tap "{cont}" on the title screen to read on.\nTap "{selBack}" at the bottom to return to the tale list. The saved place is then erased.',
+    'Endings you find are kept in the "{zukan}". Tap an ending that shows "{zFound}" to read it again.\nEndings you have not found yet show a hint.\nAs you read on, tales told by other characters open up too. The tale list shows how to open them.',
+    'Your records stay only on this device and are never sent anywhere.\nTap "{reset}" at the very bottom of the title screen twice in a row to erase all records.\nThere is no way to move your records to a new phone.',
+    'In "{settings}" (during a tale, the ⚙️ at the bottom) you can change "{lblFs}", "{lblBgm}" and "{lblSe}".\nChange the language with "{btnLang}" on the title screen or the 🌐 at the bottom of a tale.\nYou can see this guide again at any time with "{guideAgain}" under "{guideTitle}" in "{settings}".'
+  ]
 }
 };
 
@@ -2586,6 +2677,8 @@ function renderSettings(){
   $('lblFs').textContent = t('lblFs');
   $('lblBgm').textContent = t('lblBgm');
   $('lblSe').textContent = t('lblSe');
+  $('lblGuide').textContent = t('guideTitle');
+  $('btnGuide').textContent = t('guideAgain');
   $('btnSetBack').textContent = t('back');
   const fsKeys = ['s','m','l'];
   seg($('segFs'), t('fsOpts'), fsKeys.indexOf(PREF.fs), i=>{ PREF.fs = fsKeys[i]; applyFs(); savePref(); });
@@ -2594,8 +2687,9 @@ function renderSettings(){
 }
 
 /* ことばを えらんだ とき: いるものを よみこんでから 画面を 描きなおす。
-   ものがたりの とちゅうなら、おなじ 場面を あたらしい ことばで 出しなおす */
-function pickLang(code){
+   ものがたりの とちゅうなら、おなじ 場面を あたらしい ことばで 出しなおす
+   (alsoGame=true: あそびかたの 1ページめで えらんだ ときに、したが ものがたりの とちゅうの せってい なら それも 出しなおす) */
+function pickLang(code, alsoGame){
   if(code === PREF.lang) return;
   const info = LANGS.find(l=>l.c === code);
   PREF.lang = code;
@@ -2603,7 +2697,7 @@ function pickLang(code){
   applyDir();
   const done = ()=>{
     applyLang();
-    if(langBack === 'scGame' && redrawGame) redrawGame();
+    if((alsoGame || langBack === 'scGame') && redrawGame) redrawGame();
   };
   if(LANG_LOADED[code]){ done(); return; }
   showLangLoad(true, info ? info.nm : code);
@@ -2673,6 +2767,8 @@ function applyLang(){
   /* ひらいたままの 画面も 描きなおす(えらび・ずかん) */
   renderSelect();
   renderZukan();
+  /* はじめての あそびかたが 出ていれば、いまの ページの まま 訳しなおす */
+  if(guideOpen) guideOpen.draw();
 }
 
 /* ================= ボタン ================= */
@@ -2682,6 +2778,7 @@ $('btnZukan').addEventListener('click', ()=>{ renderZukan(); showScreen('scZukan
 $('btnSettings').addEventListener('click', ()=>{ settingsBack = 'scTitle'; renderSettings(); showScreen('scSettings'); });
 $('btnGear').addEventListener('click', ()=>{ settingsBack = 'scGame'; renderSettings(); showScreen('scSettings'); });
 $('btnSetBack').addEventListener('click', ()=>{ showScreen(settingsBack); });
+$('btnGuide').addEventListener('click', ()=>openGuide(false));
 $('btnLang').addEventListener('click', ()=>{ langBack = 'scTitle'; renderLangScreen(); showScreen('scLang'); });
 $('btnLangGame').addEventListener('click', ()=>{ langBack = 'scGame'; renderLangScreen(); showScreen('scLang'); });
 $('btnLangBack').addEventListener('click', ()=>{ showScreen(langBack); });
@@ -2786,6 +2883,7 @@ function quitGame(){
 function onBack(){
   if(askOpen){ askOpen.no(); return; }
   if($('langLoad').classList.contains('on')) return;
+  if(guideOpen){ guideOpen.back(); return; }               /* はじめての あそびかた(したの openGuide の きまり) */
   const cur = document.querySelector('.screen.on');
   const id = cur ? cur.id : 'scTitle';
   if(BACK_BTN[id]){ $(BACK_BTN[id]).click(); return; }
@@ -2801,6 +2899,98 @@ function watchBack(){
   const ap = nativePlugin('App', 'addListener');
   if(!ap) return;
   try{ ap.addListener('backButton', ()=>{ onBack(); }); }catch(e){}
+}
+
+/* ================= はじめての あそびかた(はじめての 起動の 案内・2026-09-30) =================
+   ヒロさん「ひとつずつ・そよぎ みたいなタイプのアプリは、必ず最初に使い方の丁寧な説明を出してほしい。10代の情報室のように」。
+   ・はじめての 起動で かならず だす(さいごまで よむまで、ひらく たびに でる)。がめん いっぱいに かさねる
+   ・1ページずつ「つぎへ」「まえへ」で すすむ。とじるのは さいごの ページの「あそぶ」だけ(× は おかない)
+   ・1ページめに ことばの えらび(🌐 と おなじ 12の ことば)。案内が タイトルの 🌐 を おおうので、ここでも えらべるように。
+     えらぶと 案内も その ことばに かわる(applyLang が draw を よぶ)
+   ・もどるボタン(Play版): 2ページめから=まえの ページ / 1ページめ=はじめてなら うしろに さげる(とじない・10代の情報室と おなじ)、
+     「せってい」の「あそびかた」から ひらいた ときは とじる
+   ・よみおえたら GUIDE_KEY に true(「きろくを ぜんぶ けして」でも きえない)
+   ・文言は UIT の guide*(12ことば)。本文の {start} などは いまの ことばの ボタンの 文字 t(key) に おきかえる
+     =ボタン名が がめんと かならず おなじ。{btnLang} は タイトルの「🌐 ことば / Language」
+   ・音は いまの きまりの まま(起動では 鳴らさない。さいしょの タップから) */
+const GUIDE_KEY = 'mukashi_guide_v1';
+let guideOpen = null;      /* 出している 案内({back:もどるボタン1かい, draw:訳しなおし, page:いまの ページ}) */
+function guideDone(){ return loadJson(GUIDE_KEY, false) === true; }
+function guideText(s){
+  return String(s == null ? '' : s).replace(/\{(\w+)\}/g, (m, k)=>{
+    if(k === 'btnLang') return '🌐 ' + t('lblLang');
+    const v = t(k);
+    return (typeof v === 'string') ? v : m;
+  });
+}
+function openGuide(first){
+  if(guideOpen) return;                                    /* もう 出ていれば 二重に 出さない */
+  let i = 0;
+  const mk = (tag, cls)=>{ const e = document.createElement(tag); e.className = cls; return e; };
+  const ov = mk('div', 'guide-ov');
+  ov.setAttribute('role', 'dialog');
+  ov.setAttribute('aria-modal', 'true');
+  const box = mk('div', 'guide-box'), top = mk('div', 'guide-top');
+  const ttl = mk('p', 'guide-title'), step = mk('p', 'guide-step');
+  step.dir = 'ltr';                                        /* 「2 / 7」は アラビア語でも ひだりから */
+  top.appendChild(ttl); top.appendChild(step);
+  /* ことば(1ページめだけ)。ならびと 名まえは ことばの 画面と おなじ(LANGS) */
+  const langRow = mk('div', 'guide-lang'), langLbl = mk('span', 'guide-lang-lbl');
+  const sel = document.createElement('select');
+  sel.setAttribute('aria-label', 'Language');
+  LANGS.forEach(l=>{
+    const o = document.createElement('option');
+    o.value = l.c; o.textContent = l.nm; o.setAttribute('lang', l.c);
+    if(l.rtl) o.dir = 'rtl';
+    sel.appendChild(o);
+  });
+  sel.addEventListener('change', ()=>{
+    /* ものがたりの とちゅうの ⚙️ から ひらいた ときは、したの 場面も あたらしい ことばで 出しなおす */
+    pickLang(sel.value, settingsBack === 'scGame' && $('scSettings').classList.contains('on'));
+  });
+  langRow.appendChild(langLbl); langRow.appendChild(sel);
+  const h = mk('h2', 'guide-h'), p = mk('p', 'guide-p'), dots = mk('div', 'guide-dots');
+  dots.setAttribute('aria-hidden', 'true');
+  const row = mk('div', 'guide-row');
+  const prevB = mk('button', 'guide-prev'), nextB = mk('button', 'guide-next');
+  prevB.type = 'button'; nextB.type = 'button';
+  row.appendChild(prevB); row.appendChild(nextB);
+  box.appendChild(top); box.appendChild(langRow); box.appendChild(h); box.appendChild(p); box.appendChild(dots);
+  ov.appendChild(box); ov.appendChild(row);
+  const pages = ()=>{ const b = t('guideBodies'); return Array.isArray(b) ? b : []; };
+  const draw = ()=>{
+    const heads = t('guideHeads') || [], bodies = pages(), n = bodies.length;
+    if(i > n - 1) i = Math.max(0, n - 1);
+    ov.setAttribute('aria-label', t('guideTitle'));
+    ttl.textContent = t('guideTitle');
+    step.textContent = String(t('guideStep')).replace('{n}', i + 1).replace('{m}', n);
+    langRow.style.display = (i === 0) ? '' : 'none';
+    langLbl.textContent = '🌐 ' + t('lblLang');
+    sel.value = PREF.lang;
+    h.textContent = guideText(heads[i]);
+    p.textContent = guideText(bodies[i]);
+    dots.innerHTML = '';
+    for(let k = 0; k < n; k++) dots.appendChild(mk('span', 'guide-dot' + (k === i ? ' on' : '')));
+    prevB.textContent = t('guidePrev');
+    prevB.style.visibility = (i === 0) ? 'hidden' : 'visible';   /* 1ページめも「つぎへ」の ばしょを かえない */
+    nextB.textContent = (i === n - 1) ? t('guideStart') : t('guideNext');
+  };
+  const turn = d=>{ i += d; draw(); ov.scrollTop = 0; };
+  const close = ()=>{
+    if(ov.parentNode) ov.parentNode.removeChild(ov);
+    guideOpen = null;
+    saveJson(GUIDE_KEY, true);
+  };
+  prevB.addEventListener('click', ()=>{ if(i > 0) turn(-1); });
+  nextB.addEventListener('click', ()=>{ if(i < pages().length - 1) turn(1); else close(); });
+  guideOpen = {
+    back: ()=>{ if(i > 0){ turn(-1); return; } if(first) minimizeApp(); else close(); },
+    draw: draw,
+    page: ()=>i
+  };
+  draw();
+  document.body.appendChild(ov);
+  try{ nextB.focus(); }catch(e){}
 }
 
 /* ================= 起動 ================= */
@@ -2822,6 +3012,8 @@ Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se], false);
 Sound.setTrack('title');
 /* Android の もどるボタン(Play版だけ) */
 watchBack();
+/* はじめての あそびかた(さいごまで よむまで 毎回・2026-09-30) */
+if(!guideDone()) openGuide(true);
 
 /* Web版(GitHub Pages)の オフライン対応。file:// では 登録しない */
 if('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){

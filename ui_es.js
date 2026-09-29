@@ -10,7 +10,7 @@ var UIT_ES = {
   title:'¡Sé el protagonista de los cuentos!',
   subtitle:'La historia cambia con cada elección',
   start:'Empezar', cont:'Continuar', zukan:'Colección de finales', settings:'⚙️ Ajustes',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'Todos los textos y las imágenes son originales.',
   footFirst:'Tu primera lectura sigue el cuento original.',
   footCreate:'Las historias con ramas y los finales son creaciones originales solo para esta app.',
@@ -146,7 +146,27 @@ var UIT_ES = {
   setTitle:'Ajustes', lblFs:'Tamaño del texto', lblBgm:'Música', lblSe:'Efectos de sonido', lblLang:'Idioma / Language',
   fsOpts:['Pequeño','Normal','Grande'], volOpts:['Apagado','Bajo','Normal','Alto'],
   yes:'Sí', no:'No', quitConfirm:'¿Volver a la selección? ("Continuar" va a desaparecer)',
-  seal:['Fin']
+  seal:['Fin'],
+  /* はじめての あそびかた(2026-09-30)。{start} などは いまの ことばの ボタンの 文字に おきかわる(index.html guideText) */
+  guideTitle:'Cómo jugar', guideStep:'{n} / {m}', guidePrev:'Anterior', guideNext:'Siguiente', guideStart:'Jugar', guideAgain:'Ver otra vez',
+  guideHeads:[
+    'Tus decisiones cambian la historia',
+    'Para empezar',
+    'Leer y elegir',
+    'Parar a mitad del cuento',
+    '{zukan}',
+    'Tus registros se quedan en este dispositivo',
+    'Ajustes e idioma'
+  ],
+  guideBodies:[
+    'Es un juego para leer cuentos de todo el mundo. Hay 12 cuentos, como "{momoName}" y "{akzName}".\nSi eliges tú durante el cuento, el final cambia.\nElijas lo que elijas, nunca pierdes.',
+    'En la pantalla de título, toca "{start}" y elige un cuento.\nLa primera vez, cada cuento sigue la historia original.\nA partir de la segunda vez, hay momentos en los que eliges tú.',
+    'Toca la pantalla o "{next}" para avanzar.\nCuando hay que elegir, toca el botón que prefieras.\nLas imágenes grandes que aparecen por el camino se pueden saltar con un toque.',
+    'Si cierras la aplicación a mitad del cuento, recuerda dónde estabas. La próxima vez, toca "{cont}" en la pantalla de título.\nCon "{selBack}" abajo vuelves a la lista de cuentos. Entonces se borra el punto guardado.',
+    'Los finales que encuentras se guardan en la "{zukan}". Toca un final que muestre "{zFound}" para volver a leerlo.\nLos finales que aún no has encontrado muestran una pista.\nAl seguir leyendo, también se abren cuentos contados por otros personajes. La lista de cuentos explica cómo.',
+    'Tus registros se quedan solo en este dispositivo y no se envían a ningún sitio.\nAbajo del todo en la pantalla de título, toca dos veces seguidas "{reset}" para borrarlo todo.\nNo hay forma de pasar tus registros a un teléfono nuevo.',
+    'En "{settings}" (durante un cuento, el ⚙️ de abajo) puedes cambiar "{lblFs}", "{lblBgm}" y "{lblSe}".\nCambia el idioma con "{btnLang}" en la pantalla de título o con el 🌐 de abajo en un cuento.\nPuedes ver esta guía otra vez cuando quieras: "{settings}", en "{guideTitle}", botón "{guideAgain}".'
+  ]
 };
 
 if (typeof module !== 'undefined') module.exports = { UIT_ES };

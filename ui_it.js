@@ -8,7 +8,7 @@ var UIT_IT = {
   title:'Diventa il protagonista delle fiabe!',
   subtitle:'A ogni scelta la storia cambia',
   start:'Inizia', cont:'Continua a leggere', zukan:'Raccolta dei finali', settings:'⚙️ Impostazioni',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'Tutti i testi e i disegni sono originali.',
   footFirst:'La tua prima lettura segue la storia originale.',
   footCreate:'Le storie con le scelte e i finali sono creazioni originali solo per questa app.',
@@ -144,7 +144,27 @@ var UIT_IT = {
   setTitle:'Impostazioni', lblFs:'Dimensione del testo', lblBgm:'Musica', lblSe:'Effetti sonori', lblLang:'Lingua / Language',
   fsOpts:['Piccolo','Normale','Grande'], volOpts:['Spento','Basso','Normale','Alto'],
   yes:'Sì', no:'No', quitConfirm:'Tornare alla scelta della storia? ("Continua a leggere" sparirà)',
-  seal:['Fine']
+  seal:['Fine'],
+  /* はじめての あそびかた(2026-09-30)。{start} などは いまの ことばの ボタンの 文字に おきかわる(index.html guideText) */
+  guideTitle:'Come si gioca', guideStep:'{n} / {m}', guidePrev:'Indietro', guideNext:'Avanti', guideStart:'Gioca', guideAgain:'Rivedi',
+  guideHeads:[
+    'Le tue scelte cambiano la storia',
+    'Per cominciare',
+    'Leggere e scegliere',
+    'Fermarsi a metà',
+    '{zukan}',
+    'I tuoi dati restano su questo dispositivo',
+    'Impostazioni e lingua'
+  ],
+  guideBodies:[
+    'È un gioco in cui leggi fiabe di tutto il mondo. Ci sono 12 storie, come "{momoName}" e "{akzName}".\nSe scegli tu durante la storia, il finale cambia.\nQualunque cosa tu scelga, non perdi mai.',
+    'Nella schermata del titolo tocca "{start}" e scegli una storia.\nLa prima volta, ogni storia segue la fiaba originale.\nDalla seconda volta in poi, ci sono punti in cui scegli tu.',
+    'Tocca lo schermo o "{next}" per andare avanti.\nQuando c’è una scelta, tocca il pulsante che preferisci.\nLe grandi immagini che compaiono lungo la strada si possono saltare con un tocco.',
+    'Se chiudi l’app a metà, ricorda il punto in cui eri. La prossima volta tocca "{cont}" nella schermata del titolo.\nCon "{selBack}" in basso torni alla scelta della storia. Il punto salvato viene cancellato.',
+    'I finali che trovi restano nella "{zukan}". Tocca un finale con "{zFound}" per rileggerlo.\nI finali non ancora trovati mostrano un indizio.\nLeggendo si aprono anche storie raccontate da altri personaggi. La scelta della storia spiega come.',
+    'I tuoi dati restano solo su questo dispositivo e non vengono inviati da nessuna parte.\nIn fondo alla schermata del titolo, tocca due volte di seguito "{reset}" per cancellare tutto.\nNon c’è modo di trasferire i dati su un nuovo telefono.',
+    'In "{settings}" (durante una storia, il ⚙️ in basso) puoi cambiare "{lblFs}", "{lblBgm}" e "{lblSe}".\nCambia lingua con "{btnLang}" nella schermata del titolo o con il 🌐 in basso in una storia.\nPuoi rivedere questa guida quando vuoi: "{settings}", voce "{guideTitle}", pulsante "{guideAgain}".'
+  ]
 };
 
 if (typeof module !== 'undefined') module.exports = { UIT_IT };

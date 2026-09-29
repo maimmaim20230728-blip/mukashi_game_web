@@ -8,7 +8,7 @@ var UIT_SV = {
   title:'Bli huvudpersonen i sagorna!',
   subtitle:'Sagan ändras varje gång du väljer',
   start:'Börja', cont:'Läs vidare', zukan:'Samling av slut', settings:'⚙️ Inställningar',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'All text och alla bilder är original.',
   footFirst:'Din första läsning följer den ursprungliga sagan.',
   footCreate:'Sagorna och sluten som ändras av dina val är original bara för den här appen.',
@@ -144,7 +144,27 @@ var UIT_SV = {
   setTitle:'Inställningar', lblFs:'Textstorlek', lblBgm:'Musik', lblSe:'Ljudeffekter', lblLang:'Språk / Language',
   fsOpts:['Liten','Normal','Stor'], volOpts:['Av','Låg','Normal','Hög'],
   yes:'Ja', no:'Nej', quitConfirm:'Tillbaka till sagovalet? (”Läs vidare” försvinner då)',
-  seal:['Slut']
+  seal:['Slut'],
+  /* はじめての あそびかた(2026-09-30)。{start} などは いまの ことばの ボタンの 文字に おきかわる(index.html guideText) */
+  guideTitle:'Så spelar du', guideStep:'{n} / {m}', guidePrev:'Föregående', guideNext:'Nästa', guideStart:'Spela', guideAgain:'Visa igen',
+  guideHeads:[
+    'Dina val ändrar berättelsen',
+    'Så börjar du',
+    'Läsa och välja',
+    'Sluta mitt i',
+    '{zukan}',
+    'Dina uppgifter stannar på den här enheten',
+    'Inställningar och språk'
+  ],
+  guideBodies:[
+    'I det här spelet läser du sagor från hela världen. Det finns 12 sagor, till exempel ”{momoName}” och ”{akzName}”.\nNär du själv väljer under sagan ändras slutet.\nVad du än väljer kan du aldrig förlora.',
+    'Tryck på ”{start}” på titelskärmen och välj en saga.\nFörsta gången följer varje saga den ursprungliga berättelsen.\nFrån andra gången finns det ställen där du väljer själv.',
+    'Tryck på skärmen eller på ”{next}” för att gå vidare.\nNär det finns ett val trycker du på den knapp du vill.\nDe stora bilderna som dyker upp på vägen kan du hoppa över med ett tryck.',
+    'Om du stänger appen mitt i kommer den ihåg var du var. Nästa gång trycker du på ”{cont}” på titelskärmen.\nMed ”{selBack}” längst ner kommer du tillbaka till sagovalet. Då raderas det sparade stället.',
+    'Slut som du hittar sparas i ”{zukan}”. Tryck på ett slut med ”{zFound}” för att läsa det igen.\nSlut som du inte har hittat än visar en ledtråd.\nNär du läser vidare öppnas också sagor berättade av andra figurer. Sagovalet visar hur.',
+    'Dina uppgifter stannar bara på den här enheten och skickas ingenstans.\nTryck två gånger i rad på ”{reset}” längst ner på titelskärmen för att radera allt.\nDet går inte att flytta dina uppgifter till en ny telefon.',
+    'Under ”{settings}” (i en saga ⚙️ längst ner) kan du ändra ”{lblFs}”, ”{lblBgm}” och ”{lblSe}”.\nSpråket väljer du med ”{btnLang}” på titelskärmen eller med 🌐 längst ner i en saga.\nDen här guiden kan du se igen när som helst: ”{settings}”, vid ”{guideTitle}”, knappen ”{guideAgain}”.'
+  ]
 };
 
 if (typeof module !== 'undefined') module.exports = { UIT_SV };

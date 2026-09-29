@@ -9,7 +9,7 @@ var UIT_PT = {
   title:'Seja a personagem principal dos contos!',
   subtitle:'A história muda a cada escolha',
   start:'Começar', cont:'Continuar a leitura', zukan:'Coleção de finais', settings:'⚙️ Ajustes',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'Todos os textos e desenhos são originais.',
   footFirst:'A sua primeira leitura segue o conto original.',
   footCreate:'As histórias que mudam com as escolhas e os finais são criações originais deste app.',
@@ -145,7 +145,27 @@ var UIT_PT = {
   setTitle:'Ajustes', lblFs:'Tamanho da letra', lblBgm:'Música', lblSe:'Efeitos sonoros', lblLang:'Idioma / Language',
   fsOpts:['Pequena','Normal','Grande'], volOpts:['Sem som','Baixo','Normal','Alto'],
   yes:'Sim', no:'Não', quitConfirm:'Voltar à escolha do conto? ("Continuar a leitura" vai desaparecer)',
-  seal:['Fim']
+  seal:['Fim'],
+  /* はじめての あそびかた(2026-09-30)。{start} などは いまの ことばの ボタンの 文字に おきかわる(index.html guideText) */
+  guideTitle:'Como jogar', guideStep:'{n} / {m}', guidePrev:'Anterior', guideNext:'Próximo', guideStart:'Jogar', guideAgain:'Ver de novo',
+  guideHeads:[
+    'Suas escolhas mudam a história',
+    'Para começar',
+    'Ler e escolher',
+    'Parar no meio',
+    '{zukan}',
+    'Seus dados ficam neste aparelho',
+    'Ajustes e idioma'
+  ],
+  guideBodies:[
+    'Neste jogo você lê contos do mundo inteiro. São 12 contos, como "{momoName}" e "{akzName}".\nQuando você escolhe durante o conto, o final muda.\nSeja qual for a sua escolha, você nunca perde.',
+    'Na tela de título, toque em "{start}" e escolha um conto.\nNa primeira vez, cada conto segue a história original.\nA partir da segunda vez, há momentos em que você escolhe.',
+    'Toque na tela ou em "{next}" para avançar.\nQuando houver uma escolha, toque no botão que preferir.\nAs imagens grandes que aparecem pelo caminho podem ser puladas com um toque.',
+    'Se você fechar o app no meio, ele lembra onde você parou. Da próxima vez, toque em "{cont}" na tela de título.\nCom "{selBack}", embaixo, você volta à escolha do conto. O ponto salvo é apagado.',
+    'Os finais que você encontra ficam na "{zukan}". Toque em um final com "{zFound}" para lê-lo de novo.\nOs finais ainda não encontrados mostram uma dica.\nConforme você lê, abrem-se também contos contados por outros personagens. A escolha do conto mostra como.',
+    'Seus dados ficam só neste aparelho e não são enviados para lugar nenhum.\nBem embaixo na tela de título, toque duas vezes seguidas em "{reset}" para apagar tudo.\nNão há como passar seus dados para um celular novo.',
+    'Em "{settings}" (durante um conto, o ⚙️ embaixo) você pode mudar "{lblFs}", "{lblBgm}" e "{lblSe}".\nMude o idioma com "{btnLang}" na tela de título ou com o 🌐 embaixo em um conto.\nVocê pode ver este guia de novo quando quiser: "{settings}", em "{guideTitle}", botão "{guideAgain}".'
+  ]
 };
 
 if (typeof module !== 'undefined') module.exports = { UIT_PT };

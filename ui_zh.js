@@ -8,7 +8,7 @@ var UIT_ZH = {
   title:'来当名作的主人公吧！',
   subtitle:'每选择一次，故事就会改变',
   start:'开始', cont:'接着读', zukan:'结局图鉴', settings:'⚙️ 设置',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'文字和图画全都是原创的。',
   footFirst:'第一次游玩时，会照着原本的故事往下走。',
   footCreate:'选择后改变的故事和结局，是这个应用独有的原创内容。',
@@ -144,7 +144,27 @@ var UIT_ZH = {
   setTitle:'设置', lblFs:'文字大小', lblBgm:'音乐', lblSe:'音效', lblLang:'语言 / Language',
   fsOpts:['小','标准','大'], volOpts:['关闭','小声','标准','大声'],
   yes:'是', no:'否', quitConfirm:'要回到故事选择吗？（“接着读”会消失）',
-  seal:['完']
+  seal:['完'],
+  /* はじめての あそびかた(2026-09-30)。{start} などは いまの ことばの ボタンの 文字に おきかわる(index.html guideText) */
+  guideTitle:'玩法', guideStep:'{n} / {m}', guidePrev:'上一页', guideNext:'下一页', guideStart:'开始玩', guideAgain:'再看一次',
+  guideHeads:[
+    '你的选择会改变故事',
+    '怎么开始',
+    '阅读和选择',
+    '中途停下时',
+    '{zukan}',
+    '记录只保存在这台设备上',
+    '设置和语言'
+  ],
+  guideBodies:[
+    '这是一款阅读世界各地民间故事的游戏。共有《{momoName}》《{akzName}》等12个故事。\n在故事中自己做出选择，结局就会改变。\n无论选择什么，都不会输。',
+    '在标题画面点“{start}”，然后选择想读的故事。\n第一次读时，每个故事都按照原来的故事进行。\n从第二次开始，会出现由你来选择的地方。',
+    '点一下画面或点“{next}”，就会往下进行。\n遇到选择时，点一个你喜欢的按钮。\n中途出现的大图，点一下就可以跳过。',
+    '中途关闭应用，也会记住你读到的地方。下次在标题画面点“{cont}”就能接着读。\n点下面的“{selBack}”，会回到故事选择。这时保存的位置会被清除。',
+    '找到的结局会留在“{zukan}”里。点显示“{zFound}”的结局，就能重新阅读。\n还没找到的结局会显示提示。\n继续读下去，还会出现从其他角色的角度讲述的故事。出现的方法写在故事选择里。',
+    '记录只保存在这台设备上，不会发送到任何地方。\n在标题画面最下面，连续点两次“{reset}”，就能删除所有记录。\n没有办法把记录转移到新手机。',
+    '在“{settings}”（读故事时是下面的 ⚙️）里可以更改“{lblFs}”“{lblBgm}”“{lblSe}”。\n语言可以用标题画面的“{btnLang}”或故事下面的 🌐 来更改。\n这份玩法说明随时可以在“{settings}”的“{guideTitle}”里点“{guideAgain}”再次查看。'
+  ]
 };
 
 if (typeof module !== 'undefined') module.exports = { UIT_ZH };

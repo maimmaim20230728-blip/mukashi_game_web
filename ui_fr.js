@@ -8,7 +8,7 @@ var UIT_FR = {
   title:'Deviens le héros des contes !',
   subtitle:'L\'histoire change à chaque choix',
   start:'Commencer', cont:'Reprendre la lecture', zukan:'Collection des fins', settings:'⚙️ Réglages',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'Tous les textes et toutes les images sont originaux.',
   footFirst:'Ta première lecture suit l\'histoire d\'origine.',
   footCreate:'Les histoires à choix et les fins sont des créations originales pour cette application.',
@@ -144,7 +144,27 @@ var UIT_FR = {
   setTitle:'Réglages', lblFs:'Taille du texte', lblBgm:'Musique', lblSe:'Effets sonores', lblLang:'Langue / Language',
   fsOpts:['Petite','Normale','Grande'], volOpts:['Aucun','Faible','Normal','Fort'],
   yes:'Oui', no:'Non', quitConfirm:'Retourner au choix des histoires ? (« Reprendre la lecture » va disparaître)',
-  seal:['Fin']
+  seal:['Fin'],
+  /* はじめての あそびかた(2026-09-30)。{start} などは いまの ことばの ボタンの 文字に おきかわる(index.html guideText) */
+  guideTitle:'Comment jouer', guideStep:'{n} / {m}', guidePrev:'Précédent', guideNext:'Suivant', guideStart:'Jouer', guideAgain:'Revoir',
+  guideHeads:[
+    'Tes choix changent l’histoire',
+    'Pour commencer',
+    'Lire et choisir',
+    'S’arrêter en cours de route',
+    '{zukan}',
+    'Tes enregistrements restent sur cet appareil',
+    'Réglages et langue'
+  ],
+  guideBodies:[
+    'Dans ce jeu, tu lis des contes du monde entier. Il y a 12 histoires, comme « {momoName} » et « {akzName} ».\nQuand tu fais des choix pendant l’histoire, la fin change.\nQuoi que tu choisisses, tu ne perds jamais.',
+    'Sur l’écran titre, appuie sur « {start} » puis choisis une histoire.\nLa première fois, chaque histoire suit le conte original.\nÀ partir de la deuxième fois, il y a des moments où tu choisis toi-même.',
+    'Appuie sur l’écran ou sur « {next} » pour avancer.\nQuand il y a un choix, appuie sur le bouton que tu préfères.\nLes grandes images qui apparaissent en chemin peuvent être passées d’une simple touche.',
+    'Si tu fermes l’application en cours de route, elle se souvient de l’endroit. La prochaine fois, appuie sur « {cont} » sur l’écran titre.\nAvec « {selBack} » en bas, tu reviens au choix des histoires. L’endroit gardé est alors effacé.',
+    'Les fins que tu trouves sont gardées dans la « {zukan} ». Appuie sur une fin marquée « {zFound} » pour la relire.\nLes fins pas encore trouvées affichent un indice.\nEn lisant, tu ouvres aussi des histoires racontées par d’autres personnages. Le choix des histoires indique comment.',
+    'Tes enregistrements restent seulement sur cet appareil et ne sont envoyés nulle part.\nTout en bas de l’écran titre, appuie deux fois de suite sur « {reset} » pour tout effacer.\nIl n’est pas possible de transférer tes enregistrements vers un nouveau téléphone.',
+    'Dans « {settings} » (pendant une histoire, le ⚙️ en bas), tu peux changer « {lblFs} », « {lblBgm} » et « {lblSe} ».\nChange de langue avec « {btnLang} » sur l’écran titre ou avec le 🌐 en bas d’une histoire.\nTu peux revoir ce guide à tout moment : « {settings} », ligne « {guideTitle} », bouton « {guideAgain} ».'
+  ]
 };
 
 if (typeof module !== 'undefined') module.exports = { UIT_FR };

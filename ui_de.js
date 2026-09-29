@@ -8,7 +8,7 @@ var UIT_DE = {
   title:'Werde die Hauptfigur der Märchen!',
   subtitle:'Die Geschichte ändert sich mit jeder Wahl',
   start:'Starten', cont:'Weiterlesen', zukan:'Sammlung der Enden', settings:'⚙️ Einstellungen',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'Alle Texte und Bilder sind Originale.',
   footFirst:'Dein erster Durchgang folgt der ursprünglichen Geschichte.',
   footCreate:'Die verzweigten Geschichten und Enden sind Originale nur für diese App.',
@@ -144,7 +144,27 @@ var UIT_DE = {
   setTitle:'Einstellungen', lblFs:'Schriftgröße', lblBgm:'Musik', lblSe:'Klangeffekte', lblLang:'Sprache / Language',
   fsOpts:['Klein','Normal','Groß'], volOpts:['Aus','Leise','Normal','Laut'],
   yes:'Ja', no:'Nein', quitConfirm:'Zurück zur Auswahl? („Weiterlesen“ verschwindet dann)',
-  seal:['Ende']
+  seal:['Ende'],
+  /* はじめての あそびかた(2026-09-30)。{start} などは いまの ことばの ボタンの 文字に おきかわる(index.html guideText) */
+  guideTitle:'So wird gespielt', guideStep:'{n} / {m}', guidePrev:'Zurück', guideNext:'Weiter', guideStart:'Spielen', guideAgain:'Noch einmal ansehen',
+  guideHeads:[
+    'Deine Wahl verändert die Geschichte',
+    'So fängst du an',
+    'Lesen und wählen',
+    'Mittendrin aufhören',
+    '{zukan}',
+    'Deine Aufzeichnungen bleiben auf diesem Gerät',
+    'Einstellungen und Sprache'
+  ],
+  guideBodies:[
+    'In diesem Spiel liest du Märchen aus aller Welt. Es gibt 12 Geschichten, zum Beispiel „{momoName}“ und „{akzName}“.\nWenn du unterwegs selbst wählst, ändert sich das Ende.\nEgal, was du wählst: Verlieren kannst du nie.',
+    'Tippe auf dem Titelbildschirm auf „{start}“ und wähle eine Geschichte.\nBeim ersten Mal folgt jede Geschichte dem ursprünglichen Märchen.\nAb dem zweiten Mal gibt es Stellen, an denen du selbst wählst.',
+    'Tippe auf den Bildschirm oder auf „{next}“, um weiterzugehen.\nWo es eine Wahl gibt, tippst du auf die Schaltfläche, die dir gefällt.\nDie großen Bilder zwischendurch kannst du mit einem Tippen überspringen.',
+    'Wenn du die App mittendrin schließt, merkt sie sich die Stelle. Beim nächsten Mal liest du mit „{cont}“ auf dem Titelbildschirm weiter.\nMit „{selBack}“ unten kommst du zur Auswahl zurück. Dann wird die gemerkte Stelle gelöscht.',
+    'Gefundene Enden kommen in die „{zukan}“. Tippe auf ein Ende mit „{zFound}“, um es noch einmal zu lesen.\nEnden, die du noch nicht gefunden hast, zeigen einen Hinweis.\nWenn du weiterliest, öffnen sich auch Geschichten aus der Sicht anderer Figuren. Wie das geht, steht in der Auswahl.',
+    'Deine Aufzeichnungen bleiben nur auf diesem Gerät und werden nirgendwohin gesendet.\nTippe ganz unten auf dem Titelbildschirm zweimal hintereinander auf „{reset}“, um alles zu löschen.\nDie Aufzeichnungen auf ein neues Handy zu übertragen, ist nicht möglich.',
+    'Unter „{settings}“ (in einer Geschichte das ⚙️ unten) kannst du „{lblFs}“, „{lblBgm}“ und „{lblSe}“ ändern.\nDie Sprache wählst du mit „{btnLang}“ auf dem Titelbildschirm oder mit 🌐 unten in einer Geschichte.\nDiese Anleitung siehst du jederzeit wieder: „{settings}“, bei „{guideTitle}“ auf „{guideAgain}“ tippen.'
+  ]
 };
 
 if (typeof module !== 'undefined') module.exports = { UIT_DE };

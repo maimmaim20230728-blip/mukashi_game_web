@@ -8,7 +8,7 @@ var UIT_NL = {
   title:'Word de hoofdpersoon van de sprookjes!',
   subtitle:'Het verhaal verandert bij elke keuze',
   start:'Beginnen', cont:'Verder lezen', zukan:'Verzameling van eindes', settings:'⚙️ Instellingen',
-  footVer:'v1.8.2',
+  footVer:'v1.8.3',
   footOrig:'Alle teksten en tekeningen zijn origineel.',
   footFirst:'Je eerste keer volgt het oorspronkelijke verhaal.',
   footCreate:'De vertakkende verhalen en eindes zijn origineel, alleen voor deze app.',
@@ -144,7 +144,27 @@ var UIT_NL = {
   setTitle:'Instellingen', lblFs:'Tekstgrootte', lblBgm:'Muziek', lblSe:'Geluidseffecten', lblLang:'Taal / Language',
   fsOpts:['Klein','Normaal','Groot'], volOpts:['Uit','Zacht','Normaal','Hard'],
   yes:'Ja', no:'Nee', quitConfirm:'Terug naar de verhaalkeuze? ("Verder lezen" verdwijnt dan)',
-  seal:['Einde']
+  seal:['Einde'],
+  /* はじめての あそびかた(2026-09-30)。{start} などは いまの ことばの ボタンの 文字に おきかわる(index.html guideText) */
+  guideTitle:'Zo speel je', guideStep:'{n} / {m}', guidePrev:'Vorige', guideNext:'Volgende', guideStart:'Spelen', guideAgain:'Opnieuw bekijken',
+  guideHeads:[
+    'Jouw keuzes veranderen het verhaal',
+    'Zo begin je',
+    'Lezen en kiezen',
+    'Halverwege stoppen',
+    '{zukan}',
+    'Je gegevens blijven op dit apparaat',
+    'Instellingen en taal'
+  ],
+  guideBodies:[
+    'In dit spel lees je sprookjes uit de hele wereld. Er zijn 12 verhalen, zoals "{momoName}" en "{akzName}".\nAls je onderweg zelf kiest, verandert het einde.\nWat je ook kiest, je verliest nooit.',
+    'Tik in het titelscherm op "{start}" en kies een verhaal.\nDe eerste keer volgt elk verhaal het oorspronkelijke sprookje.\nVanaf de tweede keer zijn er momenten waarop je zelf kiest.',
+    'Tik op het scherm of op "{next}" om verder te gaan.\nBij een keuze tik je op de knop die je wilt.\nDe grote plaatjes die onderweg verschijnen, kun je met één tik overslaan.',
+    'Als je de app halverwege sluit, onthoudt hij waar je was. Tik de volgende keer in het titelscherm op "{cont}".\nMet "{selBack}" onderaan ga je terug naar de verhaalkeuze. De bewaarde plek wordt dan gewist.',
+    'Gevonden eindes komen in de "{zukan}". Tik op een einde met "{zFound}" om het opnieuw te lezen.\nEindes die je nog niet hebt gevonden, tonen een hint.\nAls je verder leest, gaan ook verhalen vanuit andere personages open. Hoe dat gaat, staat in de verhaalkeuze.',
+    'Je gegevens blijven alleen op dit apparaat en worden nergens naartoe gestuurd.\nTik helemaal onderaan in het titelscherm twee keer achter elkaar op "{reset}" om alles te wissen.\nJe gegevens overzetten naar een nieuwe telefoon kan niet.',
+    'Bij "{settings}" (in een verhaal het ⚙️ onderaan) kun je "{lblFs}", "{lblBgm}" en "{lblSe}" aanpassen.\nDe taal kies je met "{btnLang}" in het titelscherm of met 🌐 onderaan in een verhaal.\nDeze uitleg zie je altijd opnieuw: "{settings}", bij "{guideTitle}", knop "{guideAgain}".'
+  ]
 };
 
 if (typeof module !== 'undefined') module.exports = { UIT_NL };

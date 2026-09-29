@@ -16,7 +16,7 @@ var UIT_KO = {
   title:'명작의 주인공이 되자!',
   subtitle:'고를 때마다 이야기가 달라집니다',
   start:'시작하기', cont:'이어서 읽기', zukan:'결말 도감', settings:'⚙️ 설정',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'글과 그림은 모두 창작입니다',
   footFirst:'첫 1회차는 원래 이야기 그대로 진행됩니다',
   footCreate:'골라서 달라지는 이야기와 결말은 이 앱만의 창작입니다',
@@ -150,6 +150,7 @@ var UIT_KO = {
   btnSelect:'이야기 고르기로', btnZBack:'도감으로 돌아가기',
   setTitle:'설정', lblFs:'글자 크기', lblBgm:'음악', lblSe:'효과음', lblLang:'언어 / Language',
   fsOpts:['작게','보통','크게'], volOpts:['없음','작게','보통','크게'],
+  yes:'예', no:'아니요', quitConfirm:'이야기 고르기로 돌아갈까요? ("이어서 읽기"가 사라집니다)',
   seal:['끝']
 };
 

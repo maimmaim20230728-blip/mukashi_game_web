@@ -8,7 +8,7 @@ var UIT_FR = {
   title:'Deviens le héros des contes !',
   subtitle:'L\'histoire change à chaque choix',
   start:'Commencer', cont:'Reprendre la lecture', zukan:'Collection des fins', settings:'⚙️ Réglages',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'Tous les textes et toutes les images sont originaux.',
   footFirst:'Ta première lecture suit l\'histoire d\'origine.',
   footCreate:'Les histoires à choix et les fins sont des créations originales pour cette application.',
@@ -143,6 +143,7 @@ var UIT_FR = {
   btnSelect:'Retour au choix des histoires', btnZBack:'Retour à la collection',
   setTitle:'Réglages', lblFs:'Taille du texte', lblBgm:'Musique', lblSe:'Effets sonores', lblLang:'Langue / Language',
   fsOpts:['Petite','Normale','Grande'], volOpts:['Aucun','Faible','Normal','Fort'],
+  yes:'Oui', no:'Non', quitConfirm:'Retourner au choix des histoires ? (« Reprendre la lecture » va disparaître)',
   seal:['Fin']
 };
 

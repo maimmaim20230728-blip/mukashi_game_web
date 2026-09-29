@@ -10,7 +10,7 @@ var UIT_ES = {
   title:'¡Sé el protagonista de los cuentos!',
   subtitle:'La historia cambia con cada elección',
   start:'Empezar', cont:'Continuar', zukan:'Colección de finales', settings:'⚙️ Ajustes',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'Todos los textos y las imágenes son originales.',
   footFirst:'Tu primera lectura sigue el cuento original.',
   footCreate:'Las historias con ramas y los finales son creaciones originales solo para esta app.',
@@ -145,6 +145,7 @@ var UIT_ES = {
   btnSelect:'Volver a la selección', btnZBack:'Volver a la colección',
   setTitle:'Ajustes', lblFs:'Tamaño del texto', lblBgm:'Música', lblSe:'Efectos de sonido', lblLang:'Idioma / Language',
   fsOpts:['Pequeño','Normal','Grande'], volOpts:['Apagado','Bajo','Normal','Alto'],
+  yes:'Sí', no:'No', quitConfirm:'¿Volver a la selección? ("Continuar" va a desaparecer)',
   seal:['Fin']
 };
 

@@ -8,7 +8,7 @@ var UIT_IT = {
   title:'Diventa il protagonista delle fiabe!',
   subtitle:'A ogni scelta la storia cambia',
   start:'Inizia', cont:'Continua a leggere', zukan:'Raccolta dei finali', settings:'⚙️ Impostazioni',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'Tutti i testi e i disegni sono originali.',
   footFirst:'La tua prima lettura segue la storia originale.',
   footCreate:'Le storie con le scelte e i finali sono creazioni originali solo per questa app.',
@@ -143,6 +143,7 @@ var UIT_IT = {
   btnSelect:'Torna alla scelta della storia', btnZBack:'Torna alla raccolta',
   setTitle:'Impostazioni', lblFs:'Dimensione del testo', lblBgm:'Musica', lblSe:'Effetti sonori', lblLang:'Lingua / Language',
   fsOpts:['Piccolo','Normale','Grande'], volOpts:['Spento','Basso','Normale','Alto'],
+  yes:'Sì', no:'No', quitConfirm:'Tornare alla scelta della storia? ("Continua a leggere" sparirà)',
   seal:['Fine']
 };
 

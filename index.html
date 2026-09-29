@@ -135,6 +135,24 @@ body[data-fs="l"] .znote{font-size:13px}
 }
 #langLoad.on{display:flex}
 
+/* ---- たしかめの まど(Play版の もどるボタン・2026-09-30) ----
+   カットイン(50)・ことばの よみこみ(60)より うえ。Play版の window.confirm は ボタンが 英語に なるので アプリの 中に 出す */
+.ask-ov{
+  position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+  background:rgba(74,55,40,.55);
+  padding:calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+}
+.ask-box{background:var(--panel);border:3px solid var(--frame);border-radius:14px;padding:18px 16px 16px;width:100%;max-width:420px;max-height:100%;overflow-y:auto}
+.ask-msg{font-size:17px;line-height:1.9;font-weight:700;margin-bottom:16px;white-space:pre-line;overflow-wrap:anywhere}
+.ask-row{display:flex;gap:10px}
+.ask-row button{
+  flex:1;min-height:48px;font-size:17px;padding:12px 10px;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:700;
+}
+.ask-row .ask-no{border:3px solid var(--frame);background:var(--panel);color:var(--ink)}
+.ask-row .ask-yes{border:3px solid var(--accent-dark);background:var(--accent);color:#fff}
+body[data-fs="s"] .ask-msg,body[data-fs="s"] .ask-row button{font-size:15px}
+body[data-fs="l"] .ask-msg,body[data-fs="l"] .ask-row button{font-size:20px}
+
 /* ---- ずかん ---- */
 .zgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .zcell{background:var(--panel);border:3px solid var(--frame);border-radius:12px;padding:12px}
@@ -969,7 +987,7 @@ ja:{
   title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
   subtitle:'えらぶたびに、おはなしが かわる',
   start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'ぶんしょうと えは すべて オリジナルです',
   footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
   footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
@@ -1103,13 +1121,15 @@ ja:{
   btnSelect:'おはなし えらびへ', btnZBack:'ずかんへ もどる',
   setTitle:'せってい', lblFs:'もじの おおきさ', lblBgm:'おんがく', lblSe:'こうかおん', lblLang:'ことば / Language',
   fsOpts:['ちいさい','ふつう','おおきい'], volOpts:['なし','ちいさい','ふつう','おおきい'],
+  /* Play版の もどるボタンで 出す たしかめの まど(2026-09-30) */
+  yes:'はい', no:'いいえ', quitConfirm:'おはなし えらびへ もどる？（「つづきから よむ」は きえます）',
   seal:['お','し','ま','い']
 },
 en:{
   title:'Be the Hero of Tales!',
   subtitle:'The story changes with every choice',
   start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'All text and art are original.',
   footFirst:'Your first read follows the original tale.',
   footCreate:'Branching stories and endings are original creations for this app.',
@@ -1243,6 +1263,7 @@ en:{
   btnSelect:'Back to Tale Select', btnZBack:'Back to the Collection',
   setTitle:'Settings', lblFs:'Text size', lblBgm:'Music', lblSe:'Sound effects', lblLang:'ことば / Language',
   fsOpts:['Small','Normal','Large'], volOpts:['Off','Soft','Normal','Loud'],
+  yes:'Yes', no:'No', quitConfirm:'Go back to Tale Select? ("Continue" will disappear)',
   seal:['The','End']
 }
 };
@@ -2692,6 +2713,96 @@ function bindReset(){
   });
 }
 
+/* ================= Play版(Android)の もどるボタン(2026-09-30) =================
+   Capacitor の WebView は もどるボタンを うけとらない(@capacitor/app が ないと、アプリごと うしろに さがる)。
+   Play版(isNativePlatform)だけ Capacitor.Plugins.App の backButton を うけとる(registerPlugin は WebView に ない)。
+   おした ときの じゅん:
+     ①たしかめの まど → 「いいえ」と おなじ(とじるだけ)
+     ②ことばを よみこんでいる あいだ → なにも しない(すぐ おわる)
+     ③タイトル いがいの 画面 → その画面の「もどる」ボタンと おなじ ゆきさき
+       ものがたりの とちゅうで「つづきから よむ」が のこっている ときは、さきに たしかめる
+       (はい=おはなし えらびへ・よみかけは きえる / いいえ=そのまま)。けつまつの あとは たしかめない
+     ④タイトル → アプリを うしろに さげる(minimizeApp。なかみは そのまま)
+   たしかめの まどは アプリの 中に 出す(Play版の window.confirm は ボタンが 英語の OK / Cancel に なる。
+   この アプリは もともと confirm() を つかわない)。Web版(ブラウザ)は なにも かえない */
+function isNativeApp(){
+  try{ const c = window.Capacitor; return !!(c && typeof c.isNativePlatform === 'function' && c.isNativePlatform()); }
+  catch(e){ return false; }
+}
+function nativePlugin(name, fn){
+  try{
+    const c = window.Capacitor;
+    if(typeof c.isPluginAvailable === 'function' && !c.isPluginAvailable(name)) return null;
+    const p = c.Plugins && c.Plugins[name];
+    return (p && typeof p[fn] === 'function') ? p : null;
+  }catch(e){ return null; }
+}
+function minimizeApp(){
+  const ap = nativePlugin('App', 'minimizeApp');
+  try{ if(ap){ const p = ap.minimizeApp(); if(p && p.catch) p.catch(()=>{}); } }catch(e){}
+}
+let askOpen = null;      /* 出している たしかめの まど({no: いいえで とじる}) */
+/* done(true=はい / false=いいえ)。ボタンの 文字は いまの ことば(t('yes') / t('no')) */
+function askBox(msg, done){
+  if(askOpen) askOpen.no();
+  const ov = document.createElement('div');
+  ov.className = 'ask-ov';
+  ov.setAttribute('role', 'alertdialog');
+  ov.setAttribute('aria-modal', 'true');
+  const box = document.createElement('div'); box.className = 'ask-box';
+  const p = document.createElement('p'); p.className = 'ask-msg'; p.textContent = msg;
+  const row = document.createElement('div'); row.className = 'ask-row';
+  const no = document.createElement('button'); no.type = 'button'; no.className = 'ask-no'; no.textContent = t('no');
+  const yes = document.createElement('button'); yes.type = 'button'; yes.className = 'ask-yes'; yes.textContent = t('yes');
+  let closed = false;
+  const me = {};
+  const close = v=>{
+    if(closed) return;
+    closed = true;
+    if(askOpen === me) askOpen = null;
+    if(ov.parentNode) ov.parentNode.removeChild(ov);
+    done(v);
+  };
+  me.no = ()=>close(false);
+  no.addEventListener('click', ()=>close(false));
+  yes.addEventListener('click', ()=>close(true));
+  row.appendChild(no); row.appendChild(yes);
+  box.appendChild(p); box.appendChild(row); ov.appendChild(box);
+  document.body.appendChild(ov);
+  askOpen = me;
+  try{ no.focus(); }catch(e){}
+}
+/* 画面ごとの「もどる」ボタン(せってい・ことばは ひらいた ところへ もどる) */
+const BACK_BTN = {scSelect:'btnSelBack', scZukan:'btnZBack', scSettings:'btnSetBack', scLang:'btnLangBack'};
+/* ものがたりを やめて おはなし えらびへ(「おはなし えらびへ もどる」ボタンと おなじ)。
+   カットインの とちゅうなら、つぎの 場面へ すすめずに とめてから(とめないと えらび画面の うえで つづきが 保存される) */
+function quitGame(){
+  clearTimeout(cutinTimer);
+  cutinNext = null;
+  const box = $('cutin');
+  if(box.classList.contains('on')){ box.className = ''; box.innerHTML = ''; }
+  $('btnGameBack').click();
+}
+function onBack(){
+  if(askOpen){ askOpen.no(); return; }
+  if($('langLoad').classList.contains('on')) return;
+  const cur = document.querySelector('.screen.on');
+  const id = cur ? cur.id : 'scTitle';
+  if(BACK_BTN[id]){ $(BACK_BTN[id]).click(); return; }
+  if(id === 'scGame'){
+    if(!loadCur()){ quitGame(); return; }
+    askBox(t('quitConfirm'), ok=>{ if(ok) quitGame(); });
+    return;
+  }
+  minimizeApp();
+}
+function watchBack(){
+  if(!isNativeApp()) return;
+  const ap = nativePlugin('App', 'addListener');
+  if(!ap) return;
+  try{ ap.addListener('backButton', ()=>{ onBack(); }); }catch(e){}
+}
+
 /* ================= 起動 ================= */
 applyFs();
 applyDir();
@@ -2709,6 +2820,8 @@ if(PREF.lang !== 'ja'){
 Sound.setVolumes(VOLS[PREF.bgm], VOLS[PREF.se], false);
 /* さいしょに 鳴る 1曲目が 和の里(home)に ならないよう、鳴らす前に タイトルの曲に しておく */
 Sound.setTrack('title');
+/* Android の もどるボタン(Play版だけ) */
+watchBack();
 
 /* Web版(GitHub Pages)の オフライン対応。file:// では 登録しない */
 if('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){

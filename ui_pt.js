@@ -9,7 +9,7 @@ var UIT_PT = {
   title:'Seja a personagem principal dos contos!',
   subtitle:'A história muda a cada escolha',
   start:'Começar', cont:'Continuar a leitura', zukan:'Coleção de finais', settings:'⚙️ Ajustes',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'Todos os textos e desenhos são originais.',
   footFirst:'A sua primeira leitura segue o conto original.',
   footCreate:'As histórias que mudam com as escolhas e os finais são criações originais deste app.',
@@ -144,6 +144,7 @@ var UIT_PT = {
   btnSelect:'Voltar à escolha do conto', btnZBack:'Voltar à coleção',
   setTitle:'Ajustes', lblFs:'Tamanho da letra', lblBgm:'Música', lblSe:'Efeitos sonoros', lblLang:'Idioma / Language',
   fsOpts:['Pequena','Normal','Grande'], volOpts:['Sem som','Baixo','Normal','Alto'],
+  yes:'Sim', no:'Não', quitConfirm:'Voltar à escolha do conto? ("Continuar a leitura" vai desaparecer)',
   seal:['Fim']
 };
 

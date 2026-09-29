@@ -8,7 +8,7 @@ var UIT_ZH = {
   title:'来当名作的主人公吧！',
   subtitle:'每选择一次，故事就会改变',
   start:'开始', cont:'接着读', zukan:'结局图鉴', settings:'⚙️ 设置',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'文字和图画全都是原创的。',
   footFirst:'第一次游玩时，会照着原本的故事往下走。',
   footCreate:'选择后改变的故事和结局，是这个应用独有的原创内容。',
@@ -143,6 +143,7 @@ var UIT_ZH = {
   btnSelect:'回到故事选择', btnZBack:'回到图鉴',
   setTitle:'设置', lblFs:'文字大小', lblBgm:'音乐', lblSe:'音效', lblLang:'语言 / Language',
   fsOpts:['小','标准','大'], volOpts:['关闭','小声','标准','大声'],
+  yes:'是', no:'否', quitConfirm:'要回到故事选择吗？（“接着读”会消失）',
   seal:['完']
 };
 

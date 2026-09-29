@@ -8,7 +8,7 @@ var UIT_NL = {
   title:'Word de hoofdpersoon van de sprookjes!',
   subtitle:'Het verhaal verandert bij elke keuze',
   start:'Beginnen', cont:'Verder lezen', zukan:'Verzameling van eindes', settings:'⚙️ Instellingen',
-  footVer:'v1.8.1',
+  footVer:'v1.8.2',
   footOrig:'Alle teksten en tekeningen zijn origineel.',
   footFirst:'Je eerste keer volgt het oorspronkelijke verhaal.',
   footCreate:'De vertakkende verhalen en eindes zijn origineel, alleen voor deze app.',
@@ -143,6 +143,7 @@ var UIT_NL = {
   btnSelect:'Terug naar de verhaalkeuze', btnZBack:'Terug naar de verzameling',
   setTitle:'Instellingen', lblFs:'Tekstgrootte', lblBgm:'Muziek', lblSe:'Geluidseffecten', lblLang:'Taal / Language',
   fsOpts:['Klein','Normaal','Groot'], volOpts:['Uit','Zacht','Normaal','Hard'],
+  yes:'Ja', no:'Nee', quitConfirm:'Terug naar de verhaalkeuze? ("Verder lezen" verdwijnt dan)',
   seal:['Einde']
 };
 

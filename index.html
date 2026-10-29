@@ -887,7 +887,7 @@ body[data-fs="l"] .guide-row button{font-size:20px}
   <div id="scGame" class="screen">
     <!-- 絵は ことばに よらず ひだり→みぎの ままに する(アラビア語でも 絵は そのまま) -->
     <div class="stage" id="stage" dir="ltr"></div>
-    <div class="textbox" id="tbox"></div>
+    <div class="textbox" id="tbox" aria-live="polite"></div>
     <div class="choices" id="chs"></div>
     <div class="gamefoot">
       <button id="btnGameBack"></button>
@@ -1038,7 +1038,7 @@ ja:{
   title:'<ruby>名作<rt>めいさく</rt></ruby>の<ruby>主人公<rt>しゅじんこう</rt></ruby>になろう！',
   subtitle:'えらぶたびに、おはなしが かわる',
   start:'はじめる', cont:'つづきから よむ', zukan:'けつまつ ずかん', settings:'⚙️ せってい',
-  footVer:'v1.8.3',
+  footVer:'v1.8.4',
   footOrig:'ぶんしょうと えは すべて オリジナルです',
   footFirst:'はじめての 1かいめは、もとの おはなしの とおりに すすみます',
   footCreate:'えらんで かわる おはなしや けつまつは、この アプリだけの そうさくです',
@@ -1201,101 +1201,101 @@ en:{
   title:'Be the Hero of Tales!',
   subtitle:'The story changes with every choice',
   start:'Start', cont:'Continue', zukan:'Ending Collection', settings:'⚙️ Settings',
-  footVer:'v1.8.3',
+  footVer:'v1.8.4',
   footOrig:'All text and art are original.',
   footFirst:'Your first read follows the original tale.',
   footCreate:'Branching stories and endings are original creations for this app.',
-  credit:'App by SOYOGI — Care & Support Counseling (service in Japanese)',
+  credit:'App by SOYOGI (Care & Support Counseling, service in Japanese)',
   privacy:'Privacy Policy',
   reset:'Erase all records and start over',
   resetConfirm:'Really erase? (Press again to erase)',
   selTitle:'Which tale will you read?',
   momoName:'Momotaro the Peach Boy',
   momoTagFirst:'Your first read follows the original tale',
-  momoTag:'A Japanese tale of adventure — 8 endings',
-  oniName:"The Ogre's Tale", oniTag:"Momotaro through an ogre's eyes — 5 endings",
+  momoTag:'A Japanese tale of adventure (8 endings)',
+  oniName:"The Ogre's Tale", oniTag:"Momotaro through an ogre's eyes (5 endings)",
   oniLock:'Finish Momotaro once to unlock',
-  kijiName:"The Pheasant's Tale", kijiTag:'The story of the smallest friend — 2 endings',
+  kijiName:"The Pheasant's Tale", kijiTag:'The story of the smallest friend (2 endings)',
   kijiLock:'Finish Momotaro with the Pheasant to unlock',
   akzName:'Little Red Riding Hood',
   akzTagFirst:'Your first read follows the original tale',
-  akzTag:'A Grimm tale of suspense — 6 endings',
-  wolfName:"The Wolf's Tale", wolfTag:"The tale through the wolf's eyes — 3 endings",
+  akzTag:'A Grimm tale of suspense (6 endings)',
+  wolfName:"The Wolf's Tale", wolfTag:"The tale through the wolf's eyes (3 endings)",
   wolfLock:'Finish Little Red Riding Hood once to unlock',
-  gmaName:"Grandmother's Tale", gmaTag:'She is not only there to be saved — 2 endings',
+  gmaName:"Grandmother's Tale", gmaTag:'She is not only there to be saved (2 endings)',
   gmaLock:'Find the ending "Grandma\'s Clever Plan" to unlock',
   kabuName:'The Enormous Turnip',
   kabuTagFirst:'Your first read follows the original tale',
-  kabuTag:'A Russian tale of pulling together — 4 endings',
-  turnipName:"The Turnip's Tale", turnipTag:'The one being pulled has feelings too — 2 endings',
+  kabuTag:'A Russian tale of pulling together (4 endings)',
+  turnipName:"The Turnip's Tale", turnipTag:'The one being pulled has feelings too (2 endings)',
   turnipLock:'Finish The Enormous Turnip once to unlock',
-  mouseName:"The Mouse's Tale", mouseTag:'The smallest one gives the final push — 2 endings',
+  mouseName:"The Mouse's Tale", mouseTag:'The smallest one gives the final push (2 endings)',
   mouseLock:"Find one ending in The Turnip's Tale to unlock",
   uraName:'Urashima Taro',
   uraTagFirst:'Your first read follows the original tale',
-  uraTag:'A Japanese tale of longing — 5 endings',
-  kameName:"The Turtle's Tale", kameTag:'The best seat is on my shell — 2 endings',
+  uraTag:'A Japanese tale of longing (5 endings)',
+  kameName:"The Turtle's Tale", kameTag:'The best seat is on my shell (2 endings)',
   kameLock:'Finish Urashima Taro once to unlock',
-  himeName:"Princess Otohime's Tale", himeTag:'The wish sealed in the tamatebako — 2 endings',
+  himeName:"Princess Otohime's Tale", himeTag:'The wish sealed in the tamatebako (2 endings)',
   himeLock:'Find the ending "Taro the Crane" or "The Box He Never Opened" to unlock',
   butaName:'The Three Little Pigs',
   butaTagFirst:'Your first read follows the original tale',
-  butaTag:'An English tale of huff and puff — 4 endings',
-  pwolfName:"The Hungry Wolf's Tale", pwolfTag:'Hungry, and always the one fooled — 2 endings',
+  butaTag:'An English tale of huff and puff (4 endings)',
+  pwolfName:"The Hungry Wolf's Tale", pwolfTag:'Hungry, and always the one fooled (2 endings)',
   pwolfLock:'Finish The Three Little Pigs once to unlock',
-  prengaName:"The Brick House's Tale", prengaTag:'The one who protects has pride too — 2 endings',
+  prengaName:"The Brick House's Tale", prengaTag:'The one who protects has pride too (2 endings)',
   prengaLock:'Find the ending "The True English Tale" or "Three Together from the Start" to unlock',
   hgName:'Hansel and Gretel',
   hgTagFirst:'Your first read follows the original tale',
-  hgTag:'A Grimm tale of a house of sweets — 4 endings',
-  majoName:"The Witch's Tale", majoTag:'Baking sweets alone, all those years — 2 endings',
+  hgTag:'A Grimm tale of a house of sweets (4 endings)',
+  majoName:"The Witch's Tale", majoTag:'Baking sweets alone, all those years (2 endings)',
   majoLock:'Finish Hansel and Gretel once to unlock',
-  toriName:"The White Bird's Tale", toriTag:'I was the one who ate the breadcrumbs — 2 endings',
+  toriName:"The White Bird's Tale", toriTag:'I was the one who ate the breadcrumbs (2 endings)',
   toriLock:'Find the ending "Across the River" or "The Village\'s Winter" to unlock',
   kgName:'Princess Kaguya',
   kgTagFirst:'Your first read follows the original tale',
-  kgTag:'A Japanese tale of a princess who returns to the moon — 4 endings',
-  okinaName:"The Bamboo Cutter's Tale", okinaTag:'The days that followed, for the two left behind — 2 endings',
+  kgTag:'A Japanese tale of a princess who returns to the moon (4 endings)',
+  okinaName:"The Bamboo Cutter's Tale", okinaTag:'The days that followed, for the two left behind (2 endings)',
   okinaLock:'Finish Princess Kaguya once to unlock',
-  tsukiName:"The Moon Envoy's Tale", tsukiTag:'From a land that knows no tears — 2 endings',
+  tsukiName:"The Moon Envoy's Tale", tsukiTag:'From a land that knows no tears (2 endings)',
   tsukiLock:'Find the ending "Before the Feathered Robe" or "The Elixir of Life" to unlock',
   brName:'The Bremen Town Musicians',
   brTagFirst:'Your first read follows the original tale',
-  brTag:'A Grimm tale of four voices in chorus — 4 endings',
-  dorobouName:"The Robbers' Tale", dorobouTag:'The robber who went back to the dark house — 2 endings',
+  brTag:'A Grimm tale of four voices in chorus (4 endings)',
+  dorobouName:"The Robbers' Tale", dorobouTag:'The robber who went back to the dark house (2 endings)',
   dorobouLock:'Finish The Bremen Town Musicians once to unlock',
-  ondoriName:"The Rooster's Tale", ondoriTag:'The voice that was to become soup — 2 endings',
+  ondoriName:"The Rooster's Tale", ondoriTag:'The voice that was to become soup (2 endings)',
   ondoriLock:'Find the ending "In the Town of Bremen" or "Morning in the Forest" to unlock',
   juName:'How the Twelve Animals Were Chosen',
   juTagFirst:'Your first read follows the original tale',
-  juTag:'A Japanese tale of how the years got their names — 4 endings',
-  jnekoName:"The Cat's Tale", jnekoTag:'The cat who was told the wrong day — 2 endings',
+  juTag:'A Japanese tale of how the years got their names (4 endings)',
+  jnekoName:"The Cat's Tale", jnekoTag:'The cat who was told the wrong day (2 endings)',
   jnekoLock:'Finish How the Twelve Animals Were Chosen once to unlock',
-  jnezumiName:"The Rat's Tale", jnezumiTag:'The one who never told the true day — 2 endings',
+  jnezumiName:"The Rat's Tale", jnezumiTag:'The one who never told the true day (2 endings)',
   jnezumiLock:'Find the ending "On the Ox\'s Back" or "A Greeting Every Year" to unlock',
   tsName:'The Crane Who Returned a Kindness',
   tsTagFirst:'Your first read follows the original tale',
-  tsTag:'A Japanese tale of a crane on a snowy day — 4 endings',
-  tsuruName:"The Crane's Tale", tsuruTag:'Counting her feathers as she weaves — 2 endings',
+  tsTag:'A Japanese tale of a crane on a snowy day (4 endings)',
+  tsuruName:"The Crane's Tale", tsuruTag:'Counting her feathers as she weaves (2 endings)',
   tsuruLock:'Finish The Crane Who Returned a Kindness once to unlock',
   /* 🔴あかずきんの Grandmother's Tale と まぎれない ように Winter を 入れる */
-  tbaaName:"The Old Woman's Winter", tbaaTag:'She was told not to look — 2 endings',
+  tbaaName:"The Old Woman's Winter", tbaaTag:'She was told not to look (2 endings)',
   tbaaLock:'Find the ending "You Need Not Weave Any More" or "A Winter Without Looking" to unlock',
   /* 🔴"Alibaba" と つづけて 書かない(分かち書きの "Ali Baba" だけ) */
   abName:'Ali Baba and the Forty Thieves',
   abTagFirst:'Your first read follows the original tale',
-  abTag:'A Persian tale of the stone door — 4 endings',
-  moruName:"Morgiana's Tale", moruTag:'The servant who notices everything — 2 endings',
+  abTag:'A Persian tale of the stone door (4 endings)',
+  moruName:"Morgiana's Tale", moruTag:'The servant who notices everything (2 endings)',
   moruLock:'Finish Ali Baba and the Forty Thieves once to unlock',
   /* 🔴ブレーメンの The Robbers' Tale と まぎれない ように The Captain's Tale に する */
-  kashiraName:"The Captain's Tale", kashiraTag:'The captain whose secret was found out — 2 endings',
+  kashiraName:"The Captain's Tale", kashiraTag:'The captain whose secret was found out (2 endings)',
   kashiraLock:'Find the ending "Ropes and the Magistrate" or "The Captain Fled" to unlock',
   kzName:'The North Wind and the Sun',
   kzTagFirst:'Your first read follows the original tale',
-  kzTag:'An Aesop fable of a contest over a coat — 4 endings',
-  kitakazeName:"The North Wind's Tale", kitakazeTag:"Blowing hard is the North Wind's work — 2 endings",
+  kzTag:'An Aesop fable of a contest over a coat (4 endings)',
+  kitakazeName:"The North Wind's Tale", kitakazeTag:"Blowing hard is the North Wind's work (2 endings)",
   kitakazeLock:'Finish The North Wind and the Sun once to unlock',
-  taiyouName:"The Sun's Tale", taiyouTag:"Shining is the Sun's work — 2 endings",
+  taiyouName:"The Sun's Tale", taiyouTag:"Shining is the Sun's work (2 endings)",
   taiyouLock:'Find the ending "A Fine Day for Laundry" or "A Rest in the Shade" to unlock',
   prep:'Coming soon',
   titleBack:'Back to Title', selBack:'Back to Tale Select', next:'Next ▼', back:'Back',
@@ -2127,12 +2127,24 @@ let currentStory = 'momo';
 
 /* 2.2びょうは 1ページを みる(連打防止)+ 画面タップで進行 */
 const READ_MS = 2200;
+/* 一度 読んだ 場面は 待ちを みじかく(2026-10-30)。107の けつまつを あつめる ときは 同じ 場面を 何度も とおるため。
+   読んだ 場面の ID だけを 端末の中に おぼえる(ID は ことばに かかわらず 同じ)。「きろくを けす」で いっしょに けす */
+const SEEN_KEY = 'mukashi_seen_v1';
+const READ_MS_SEEN = 700;
+let seenScenes = new Set((v => Array.isArray(v) ? v : [])(loadJson(SEEN_KEY, [])));
+function markSeen(id){
+  if(id == null || seenScenes.has(id)) return;
+  seenScenes.add(id);
+  saveJson(SEEN_KEY, Array.from(seenScenes));
+}
 let sceneReadyAt = 0, sceneReadyTimer = null, tapAdvance = null;
 /* いま ゲーム画面に 出している ところを もういちど 描く やりかた。
    ことばを かえた ときに、おなじ 場面を あたらしい ことばで 描きなおす ために つかう */
 let redrawGame = null;
-function lockButtons(){
-  sceneReadyAt = Date.now() + READ_MS;
+function lockButtons(id){
+  const ms = (id != null && seenScenes.has(id)) ? READ_MS_SEEN : READ_MS;   /* id のない(けつまつ など)ときは これまでどおり */
+  markSeen(id);
+  sceneReadyAt = Date.now() + ms;
   clearTimeout(sceneReadyTimer);
   const btns = Array.from($('chs').querySelectorAll('button'));
   btns.forEach(b=>{ b.disabled = true; });
@@ -2141,7 +2153,7 @@ function lockButtons(){
       b.disabled = false;
       if(b.classList.contains('next')) b.classList.add('ready');
     });
-  }, READ_MS);
+  }, ms);
 }
 $('scGame').addEventListener('click', e=>{
   if(e.target.closest('button')) return;
@@ -2283,7 +2295,7 @@ function render(s, id){
     chs.appendChild(b);
     tapAdvance = ()=>go(s.next);
   }
-  lockButtons();
+  lockButtons(id);
 }
 
 /* SVGの 中に そのまま 出す ので、記号だけ よけておく */
@@ -2498,7 +2510,7 @@ function playStep(){
   b.addEventListener('click', ()=>{ Sound.se('page'); playStep(); });
   chs.appendChild(b);
   tapAdvance = playStep;
-  lockButtons();
+  lockButtons(id);
   redrawGame = ()=>{ seqIdx = here; playStep(); };
 }
 
@@ -2594,7 +2606,7 @@ function renderSelect(){
     const d = document.createElement('div');
     d.className = 'card' + (cls ? ' ' + cls : '');
     d.innerHTML = '<div class="ico">'+ico+'</div><div><div class="nm">'+nm+'</div><div class="tg">'+tg+'</div></div>';
-    if(onClick) d.addEventListener('click', onClick);
+    if(onClick){ d.addEventListener('click', onClick); kbdPress(d); }
     return d;
   };
 
@@ -2609,6 +2621,15 @@ function renderSelect(){
     }
     const tg = (c.tagFirst && !taleCleared(c.tale)) ? t(c.tagFirst) : t(c.tag);
     box.appendChild(mk(c.ico, t(c.nm), tg, ()=>startStory(c.story)));
+  });
+}
+
+/* div の 押せる所(おはなしの カード・ずかんの マス)を キーボード・スイッチでも 押せるように(Enter / スペースで click と おなじ) */
+function kbdPress(el){
+  el.setAttribute('role', 'button');
+  el.tabIndex = 0;
+  el.addEventListener('keydown', e=>{
+    if(e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar'){ e.preventDefault(); el.click(); }
   });
 }
 
@@ -2647,6 +2668,7 @@ function renderZukan(){
     if(got && typeof RECAP !== 'undefined' && RECAP[z.id]){
       d.style.cursor = 'pointer';
       d.addEventListener('click', ()=>startRecap(z.id));
+      kbdPress(d);
     }
     grid.appendChild(d);
   });
@@ -2794,7 +2816,7 @@ function bindReset(){
     if(resetArmed){
       clearTimeout(resetArmed);
       resetArmed = null;
-      try{ localStorage.removeItem(SAVE_KEY); localStorage.removeItem(UNLOCK_KEY); localStorage.removeItem(CUR_KEY); }catch(e){}
+      try{ localStorage.removeItem(SAVE_KEY); localStorage.removeItem(UNLOCK_KEY); localStorage.removeItem(CUR_KEY); localStorage.removeItem(SEEN_KEY); }catch(e){}
       location.reload();
       return;
     }
